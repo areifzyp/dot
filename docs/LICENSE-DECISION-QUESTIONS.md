@@ -16,13 +16,14 @@ di [`LICENSE-DECISION-RECORD.md` §4](LICENSE-DECISION-RECORD.md).
    sah dan mencegah agen menebak.
 3. Butir bertanda **`[KLARIFIKASI PENGAJU]`** belum boleh dikirim apa adanya: pengusul harus
    melengkapi satu fakta/niat dulu (disebut di butirnya). Kirim sisanya lebih dulu bila perlu.
-4. Yang menahan rilis hanya **Q1, Q2, Q5** (= D1–D3 di [REQUEST §8](LICENSE-DECISION-REQUEST.md)).
+4. Yang menahan rilis hanya **Q1, Q5, Q7** (= D1, D3, D2 di [REQUEST §8](LICENSE-DECISION-REQUEST.md)).
    Sisanya wajib dijawab sebelum `LICENSE`/`NOTICE` ditulis, tetapi tidak memblokir pekerjaan kode.
 
-**Asal butir:** Q1–Q12 adalah rumusan tertutup dari §6 (ID sama, isi sama, hanya bentuknya
-dipertegas). **Q13–Q18 adalah butir baru** yang lahir dari audit 23 Okt 2026 dan **belum ada di §6** —
-jangan dikirim sebagai bagian paket resmi sebelum §6 dan RECORD §4 diperbarui (lihat catatan di
-akhir berkas).
+**Asal butir:** Q1–Q12 adalah rumusan tertutup dari §6 dengan **ID yang sama persis**
+(Q1 = D1, Q5 = D3, Q7 = D2, Q11 = bentuk bukti, Q12 = penanda status) — hanya bentuknya yang
+dipertegas menjadi pilihan tertutup. **Q13–Q18 adalah butir baru** yang lahir dari audit 23 Okt 2026
+dan **belum ada di §6** — jangan dikirim sebagai bagian paket resmi sebelum §6 dan RECORD §4
+diperbarui (lihat catatan di akhir berkas).
 
 ---
 
@@ -153,9 +154,31 @@ dinyatakan; pilihan (a) tidak bisa diusulkan tanpa itu.
 
 ---
 
-## C. Kompatibilitas lisensi
+## C. Format bukti dan penanda status
 
-### Q11 — Apakah `GPL-2.0-or-later` (pilihan pemilik di PRD) sah dipakai bersama 101 dependensi Apache-2.0 di APK? `[KLARIFIKASI PENGAJU]`
+### Q11 — Bentuk bukti apa yang sah, dan siapa yang berwenang menyatakan final?
+
+**Pilih satu (bukti):** (a) komentar di kartu `t_6cc84cef` · (b) email resmi dari alamat domain · (c) dokumen bertanda tangan · (d) commit yang menerapkan `LICENSE` oleh pemilik repo · (e) `lain: …`
+**Wewenang final:** pemilik repo (`areifzyp`) · operator · tim hukum · `lain: …`
+
+**Mengapa perlu:** `LICENSE-DECISION-RECORD.md` §2 menetapkan kapan keputusan dianggap diterima,
+dan §3 adalah formulir yang harus diisi. Tanpa butir ini, item bisa ditutup dengan "bukti" yang
+tidak sah — misalnya komentar orang yang bukan pemegang wewenang — dan gerbang
+`bash scripts/license-status.sh` akan lolos atas dasar yang keliru.
+
+### Q12 — Apakah penanda "lisensi belum final" ditambahkan di `README`/`NOTICE`?
+
+**Pilih satu:** (a) di `README` saja · (b) di `README` dan `NOTICE` · (c) jangan sama sekali · (d) `lain: …`
+
+**Mengapa perlu:** penanda di `NOTICE` adalah teks publik dan bisa dibaca sebagai klaim lisensi
+tambahan, bukan sebagai catatan proses. Butir ini menahan satu-satunya perubahan `NOTICE` yang
+diizinkan sebelum keputusan keluar.
+
+---
+
+## D. Kompatibilitas lisensi
+
+### Q13 — Apakah `GPL-2.0-or-later` (pilihan pemilik di PRD) sah dipakai bersama 101 dependensi Apache-2.0 di APK? `[KLARIFIKASI PENGAJU]`
 
 **Pilih satu:**
 (a) `GPL-2.0-or-later` sah — lanjutkan
@@ -170,7 +193,7 @@ butir ini menahan pembuatan `LICENSE` bersama Q1.
 **Klarifikasi yang dibutuhkan pengusul:** konfirmasi apakah `GPL-2.0-or-later` adalah preferensi
 yang bisa dinegosiasikan atau harga mati. Tanpa itu, opsi (b) tidak bisa ditawarkan sebagai jalan keluar.
 
-### Q12 — Dependensi yang hanya dipakai tes (`EPL-1.0`, BouncyCastle, ASM, `javax.annotation`) cukup dicatat, atau perlu tindakan?
+### Q14 — Dependensi yang hanya dipakai tes (`EPL-1.0`, BouncyCastle, ASM, `javax.annotation`) cukup dicatat, atau perlu tindakan?
 
 **Pilih satu:** (a) cukup dicatat, tidak terdistribusi · (b) perlu tindakan · (c) `lain: …`
 
@@ -182,9 +205,9 @@ baru sebelum digabung" yang harus masuk `AGENTS.md` §Conventions.
 
 ---
 
-## D. Atribusi dan notice
+## E. Atribusi dan notice
 
-### Q13 — Teks OFL font Doto harus ikut di paket mana? `[KLARIFIKASI PENGAJU]`
+### Q15 — Teks OFL font Doto harus ikut di paket mana? `[KLARIFIKASI PENGAJU]`
 
 **Pilih satu:**
 (a) cukup `design/fonts/OFL.txt` di repo
@@ -200,7 +223,7 @@ Namun tidak ada berkas OFL di dalam `android/app/src/main` maupun di paket plasm
 **Klarifikasi yang dibutuhkan pengusul:** keputusan kemasan (apakah teks lisensi ikut ke APK atau
 cukup ditautkan) adalah keputusan produk, bukan hukum — perlu ditanyakan ke pemilik sebelum dikirim.
 
-### Q14 — Bila Q1 bukan `Apache-2.0`, apa yang terjadi pada isi `NOTICE`? `[KLARIFIKASI PENGAJU]`
+### Q16 — Bila Q1 bukan `Apache-2.0`, apa yang terjadi pada isi `NOTICE`? `[KLARIFIKASI PENGAJU]`
 
 **Pilih satu:**
 (a) ganti seluruh teks Apache-2.0 dengan teks lisensi Q1
@@ -215,19 +238,11 @@ mendapat dua klaim yang bertentangan. Perubahan `NOTICE` sendiri ditahan S1 samp
 **Klarifikasi yang dibutuhkan pengusul:** rencana isi `NOTICE` pasca-keputusan belum ada; opsi (a)–(c)
 berbeda besar pekerjaannya.
 
-### Q15 — Apakah penanda "lisensi belum final" ditambahkan di `README`/`NOTICE`?
-
-**Pilih satu:** (a) di `README` saja · (b) di `README` dan `NOTICE` · (c) jangan sama sekali · (d) `lain: …`
-
-**Mengapa perlu:** penanda di `NOTICE` adalah teks publik dan bisa dibaca sebagai klaim lisensi
-tambahan, bukan sebagai catatan proses. Butir ini menahan satu-satunya perubahan `NOTICE` yang
-diizinkan sebelum keputusan keluar.
-
 ---
 
-## E. Kewajiban hukum lain
+## F. Kewajiban hukum lain
 
-### Q16 — Perlu pernyataan/klausa paten terpisah?
+### Q17 — Perlu pernyataan/klausa paten terpisah?
 
 **Pilih satu:** (a) perlu · (b) cukup lisensi yang dipilih · (c) tidak perlu · (d) `lain: …`
 
@@ -235,7 +250,7 @@ diizinkan sebelum keputusan keluar.
 eksplisit, GPL-2.0 tidak eksplisit, MIT tanpa grant sama sekali. Repo belum punya pernyataan paten
 apa pun, sehingga eksposur paten berubah otomatis mengikuti Q1 tanpa pernah diputuskan.
 
-### Q17 — Nama dan identitas aplikasi "Dot." + `io.github.areifzyp.dot` perlu clearance merek?
+### Q18 — Nama dan identitas aplikasi "Dot." + `io.github.areifzyp.dot` perlu clearance merek?
 
 **Pilih satu:** (a) perlu clearance sebelum publikasi · (b) aman, tidak perlu · (c) perlu ubah penamaan · (d) `lain: …`
 
@@ -245,32 +260,18 @@ aplikasi baru). Belum ada pernyataan siapa pemegang merek "Dot." maupun penafian
 
 ---
 
-## F. Format bukti keputusan
-
-### Q18 — Bentuk bukti apa yang sah, dan siapa yang berwenang menyatakan final?
-
-**Pilih satu (bukti):** (a) komentar di kartu `t_6cc84cef` · (b) email resmi dari alamat domain · (c) dokumen bertanda tangan · (d) commit yang menerapkan `LICENSE` oleh pemilik repo · (e) `lain: …`
-**Wewenang final:** pemilik repo (`areifzyp`) · operator · tim hukum · `lain: …`
-
-**Mengapa perlu:** `LICENSE-DECISION-RECORD.md` §2 menetapkan kapan keputusan dianggap diterima,
-dan §3 adalah formulir yang harus diisi. Tanpa butir ini, item bisa ditutup dengan "bukti" yang
-tidak sah — misalnya komentar orang yang bukan pemegang wewenang — dan gerbang
-`bash scripts/license-status.sh` akan lolos atas dasar yang keliru.
-
----
-
 ## Ringkasan
 
 | Kelompok | Butir | Menahan rilis? |
 |---|---|---|
-| Keputusan inti | Q1, Q2, Q5 | **ya** (D1–D3) |
-| Cakupan & hak pakai | Q6, Q7, Q8, Q9, Q10 | tidak (Q7 = D2, menahan tag/rilis S2) |
-| Kompatibilitas | Q11, Q12 | tidak, tetapi Q11 menahan isi `LICENSE` |
-| Atribusi & notice | Q3, Q4, Q13, Q14, Q15 | tidak, tetapi menahan penerapan |
-| Kewajiban hukum lain | Q16, Q17 | tidak |
-| Format bukti | Q18 | tidak, tetapi menentukan sah/tidaknya penutupan |
+| Keputusan inti | Q1, Q2, Q3, Q4, Q5 | Q1 & Q5 **ya** (D1, D3) |
+| Cakupan & hak pakai | Q6, Q7, Q8, Q9, Q10 | Q7 = D2, menahan tag/rilis (S2) |
+| Format bukti & penanda | Q11, Q12 | tidak, tetapi menentukan sah/tidaknya penutupan |
+| Kompatibilitas | Q13, Q14 | tidak, tetapi Q13 menahan isi `LICENSE` |
+| Atribusi & notice | Q15, Q16 | tidak, tetapi menahan penerapan |
+| Kewajiban hukum lain | Q17, Q18 | tidak |
 
-Butir bertanda `[KLARIFIKASI PENGAJU]`: **Q9, Q10, Q11, Q13, Q14** — lima butir ini belum boleh
+Butir bertanda `[KLARIFIKASI PENGAJU]`: **Q9, Q10, Q13, Q15, Q16** — lima butir ini belum boleh
 dikirim sebelum pengusul melengkapi fakta/niat yang disebut di masing-masing butir.
 
 ## Setelah dijawab
