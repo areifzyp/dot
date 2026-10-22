@@ -7,8 +7,8 @@ import org.kde.plasma.core as PlasmaCore
 PlasmoidItem {
     id: root
 
-    preferredWidth: Kirigami.Units.gridUnit * 12
-    preferredHeight: Kirigami.Units.gridUnit * 6
+    Layout.preferredWidth: Kirigami.Units.gridUnit * 12
+    Layout.preferredHeight: Kirigami.Units.gridUnit * 6
 
     FontLoader {
         id: dotoFont

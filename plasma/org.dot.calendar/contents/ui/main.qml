@@ -7,8 +7,8 @@ import org.kde.plasma.core as PlasmaCore
 PlasmoidItem {
     id: root
 
-    preferredWidth: Kirigami.Units.gridUnit * 14
-    preferredHeight: Kirigami.Units.gridUnit * 10
+    Layout.preferredWidth: Kirigami.Units.gridUnit * 14
+    Layout.preferredHeight: Kirigami.Units.gridUnit * 10
 
     property var currentDate: new Date()
 

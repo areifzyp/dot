@@ -7,8 +7,8 @@ import org.kde.plasma.core as PlasmaCore
 PlasmoidItem {
     id: root
 
-    preferredWidth: Kirigami.Units.gridUnit * 14
-    preferredHeight: Kirigami.Units.gridUnit * 8
+    Layout.preferredWidth: Kirigami.Units.gridUnit * 14
+    Layout.preferredHeight: Kirigami.Units.gridUnit * 8
 
     property string cityName: "Jakarta"
     property real latitude: -6.2088
