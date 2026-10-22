@@ -17,6 +17,9 @@ Satu berkas per keputusan lisensi yang keluar dari tim hukum/kepatuhan. Berkas d
 
 ## Hubungan dengan dokumen lain
 
+- **Prosedur penutupan** (checklist a–f: record, bukti, status RESOLVED, tautan, notifikasi):
+  [`../LICENSE-DECISION-RECORD.md` §6](../LICENSE-DECISION-RECORD.md#6-prosedur-penutupan--checklist-af).
+  Jalankan checklist itu — bukan urutan di atas saja — sebelum item ditutup.
 - **Lisensi Dot. sendiri** punya formulir kanonik sendiri di
   [`../LICENSE-DECISION-RECORD.md` §3](../LICENSE-DECISION-RECORD.md#3-license-decision-record-formulir);
   keputusan untuk lisensi Dot. diisi **di sana**, bukan sebagai berkas baru di folder ini.

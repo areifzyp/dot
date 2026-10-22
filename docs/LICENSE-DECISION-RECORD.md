@@ -18,7 +18,7 @@ masih kosong:
 | §3 | **License Decision Record** — formulir keputusan | **kosong, menunggu keputusan** |
 | §4 | Pertanyaan eksplisit untuk tim hukum/kepatuhan | terisi |
 | §5 | Mekanisme cek berkala + log follow-up | terisi (PIC & kanal: TODO + usulan default, menunggu konfirmasi) |
-| §6 | Langkah menutup item setelah keputusan keluar | terisi |
+| §6 | **Prosedur penutupan** — checklist a–f, gerbang verifikasi, aturan `N/A` | terisi (v1.1, 23 Okt 2026) |
 | §7 | Pekerjaan yang diblokir + tautan | terisi |
 | §8 | Riwayat berkas ini | terisi |
 
@@ -43,7 +43,7 @@ masih kosong:
 | Kadens cek | mingguan, Senin 09:00 WIB — job cron `3d4aef87edac` (§5) |
 | Follow-up pertama | **Senin, 26 Oktober 2026, 09:00 WIB** (§5) |
 | Kartu pelacak | `t_6cc84cef` (doc-writer) — kartu ini |
-| Kartu kembar | `t_2e27c818` (arsitek), judul sama, isi kosong — salah satu harus ditutup agar tidak dua kartu menunggu hal yang sama |
+| Kartu kembar | `t_2e27c818` (arsitek) — **sudah `done`** 22 Okt 2026, 23:55 WIB; tidak lagi menunggu hal yang sama |
 
 ### 1.1 Bukti bahwa keputusan belum ada
 
@@ -114,7 +114,7 @@ tercatat.
 | # | Field | Isi |
 |---|---|---|
 | 1 | **Jenis lisensi / komponen yang ditinjau** | _(belum diisi)_ — mis. "kode aplikasi Android (`android/`) + 6 plasmoid Plasma (`plasma/`) + font Doto" |
-| 2 | **Pertanyaan hukum yang diajukan** | D1–D3 + Q2–Q8, lihat §4 berkas ini dan §6 [`LICENSE-DECISION-REQUEST.md`](LICENSE-DECISION-REQUEST.md) |
+| 2 | **Pertanyaan hukum yang diajukan** | D1–D3 + Q2–Q12, lihat §4 berkas ini dan §6 [`LICENSE-DECISION-REQUEST.md`](LICENSE-DECISION-REQUEST.md) (Q1 = D1, Q5 = D3, Q7 = D2) |
 | 3 | **Tanggal pengajuan ke tim hukum/kepatuhan** | _(belum diisi)_ — paket bukti tersedia sejak 22 Okt 2026 (commit `6ef95cc`, diperbarui `e16eaea`) |
 | 4 | **Nama/narahubung penanggung jawab di tim tersebut** | _(belum diisi)_ — nama + jabatan + kanal. Bila proyek tidak punya tim hukum formal, tulis "pemilik proyek (nama)" dan jangan mengarang pihak lain |
 | 5 | **Keputusan akhir** | _(belum diisi)_ — `disetujui` / `ditolak` / `bersyarat` |
@@ -207,21 +207,161 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 
 ---
 
-## 6. Setelah keputusan diterima — langkah menutup
+## 6. Prosedur penutupan — checklist (a–f)
 
-1. Isi **§3** (10 field) dan kolom jawaban di **§4** dari teks keputusan, bukan dari tafsiran.
-2. Jalankan `bash scripts/license-status.sh` → harus exit `0` dan senyap.
-3. Perbarui header + §11 [`LICENSE-DECISION-REQUEST.md`](LICENSE-DECISION-REQUEST.md)
-   (status `MENUNGGU KEPUTUSAN` → `DIPUTUSKAN`, tanggal, tautan ke §3 berkas ini) — dua
-   dokumen tidak boleh berbeda status.
-4. Tandai kartu `t_6cc84cef` **selesai/RESOLVED** dengan ringkasan berisi ID lisensi yang
-   diputuskan + commit yang menerapkan.
-5. Buat kartu tindak lanjut untuk checklist 10 berkas ([`§7`](LICENSE-DECISION-REQUEST.md))
-   — assignee doc-writer, tautkan ke berkas ini. Ini yang benar-benar menerapkan keputusan.
-6. Tutup kartu kembar `t_2e27c818` (arsitek) atau arahkan komentarnya ke berkas ini, supaya
-   tidak ada dua kartu menunggu hal yang sama.
-7. Bila D2 = "ditunda": status item menjadi **DEFERRED**, bukan RESOLVED — catat tanggal
-   tinjau ulang di §1 dan jangan hapus pengingat mingguan.
+Checklist ini dijalankan **hanya** setelah keputusan memenuhi kelima syarat §2. Selama teks
+keputusan belum ada — atau `bash scripts/license-status.sh` masih `exit 1` — **jangan
+jalankan satu butir pun**: item tetap `BLOCKED`, checklist tetap terpasang, dan hasil
+pemeriksaan dilaporkan apa adanya (§6.3).
+
+Status saat checklist ini dipasang (**23 Oktober 2026, 00:38 WIB**): belum ada keputusan.
+`bash scripts/license-status.sh` → `exit 1`; `LICENSE` tidak ada; 11 penanda `_(belum diisi)_`
+masih ada di §3. Item tetap **BLOCKED**.
+
+### 6.0 Prasyarat — tiga artefak, diperiksa dan saling tertaut
+
+| # | Artefak | Berkas | Tautan dari sini | Diperiksa |
+|---|---|---|---|---|
+| 1 | Template record siap isi (field a–i) | [`templates/LICENSE-DECISION-RECORD.template.md`](templates/LICENSE-DECISION-RECORD.template.md) — v1.0, dibuat 23 Okt 2026, pemilik doc-writer | §3 (catatan metadata) · §6.1 butir (a) | ada · 23 Okt 2026 00:38 WIB |
+| 2 | Daftar pertanyaan hukum | [`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUEST.md) (Q1–Q12) + §4 berkas ini (D1–D3, Q2–Q12) | §3 field 2 · §4 | ada · id pertanyaan cocok (Q1 = D1, Q5 = D3, Q7 = D2) |
+| 3 | Mekanisme follow-up | §5 berkas ini + job cron `3d4aef87edac` (`every monday 9am`, next run 26 Okt 2026 09:00 WIB, `Last run: ok`) | §1 tabel · §5.1 log | aktif · dibaca 23 Okt 2026 00:38 WIB |
+
+Bila salah satu dari ketiganya hilang, checklist ini tidak boleh dijalankan — perbaiki
+tautannya lebih dulu. Pemeriksaan ulang ketiganya ada di §6.2.
+
+### 6.1 Checklist penutupan
+
+Salin blok ini ke komentar kartu `t_6cc84cef` saat mulai mengerjakan, lalu centang per butir.
+
+- [ ] **(a) Buat record terisi dari template.** Pilih satu jalur — jangan dua-duanya:
+  - **a1 · lisensi Dot. sendiri** (kasus yang sekarang menunggu): isi **formulir kanonik §3**
+    di berkas ini. Jangan membuat berkas baru di `docs/license-records/` — itu akan menjadi
+    sumber kebenaran kedua. Template v1.0 adalah ekstrak berdiri sendiri dari §3, bukan
+    record tandingan.
+  - **a2 · komponen lain** (bukan lisensi Dot.): `cp docs/templates/LICENSE-DECISION-RECORD.template.md
+    docs/license-records/<slug-komponen>-<YYYY-MM-DD>.md`, isi field a–i, lalu tambahkan satu
+    baris di indeks [`license-records/README.md`](license-records/README.md).
+  - Aturan: **satu keputusan = satu record.** Bila satu keputusan menyangkut beberapa komponen
+    dengan hasil berbeda, buat satu record per komponen dan saling tautkan di field (h)/(8).
+
+- [ ] **(b) Isi semua field wajib — tanpa sel kosong.** Field 1–10 §3 (padanan a–i di
+  template). Tiap sel harus berada di salah satu dari tiga keadaan sah:
+
+  | Keadaan | Kapan dipakai | Bentuk penulisan |
+  |---|---|---|
+  | terisi | ada isi dari teks keputusan | isi sebenarnya, ID lisensi persis (`GPL-2.0-or-later`, bukan "GPL") |
+  | `N/A` | field **benar-benar tidak berlaku** untuk keputusan ini | `N/A — <alasan satu baris>` |
+  | `belum diputuskan` | field relevan tapi pihak berwenang belum memutuskan | `belum diputuskan` (§2 butir 3: sah) |
+
+  Aturan `N/A`: **wajib disertai alasan**; `N/A` telanjang dihitung sebagai belum diisi.
+  `N/A` ≠ `belum diputuskan` — yang pertama "tidak relevan", yang kedua "menunggu jawaban";
+  menukar keduanya adalah cara termudah menutup item secara tidak sah.
+  **Empat field tidak boleh `N/A` dalam keadaan apa pun:** (1)/(a) komponen yang ditinjau,
+  (5)/(e) keputusan akhir, (7)/(g) tanggal berlaku, (8)/(h) lampiran bukti. Untuk keputusan
+  lisensi Dot., kesepuluh field relevan → `N/A` tidak dipakai sama sekali.
+
+  Padanan field template ↔ formulir §3 (agar pengisi tidak melewatkan field yang tidak ada
+  di template):
+
+  | Template | §3 | Catatan |
+  |---|---|---|
+  | a | 1 | jenis lisensi/komponen |
+  | b | 2 | pertanyaan yang diajukan |
+  | c | 3 | tanggal pengajuan |
+  | d | 4 | nama/narahubung |
+  | e | 5 | keputusan akhir |
+  | f | 6 | syarat & batasan — tulis "tidak ada" bila tanpa syarat |
+  | g | 7 | tanggal berlaku |
+  | h | 8 | lampiran/referensi |
+  | i | **§7** | template menaruh daftar pekerjaan diblokir di field (i); §3 tidak punya field padanannya, jadi rujuk §7 |
+  | — | 9 | keputusan per ID (D1/D2/D3) — **tidak ada di template**, wajib diisi |
+  | — | 10 | tindak lanjut wajib + pemilik/kartu — **tidak ada di template**, wajib diisi |
+
+- [ ] **(c) Lampirkan bukti keputusan (email/dokumen resmi).** Simpan salinan bukti sebagai
+  lampiran kartu `t_6cc84cef` (teks email/dokumen resmi ditempel atau dilampirkan), lalu
+  tautkan dari field (8)/(h). Bukti harus lolos §2 butir 1–2: **tertulis** dan dari pihak
+  **berwenang** bernama. Tautan mati atau "sudah di-unblock" tanpa teks = record tidak sah.
+  Jangan menaruh kredensial, token, atau data pribadi di repo publik — lampirkan di kartu,
+  rujuk nomor komentarnya.
+
+- [ ] **(d) Ubah status item `BLOCKED` → `RESOLVED` + tanggal resolusi.** Perbarui dua tempat:
+  baris `**Status item:**` di header berkas ini dan baris `Status` di tabel §1, menjadi
+  `RESOLVED` dengan tanggal resolusi (`YYYY-MM-DD, HH:MM WIB`). Tambahkan baris
+  "Dicatat ulang" di §1 — jangan hapus baris status lama.
+  **Pengecualian:** bila D2 = "ditunda", status menjadi **`DEFERRED`**, bukan `RESOLVED` —
+  isi tanggal tinjau ulang di §1 dan **jangan matikan** pengingat mingguan (§5).
+
+- [ ] **(e) Tautkan record ke item/pekerjaan yang diblokir.** Empat tautan, semuanya wajib:
+  1. field (i) template / tabel §7 berkas ini — setiap pekerjaan yang menunggu keputusan,
+     dengan tautan berkas atau kartu dan status barunya;
+  2. kartu `t_6cc84cef` — komentar ringkasan berisi ID lisensi yang diputuskan, tanggal,
+     dan commit yang menerapkan;
+  3. **kartu tindak lanjut checklist 10 berkas** ([`LICENSE-DECISION-REQUEST.md` §7](LICENSE-DECISION-REQUEST.md))
+     — assignee doc-writer, `parents=[t_6cc84cef]`, tautkan ke §3 berkas ini. Ini yang
+     benar-benar menerapkan keputusan; menutup item tanpa kartu ini membuat keputusan
+     berhenti sebagai dokumen;
+  4. dokumen status: header + §11 [`LICENSE-DECISION-REQUEST.md`](LICENSE-DECISION-REQUEST.md)
+     (`MENUNGGU KEPUTUSAN` → `DIPUTUSKAN`, tanggal, tautan ke §3), `docs/STATUS-MAP.md` §4d,
+     dan `docs/README.md` butir 5 — dua dokumen tidak boleh berbeda status.
+
+- [ ] **(f) Beri tahu pengusul dan pemilik pekerjaan terkait.** Pengusul: **doc-writer** —
+  penerima utama adalah komentar ringkasan di kartu `t_6cc84cef` (kanal resmi yang sudah
+  dipakai, §5). Pemilik pekerjaan terkait: satu komentar di **setiap kartu yang tercantum di
+  field (i)/§7**, dengan assignee kartu itu sebagai penerima. Kartu yang tercatat di board saat
+  checklist ini dipasang: `t_2e27c818` (arsitek — sudah `done` 22 Okt 2026 23:55 WIB, cukup
+  ditautkan), `t_40fc5231` (pm — keputusan operator soal artefak `dot-debug`, terpisah dari
+  D1–D3, jangan ditutup karena lisensi), dan kartu tindak lanjut dari butir (e)3 (doc-writer).
+  Jangan memberi tahu pihak yang tidak tercatat di field (i) — dan jangan mengarang penerima
+  baru demi memenuhi butir ini.
+
+### 6.2 Gerbang verifikasi — semua harus lulus sebelum item ditutup
+
+```bash
+bash scripts/license-status.sh          # exit 0, tanpa keluaran
+bash scripts/license-status.sh --quiet  # ringkas; dipakai job cron mingguan
+git ls-tree --name-only HEAD | grep -iE '^LICENSE$'   # harus mencetak LICENSE
+
+# Penanda kosong di §3 — logika yang sama dengan gerbang skrip: hanya baris tabel.
+# Prosa §1.1/§3 sengaja memuat penanda yang sama sebagai rujukan, jadi jangan dihitung.
+awk '/^## 3\./{f=1} /^## 4\./{f=0} f && /^\|/ { t += gsub(/_\(belum diisi\)_/, "&") } END { print t+0 }' \
+  docs/LICENSE-DECISION-RECORD.md      # harus 0
+```
+
+| # | Gerbang | Lulus bila |
+|---|---|---|
+| 1 | `scripts/license-status.sh` | `exit 0` dan senyap (LICENSE ada, NOTICE & PRD §10 sejalan, §3 terisi) |
+| 2 | Penanda placeholder §3 | `0` — tidak ada `_(belum diisi)_` |
+| 3 | Field `N/A` | setiap `N/A` punya alasan; tidak ada `N/A` di field 1, 5, 7, 8 |
+| 4 | Bukti keputusan | tautan field (8)/(h) bisa dibuka; lampiran ada di kartu |
+| 5 | Tautan pekerjaan | setiap baris §7 punya status baru + tautan; kartu tindak lanjut 10 berkas ada |
+| 6 | Konsistensi status | header, §1, REQUEST, STATUS-MAP §4d, `docs/README.md` butir 5 menyebut status yang sama |
+
+Bila satu gerbang gagal, item **tidak** ditutup — perbaiki butir yang gagal, jangan menurunkan
+kriteria gerbangnya.
+
+### 6.3 Bila keputusan belum keluar (kondisi sekarang)
+
+Jangan jalankan §6.1. Yang dilakukan justru sebaliknya:
+
+1. Pastikan checklist §6.1 masih terpasang di kartu `t_6cc84cef` dan masih tertaut ke §6.0.
+2. Item tetap **BLOCKED**; catatan status §1 tidak diubah selain baris "Dicatat ulang".
+3. Jalankan cek otomatis `bash scripts/license-status.sh --quiet`; biarkan job cron
+   `3d4aef87edac` berjalan sesuai §5 (Senin 09:00 WIB, mulai 26 Okt 2026).
+4. Laporkan status apa adanya: "checklist penutupan terpasang, keputusan belum ada, item tetap
+   BLOCKED" — lengkap dengan keluaran gerbang §6.2 yang gagal. Jangan menutup item, jangan
+   mengisi §3 dengan tafsiran.
+
+### 6.4 Yang tidak boleh dilakukan
+
+| Anti-pola | Kenapa merusak |
+|---|---|
+| Menutup item karena kartu di-*unblock* tanpa teks | unblock tanpa teks bukan keputusan (§2); record jadi kosong tapi item tampak selesai |
+| Mengisi §3 dengan kesimpulan agen ("sepertinya Apache-2.0") | mengubah catatan menjadi keputusan; pihak berwenang tidak pernah memutuskan |
+| Memakai `N/A` untuk melewati gerbang | §3 terlihat terisi padahal field wajib tidak dijawab |
+| Membuat record baru di `docs/license-records/` untuk lisensi Dot. | dua sumber kebenaran untuk hal yang sama (§6.1 butir a1) |
+| Menutup item tanpa lampiran bukti | record tanpa bukti tidak bisa dipertahankan saat ditanya "dasar keputusannya apa" |
+| Mematikan cron `3d4aef87edac` sebelum keputusan **diterapkan** | pengingat hilang sebelum checklist 10 berkas selesai |
+| Menutup item tanpa kartu tindak lanjut 10 berkas | keputusan berhenti sebagai dokumen; `LICENSE`/`NOTICE`/PRD/plasmoid tetap bertentangan |
 
 ---
 
@@ -236,8 +376,8 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | Distribusi APK · F-Droid/Play · KDE Store · tag/`VERSION`/Release (S2) · merge yang menyentuh klaim lisensi (S1) | [`LICENSE-DECISION-REQUEST.md` §4](LICENSE-DECISION-REQUEST.md) | D1, D2, S1–S3 |
 | Pembukaan repo | **sudah terjadi** 18 Okt 2026 — bukan lagi pekerjaan yang ditahan ([`§2.2`](LICENSE-DECISION-REQUEST.md)) | — |
 | Aturan lisensi untuk dependensi baru + indeks dokumentasi | [`AGENTS.md`](../AGENTS.md) §Conventions, [`docs/README.md`](README.md) | D1 |
-| Kartu pelacak | `t_6cc84cef` (doc-writer) | — |
-| Kartu kembar | `t_2e27c818` (arsitek) | — |
+| Kartu pelacak | `t_6cc84cef` (doc-writer) — status `BLOCKED`, prosedur penutupan terpasang di §6 | — |
+| Kartu kembar | `t_2e27c818` (arsitek) — **`done`** 22 Okt 2026, 23:55 WIB | — |
 
 ---
 
@@ -250,6 +390,7 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | 22 Okt 2026 23:35 | commit ini | Amandemen butir #4 (S1–S4): "membuka repo" keluar dari daftar ditahan (sudah terjadi), penahanan dipersempit ke merge berkas klaim lisensi (S1), tag/`VERSION`/Release (S2), CI distribusi APK (S3). Premis D2 diperbaiki di §1, §3 field 7, format jawaban, §4, §4.1. Q12 ditambahkan ke §4. §7 diperbarui |
 | 23 Okt 2026 00:27 | commit ini | Template berdiri sendiri ditambahkan: `docs/templates/LICENSE-DECISION-RECORD.template.md` (v1.0, metadata + field a–i, tiap field dengan placeholder dan satu baris petunjuk). Catatan §3 diperbarui: template kini punya berkas, §3 tetap formulir kanonik untuk lisensi Dot. |
 | 23 Okt 2026 00:36 | commit ini | Mekanisme follow-up §5 dilengkapi (kartu `t_f62a7c52`): tanggal follow-up pertama 26 Okt 2026, PIC & kanal diisi usulan default + `TODO` konfirmasi, baris "Yang diperbarui setiap follow-up" dan "Eskalasi bila tidak ada respons" (4 minggu). §1 dan tabel ringkasan atas diselaraskan; log §5.1 ditambah satu baris |
+| 23 Okt 2026 00:45 | commit ini | **§6 diganti prosedur penutupan** (kartu `t_cecf5a53`): §6.0 memverifikasi tiga artefak prasyarat (template v1.0, daftar pertanyaan Q1–Q12, mekanisme follow-up + cron `3d4aef87edac`) dan tautannya; §6.1 checklist (a)–(f) — record dari template, aturan tiga keadaan field (`terisi` / `N/A — alasan` / `belum diputuskan`) + tabel padanan field a–i ↔ §3 1–10, lampiran bukti, `BLOCKED`→`RESOLVED` + tanggal, tautan ke pekerjaan diblokir, notifikasi pengusul & pemilik; §6.2 enam gerbang verifikasi; §6.3 prosedur bila keputusan belum keluar; §6.4 anti-pola. Diperbaiki juga: field 2 §3 (`Q2–Q8` → `Q2–Q12`, id dipetakan), status kartu kembar `t_2e27c818` (§1, §7) yang sudah `done` 22 Okt 2026 23:55 WIB. **Keputusan belum ada — item tetap BLOCKED** |
 
 ---
 

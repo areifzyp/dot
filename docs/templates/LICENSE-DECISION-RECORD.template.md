@@ -120,6 +120,9 @@ _(belum diisi)_ — tautan: ......
 
 ## Setelah record terisi
 
+Checklist penutupan lengkap (a–f, termasuk bukti keputusan, status `RESOLVED`, tautan ke
+pekerjaan diblokir, dan notifikasi pemilik): [`../LICENSE-DECISION-RECORD.md` §6](../LICENSE-DECISION-RECORD.md#6-prosedur-penutupan--checklist-af).
+
 1. Ganti semua `_(belum diisi)_` — record dengan penanda tersisa dianggap **belum diputuskan**.
 2. Tautkan record ini dari setiap item di field (i), lalu perbarui status item tersebut.
 3. Bila record menyangkut lisensi Dot. sendiri: jalankan `bash scripts/license-status.sh`
