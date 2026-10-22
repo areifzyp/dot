@@ -137,9 +137,17 @@ Kegagalan yang dicegah bukan "widget berhenti" — melainkan **widget menampilka
 | **Pemilik** | **Keputusan D1–D3: pemilik proyek + tim hukum/kepatuhan.** Pelaksanaan checklist §7 `LICENSE-DECISION-REQUEST.md` setelah keputusan: arsitek + doc-writer. |
 | **Kriteria penerimaan** | (1) Formulir jawaban (REQUEST §0 / RECORD §3) terisi tertulis — D1–D3 minimal; "belum diputuskan" adalah jawaban sah. (2) Satu sumber kebenaran lisensi ditunjuk dan `LICENSE`/`NOTICE`/PRD §10/`plasma/*/metadata.json` diselaraskan. (3) `scripts/license-status.sh` keluar senyap (exit 0). |
 
-> **Yang ditahan sampai keputusan** (REQUEST §4): pembuatan `LICENSE`, pembukaan repo, pembagian APK, pengajuan F-Droid/Play Store, publikasi plasmoid ke KDE Store, penulisan ulang teks lisensi di Tentang Aplikasi (SET-2). Pengembangan kode, tes, CI, dan dokumentasi **tidak** ditahan.
+> **Yang ditahan sampai keputusan** (REQUEST §4 + keputusan PM 22 Okt 2026, S1–S3):
 >
-> **Catatan untuk PM (rapat 22 Oktober 2026, tindak lanjut #4):** rapat memutuskan "tidak merge/main CI sampai ada keputusan lisensi" (pengusul: doc-writer). Dokumen permintaan §4 mempersempit penahanan ke aktivitas rilis/distribusi dengan alasan kode, tes, dan CI tidak bergantung pada lisensi. Kedua ruang lingkup ini belum diselaraskan — butuh konfirmasi PM mana yang berlaku: blokir semua merge ke `main`, atau hanya tahan daftar di atas. Patut diperhatikan: branch `feat/snapshot-gate` dan `fix/gradle-version-ssot` sedang berjalan dengan asumsi lingkup §4.
+> - **S1 — merge ke `main` yang menyentuh klaim lisensi ditahan:** `LICENSE`, `NOTICE`, `SettingsScreen.kt:140`, label lisensi di `strings.xml`, field `License` di `plasma/*/metadata.json`, PRD §10/§16.4, metadata F-Droid/fastlane.
+> - **S2 — rilis ditahan:** tag, perubahan `VERSION` (kini `0.5.0`), GitHub Release, pembagian APK, pengajuan F-Droid/Play Store, publikasi plasmoid ke KDE Store, penulisan ulang teks lisensi di Tentang Aplikasi (SET-2), pembuatan `LICENSE`.
+> - **S3 — CI `main` tidak boleh mendistribusikan APK:** step `Upload debug APK` (`actions/upload-artifact@v4`) sudah dicabut dari `.github/workflows/ci.yml` — di repo publik langkah itu mendistribusikan APK pada setiap push ke `main` *dan* setiap PR. `assembleDebug` tetap jalan sebagai bukti build.
+>
+> Pengembangan kode, tes, CI, dan dokumentasi **tidak** ditahan.
+>
+> **Repo sudah publik sejak 18 Oktober 2026** (`api.github.com/repos/areifzyp/dot` → `private:false`; `NOTICE` → 200, `LICENSE` → 404 — klaim Apache-2.0 sudah terlihat publik tanpa berkas `LICENSE`). Karena eksposur tidak bisa ditarik kembali dengan menahan merge, dan risiko bersumber dari klaim (bukan dari kode fitur), blokir semua merge ke `main` tidak menahan risiko sebenarnya.
+>
+> **Keputusan PM (22 Okt 2026) — amandemen butir #4 rapat:** penahanan "tidak merge ke main" dipersempit menjadi penahanan aktivitas rilis/distribusi + merge yang menyentuh klaim lisensi (REQUEST §4, S1–S3). Alasan: repo sudah publik sejak 18 Okt 2026 (`private:false`, `NOTICE` 200, `LICENSE` 404), sehingga blokir merge tidak menahan eksposur; risiko bersumber dari klaim, bukan dari kode fitur. Wewenang membalik: operator.
 
 ---
 
