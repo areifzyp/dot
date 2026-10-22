@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget Teks — PRD §6.11 TXT-2: font Doto, tema gelap default -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text_widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF000000"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/text_widget_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:fontFamily="@font/doto"
+        android:textColor="#FFFFFFFF"
+        android:textSize="18sp"
+        android:maxLines="4"
+        android:ellipsize="end"
+        android:text="Dot." />
+
+</FrameLayout>
