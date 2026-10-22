@@ -104,9 +104,11 @@ selama penanda itu masih ada, `scripts/license-status.sh` menganggap keputusan b
 tercatat.
 
 > **Metadata template** — versi `1.0` · dibuat 22 Oktober 2026 · pemilik template: doc-writer
-> (pengusul) · pemilik keputusan: tim hukum/kepatuhan + pemilik proyek. Template ini tidak
-> punya berkas terpisah: §3 **adalah** templatenya, dan record terisi menggantikan isi sel,
-> bukan membuat berkas baru.
+> (pengusul) · pemilik keputusan: tim hukum/kepatuhan + pemilik proyek. Template siap pakai ada di
+> [`templates/LICENSE-DECISION-RECORD.template.md`](templates/LICENSE-DECISION-RECORD.template.md)
+> (v1.0, field a–i + petunjuk pengisian) — dipakai bila keputusan menyangkut komponen lain. Untuk
+> lisensi Dot. sendiri, §3 di bawah **adalah** formulir kanoniknya, dan record terisi menggantikan
+> isi sel, bukan membuat berkas baru.
 
 | # | Field | Isi |
 |---|---|---|
@@ -241,6 +243,7 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | 22 Okt 2026 22:47 | commit yang menambahkan berkas ini — lihat `git log --follow -- docs/LICENSE-DECISION-RECORD.md` | Berkas dibuat: catatan status BLOCKED, formulir §3 (kosong), daftar pertanyaan §4, mekanisme cek §5, langkah penutupan §6, tautan pekerjaan diblokir §7. Disertai `scripts/license-status.sh` |
 | 22 Okt 2026 23:26 | commit ini | Gerbang §3 diperbaiki: `grep -c` (menghitung **baris** di seluruh berkas, termasuk prosa §1.1 dan instruksi §3) diganti hitungan penanda **di dalam tabel §3 saja** via `awk` + `gsub` → `11 penanda` (10 field; baris "Keputusan per ID" memuat D1/D2/D3). Uji dua arah: §3 kosong → `exit 1` + problem "formulir §3 … belum diisi"; salinan dengan §3 terisi + `LICENSE` + `NOTICE`/PRD §10/plasmoid selaras → `exit 0`. Baris 6 §1.1 kini memakai perintah gerbang, bukan `grep -c` |
 | 22 Okt 2026 23:35 | commit ini | Amandemen butir #4 (S1–S4): "membuka repo" keluar dari daftar ditahan (sudah terjadi), penahanan dipersempit ke merge berkas klaim lisensi (S1), tag/`VERSION`/Release (S2), CI distribusi APK (S3). Premis D2 diperbaiki di §1, §3 field 7, format jawaban, §4, §4.1. Q12 ditambahkan ke §4. §7 diperbarui |
+| 23 Okt 2026 00:27 | commit ini | Template berdiri sendiri ditambahkan: `docs/templates/LICENSE-DECISION-RECORD.template.md` (v1.0, metadata + field a–i, tiap field dengan placeholder dan satu baris petunjuk). Catatan §3 diperbarui: template kini punya berkas, §3 tetap formulir kanonik untuk lisensi Dot. |
 
 ---
 
