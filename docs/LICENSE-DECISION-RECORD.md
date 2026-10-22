@@ -36,6 +36,7 @@ masih kosong:
 | Alasan | Repo menyatakan lisensi di tiga tempat yang saling bertentangan (PRD §10 `GPL-2.0-or-later`, `NOTICE` `Apache-2.0`, 6 × `metadata.json` `MIT`) dan tidak punya berkas `LICENSE`. Memilih salah satunya adalah keputusan pemilik atas saran hukum, bukan pekerjaan dokumentasi. |
 | Dicatat pertama | 22 Oktober 2026, 20:33 WIB (catatan status pertama di kartu `t_6cc84cef`) |
 | Dicatat ulang | 22 Oktober 2026, 22:47 WIB (berkas ini dibuat; keputusan tetap belum ada) |
+| Diamandemen | 22 Oktober 2026, 23:35 WIB — lingkup penahanan dipersempit (S1–S4), premis "repo private" dicabut karena repo sudah publik sejak 18 Okt 2026 |
 | Pengusul | doc-writer |
 | Penanggung jawab follow-up | `> TODO:` belum ada orang yang ditunjuk — lihat §5 |
 | Kanal komunikasi ke tim hukum | `> TODO:` belum ditentukan (email / Slack / tiket) — lihat §5 |
@@ -64,9 +65,14 @@ tanpa teks **bukan** keputusan (lihat §2).
 
 | Ditahan sampai keputusan keluar | Tetap berjalan |
 |---|---|
-| Membuat `LICENSE`; menyamakan `NOTICE`; membuka repo; membagikan APK; pengajuan F-Droid/Play; publikasi plasmoid ke KDE Store; teks lisensi di Tentang Aplikasi | Pengembangan kode, tes, CI, dokumentasi |
+| Membuat `LICENSE`; merge ke `main` yang menyentuh klaim lisensi (**S1**); tag / `VERSION` / GitHub Release (**S2**); CI `main` mendistribusikan APK (**S3**); membagikan APK; pengajuan F-Droid/Play; publikasi plasmoid ke KDE Store; teks lisensi di Tentang Aplikasi | Pengembangan kode, tes, CI non-distribusi, dokumentasi, merge yang tidak menyentuh klaim lisensi |
 
 Rincian alasan per aktivitas: [`LICENSE-DECISION-REQUEST.md` §4](LICENSE-DECISION-REQUEST.md).
+
+> **Amandemen 22 Okt 2026 (S1–S4):** repo sudah publik sejak 18 Okt 2026 (`private:false`,
+> `NOTICE` 200, `LICENSE` 404), jadi "membuka repo" bukan lagi aktivitas yang ditahan —
+> eksposur sudah berjalan. Blokir merge dipersempit ke berkas yang memuat klaim lisensi.
+> Teks keputusan PM ditempel verbatim di [`LICENSE-DECISION-REQUEST.md` §4](LICENSE-DECISION-REQUEST.md).
 
 ---
 
@@ -110,7 +116,7 @@ tercatat.
 | 4 | **Nama/narahubung penanggung jawab di tim tersebut** | _(belum diisi)_ — nama + jabatan + kanal. Bila proyek tidak punya tim hukum formal, tulis "pemilik proyek (nama)" dan jangan mengarang pihak lain |
 | 5 | **Keputusan akhir** | _(belum diisi)_ — `disetujui` / `ditolak` / `bersyarat` |
 | 6 | **Syarat & batasan** | _(belum diisi)_ — mis. kewajiban atribusi, larangan redistribusi bentuk tertentu, berkas yang wajib diubah, tenggat |
-| 7 | **Tanggal berlaku** | _(belum diisi)_ — sekarang / saat repo dibuka / saat APK pertama dibagikan (D2) |
+| 7 | **Tanggal berlaku** | _(belum diisi)_ — sekarang / saat APK pertama dibagikan (D2). Opsi "saat repo dibuka" gugur: repo sudah publik 18 Okt 2026 |
 | 8 | **Lampiran/referensi** | _(belum diisi)_ — tautan komentar kartu, email, commit yang menerapkan keputusan |
 
 Field pendukung (wajib untuk kelengkapan, bukan untuk membuka blokir):
@@ -124,7 +130,7 @@ Format jawaban terpendek yang tetap sah (boleh ditempel sebagai komentar kartu):
 
 ```text
 D1 = ......   (GPL-2.0-or-later | Apache-2.0 | MIT | lain: ......)
-D2 = ......   (sekarang | saat repo dibuka | saat APK pertama dibagikan)
+D2 = ......   (sekarang | saat APK pertama dibagikan)
 D3 = ......   (plasmoid tetap MIT | disamakan dengan D1)
 Keputusan akhir : disetujui | ditolak | bersyarat
 Diputuskan oleh : ...... (nama, jabatan/tim)
@@ -142,7 +148,7 @@ Daftar kanonik ada di [`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUE
 | ID | Pertanyaan | Kalau tidak dijawab, yang jadi ambigu | Jawaban |
 |---|---|---|---|
 | **D1** | Lisensi apa yang berlaku untuk kode Dot. sendiri (Android + Plasma)? | Tidak ada isi sah untuk `LICENSE`; `NOTICE`/PRD/plasmoid tetap bertentangan | _(menunggu jawaban)_ |
-| **D2** | Ditetapkan sekarang, atau ditunda sampai repo dibuka / APK pertama dibagikan? | Tidak jelas kapan kewajiban lisensi mulai berlaku; PRD §10 saat ini menjanjikan "nanti" | _(menunggu jawaban)_ |
+| **D2** | Ditetapkan sekarang, atau ditunda sampai APK pertama dibagikan? (opsi "saat repo dibuka" gugur — repo sudah publik 18 Okt 2026) | Tidak jelas kapan kewajiban lisensi mulai berlaku; pemicu "saat repo dibuka" di PRD §10 sudah lewat tanpa keputusan | _(menunggu jawaban)_ |
 | **D3** | Enam plasmoid Plasma tetap `MIT`, atau disamakan dengan D1? | Satu repo dua lisensi tanpa berkas yang menjelaskan pembagiannya | _(menunggu jawaban)_ |
 | **Q2** | Bila `GPL-2.0-or-later`: apakah "or later" harus eksplisit di `LICENSE` dan/atau header berkas sumber? Cukup satu `LICENSE` di akar? | Bentuk penerapan bisa salah meski pilihan lisensinya benar | _(menunggu jawaban)_ |
 | **Q3** | Apakah 101 dependensi Apache-2.0 di APK menimbulkan kewajiban tambahan (mis. teks lisensi pihak ketiga di dalam aplikasi)? Apakah `NOTICE` sekarang sudah memenuhi itu? | Kewajiban atribusi/redistribusi bisa terlewat saat APK dibagikan | _(menunggu jawaban)_ |
@@ -154,6 +160,7 @@ Daftar kanonik ada di [`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUE
 | **Q9** | Cakupan penggunaan: internal, komersial (berbayar/beriklan), redistribusi APK di toko — mana yang diizinkan, mana yang tidak? | Rilis bisa melanggar batas yang tidak pernah ditulis | _(menunggu jawaban)_ |
 | **Q10** | Bolehkah pihak lain memodifikasi & mendistribusikan ulang kode (fork, build komunitas)? Sublicensing? Source wajib disertakan saat APK dibagikan? | Kewajiban redistribusi source bisa terlewat saat APK keluar | _(menunggu jawaban)_ |
 | **Q11** | Bentuk bukti keputusan yang sah: komentar kartu, email, atau commit `LICENSE`? Siapa yang berwenang menyatakan final? | Item bisa ditutup dengan "bukti" yang tidak sah | _(menunggu jawaban)_ |
+| **Q12** | Apakah penanda "lisensi belum final" di `README`/`NOTICE` mengurangi risiko atau justru menambah klaim lisensi baru? (`NOTICE` = teks yang dibuka tombol "Lisensi" di aplikasi) | Penanda bisa dibaca sebagai pernyataan lisensi tambahan; perubahan `NOTICE` ditahan S1 sampai Q12 dijawab | _(menunggu jawaban)_ |
 
 ### 4.1 Uji ambiguitas sebelum menerima jawaban
 
@@ -161,7 +168,7 @@ Jawaban hanya dipakai bila keempat hal ini bisa dijawab "ya" dari teksnya:
 
 - [ ] Menyebut **ID lisensi yang tepat** (mis. `GPL-2.0-or-later`, bukan "GPL" atau "open source").
 - [ ] Menyebut **cakupan**: `android/`, `plasma/`, font, dan berkas tes — mana yang ikut.
-- [ ] Menyebut **waktu berlaku**: sekarang / saat repo dibuka / saat APK dibagikan.
+- [ ] Menyebut **waktu berlaku**: sekarang / saat APK dibagikan (opsi "saat repo dibuka" sudah gugur — repo publik 18 Okt 2026).
 - [ ] Menyebut **nasib tiga sumber yang sekarang bertentangan**: `NOTICE`, PRD §10, 6 × `metadata.json`.
 
 Bila ada yang tidak terjawab, jangan isi §3 — tanyakan ulang butir itu saja.
@@ -219,7 +226,8 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | Teks lisensi yang dilihat pengguna | [`NOTICE:8-12`](../NOTICE), [`SettingsScreen.kt:137`](../android/app/src/main/java/io/github/areifzyp/dot/settings/SettingsScreen.kt), [`strings.xml:86`](../android/app/src/main/res/values/strings.xml) | D1 |
 | Klaim lisensi di PRD | [`PRD-Dot.md:451`](PRD-Dot.md) §10, [`:568`](PRD-Dot.md) §16.4, [`:611`](PRD-Dot.md) kriteria Fase 4 | D1, D2 |
 | Metadata 6 plasmoid | [`plasma/*/metadata.json:14`](../plasma) | D3 |
-| Pembukaan repo · distribusi APK · F-Droid/Play · KDE Store | [`LICENSE-DECISION-REQUEST.md` §4](LICENSE-DECISION-REQUEST.md) | D1, D2 |
+| Distribusi APK · F-Droid/Play · KDE Store · tag/`VERSION`/Release (S2) · merge yang menyentuh klaim lisensi (S1) | [`LICENSE-DECISION-REQUEST.md` §4](LICENSE-DECISION-REQUEST.md) | D1, D2, S1–S3 |
+| Pembukaan repo | **sudah terjadi** 18 Okt 2026 — bukan lagi pekerjaan yang ditahan ([`§2.2`](LICENSE-DECISION-REQUEST.md)) | — |
 | Aturan lisensi untuk dependensi baru + indeks dokumentasi | [`AGENTS.md`](../AGENTS.md) §Conventions, [`docs/README.md`](README.md) | D1 |
 | Kartu pelacak | `t_6cc84cef` (doc-writer) | — |
 | Kartu kembar | `t_2e27c818` (arsitek) | — |
@@ -231,6 +239,7 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | Waktu (WIB) | Commit | Perubahan |
 |---|---|---|
 | 22 Okt 2026 22:47 | commit yang menambahkan berkas ini — lihat `git log --follow -- docs/LICENSE-DECISION-RECORD.md` | Berkas dibuat: catatan status BLOCKED, formulir §3 (kosong), daftar pertanyaan §4, mekanisme cek §5, langkah penutupan §6, tautan pekerjaan diblokir §7. Disertai `scripts/license-status.sh` |
+| 22 Okt 2026 23:35 | commit ini | Amandemen butir #4 (S1–S4): "membuka repo" keluar dari daftar ditahan (sudah terjadi), penahanan dipersempit ke merge berkas klaim lisensi (S1), tag/`VERSION`/Release (S2), CI distribusi APK (S3). Premis D2 diperbaiki di §1, §3 field 7, format jawaban, §4, §4.1. Q12 ditambahkan ke §4. §7 diperbarui |
 | 22 Okt 2026 23:26 | commit ini | Gerbang §3 diperbaiki: `grep -c` (menghitung **baris** di seluruh berkas, termasuk prosa §1.1 dan instruksi §3) diganti hitungan penanda **di dalam tabel §3 saja** via `awk` + `gsub` → `11 penanda` (10 field; baris "Keputusan per ID" memuat D1/D2/D3). Uji dua arah: §3 kosong → `exit 1` + problem "formulir §3 … belum diisi"; salinan dengan §3 terisi + `LICENSE` + `NOTICE`/PRD §10/plasmoid selaras → `exit 0`. Baris 6 §1.1 kini memakai perintah gerbang, bukan `grep -c` |
 
 ---

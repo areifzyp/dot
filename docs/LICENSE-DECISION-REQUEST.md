@@ -1,8 +1,9 @@
 # Keputusan Lisensi Dot. — Permintaan untuk Tim Hukum/Kepatuhan
 
-**Status:** MENUNGGU KEPUTUSAN · **Memblokir rilis:** ya (lihat §4) ·
+**Status:** MENUNGGU KEPUTUSAN · **Memblokir rilis/distribusi:** ya — lingkup dipersempit
+22 Oktober 2026, lihat §4 (S1–S4) ·
 **Terverifikasi pada commit:** `27d5917` · **Pemeriksaan ulang terakhir:** 22 Oktober 2026,
-22:41 WIB · **Riwayat pemeriksaan:** §11 ·
+23:35 WIB · **Riwayat pemeriksaan:** §11 ·
 **Penyusun:** doc-writer · **Pemberi keputusan:** tim hukum/kepatuhan + pemilik proyek ·
 **Catatan & formulir keputusan:** [`LICENSE-DECISION-RECORD.md`](LICENSE-DECISION-RECORD.md)
 
@@ -23,7 +24,7 @@ di kartu maupun dengan menyunting dokumen ini:
 
 ```text
 D1 = ............   (GPL-2.0-or-later | Apache-2.0 | MIT | lain: ........)
-D2 = ............   (sekarang | saat repo dibuka | saat APK pertama dibagikan)
+D2 = ............   (sekarang | saat APK pertama dibagikan)
 D3 = ............   (plasmoid tetap MIT | disamakan dengan D1)
 Catatan/persetujuan: nama + tanggal
 ```
@@ -44,11 +45,16 @@ exit `1`.
 | ID | Pertanyaan | Pilihan yang tersedia | Diputuskan oleh |
 |---|---|---|---|
 | **D1** | Lisensi apa yang berlaku untuk kode Dot. sendiri (Android + Plasma)? | `GPL-2.0-or-later` (PRD §10) · `Apache-2.0` (NOTICE) · `MIT` (metadata plasmoid) · lain | hukum/kepatuhan + pemilik |
-| **D2** | Apakah lisensi itu ditetapkan **sekarang** (repo private) atau ditunda sampai repo dibuka / APK dibagikan? | sekarang · saat pembukaan repo · saat APK pertama dibagikan | pemilik, atas saran hukum |
+| **D2** | Apakah lisensi itu ditetapkan **sekarang** atau ditunda sampai APK pertama dibagikan? | sekarang · saat APK pertama dibagikan · belum diputuskan | pemilik, atas saran hukum |
 | **D3** | Apakah enam plasmoid Plasma tetap `MIT` di `metadata.json`, atau disamakan dengan lisensi proyek utama? | samakan · pertahankan MIT | pemilik, atas saran hukum |
 
 Selama D1–D3 belum dijawab, pekerjaan di §4 ditahan. Pekerjaan lain (kode, tes, CI,
 dokumentasi) **tidak** ditahan.
+
+> **Premis D2 berubah (22 Okt 2026).** Opsi "saat repo dibuka" tidak lagi tersedia: repo
+> sudah publik sejak 18 Oktober 2026 (§2.2), jadi pemicu yang ditulis PRD §10 ("diterapkan
+> nanti saat repo dibuka atau APK dibagikan") **sudah lewat tanpa keputusan**. D2 tinggal
+> memilih: tetapkan sekarang, atau tunggu APK pertama dibagikan.
 
 ---
 
@@ -81,6 +87,24 @@ belum terjadi:
 3. **Plasma menyatakan MIT** sementara proyek utama diklaim GPL — satu repo, dua lisensi,
    tanpa berkas yang menjelaskan pembagiannya.
 4. **Tidak ada `LICENSE`** yang bisa dirujuk teks mana pun.
+
+### 2.2 Eksposur yang sudah berjalan (diperiksa 22 Okt 2026, 23:35 WIB)
+
+Klaim lisensi **sudah publik**. Menahan merge tidak menariknya kembali — ini dasar amandemen §4.
+
+| Yang sudah terbuka | Bukti | Sejak |
+|---|---|---|
+| Repo publik | `curl -s https://api.github.com/repos/areifzyp/dot` → `"private": false`, `"visibility": "public"` | `created_at` `2026-10-18T21:22:52Z` |
+| `NOTICE` (klaim Apache-2.0) terbaca siapa pun | `curl -s -o /dev/null -w '%{http_code}' .../areifzyp/dot/main/NOTICE` → `200` | 18 Okt 2026 (klaim ikut terbuka saat repo publik) |
+| `LICENSE` tetap tidak ada | URL yang sama untuk `/main/LICENSE` → `404` | — |
+| APK debug artefak CI dapat diunduh | `GET /repos/areifzyp/dot/actions/artifacts` → `dot-debug`, 11.087.580 byte, dibuat `2026-10-22T15:18:38Z`, kedaluwarsa `2027-01-20T15:15:00Z` | 22 Okt 2026 22:18 WIB |
+| GitHub Release | `GET /repos/areifzyp/dot/releases` → `[]` (0 rilis) | belum pernah ada |
+| Tag | `GET /repos/areifzyp/dot/tags` → `v0.2.0` (tag tanpa aset) | sebelum amandemen |
+
+> **Batas kepastian:** API publik hanya membuktikan keadaan **sekarang** + `created_at`.
+> Tanggal repo berubah dari privat ke publik tidak dapat diaudit tanpa log admin; yang bisa
+> dikatakan: repo berstatus publik dan dibuat 18 Okt 2026. Bila ada bukti lain soal tanggal,
+> ganti baris ini beserta buktinya.
 
 ---
 
@@ -133,7 +157,7 @@ Artefak yang bukan Apache-2.0 dan karena itu perlu perhatian khusus:
 
 **141 artefak.** Tidak ikut ke APK release karena masuk konfigurasi `testImplementation`
 dan `androidTestImplementation` ([`build.gradle.kts:83-90`](../android/app/build.gradle.kts)),
-tetapi tetap tersebar bersama repo bila repo dibuka.
+tetapi tetap tersebar bersama repo — dan repo sudah publik sejak 18 Okt 2026 (§2.2).
 
 | Lisensi | Jumlah | Contoh |
 |---|---|---|
@@ -152,15 +176,36 @@ Catatan: tidak ada dependensi berlisensi GPL murni di kedua graf. Satu entri
 
 ## 4. Apa yang ditahan sampai ada keputusan
 
-| Aktivitas | Alasan ditahan | Status |
-|---|---|---|
-| Membuat berkas `LICENSE` | Isinya bergantung pada D1; salah pilih berarti teks hukum yang keliru | **ditahan** |
-| Membuka repo menjadi publik | Klaim lisensi harus sudah konsisten sebelum kode terlihat orang lain | **ditahan** |
-| Membagikan APK ke orang lain | Distribusi memicu kewajiban lisensi (PRD §10 sendiri menyebut momen ini) | **ditahan** |
-| Pengajuan ke F-Droid / Play Store | Keduanya meminta pernyataan lisensi yang konsisten dengan kode | **ditahan** |
-| Publikasi plasmoid ke KDE Store | `metadata.json` menyatakan MIT; harus cocok dengan keputusan D3 | **ditahan** |
-| Menulis ulang teks lisensi di Tentang Aplikasi (SET-2) | String dan URL tujuan mengikuti sumber kebenaran yang baru | **ditahan** |
-| Pengembangan kode, tes, CI, dokumentasi | Tidak bergantung pada lisensi | berjalan |
+**Lingkup yang berlaku: amandemen PM 22 Oktober 2026 (butir S4).** Versi sebelumnya menahan
+"tidak merge ke `main`" dan "membuka repo menjadi publik". Yang pertama dipersempit ke klaim
+lisensi, yang kedua sudah tidak relevan — lihat §2.2.
+
+| Aktivitas | Alasan ditahan | ID | Status |
+|---|---|---|---|
+| Membuat berkas `LICENSE` | Isinya bergantung pada D1; salah pilih berarti teks hukum yang keliru | D1 | **ditahan** |
+| Merge ke `main` yang **menyentuh klaim lisensi** — `NOTICE`, PRD §10/§16.4, `plasma/*/metadata.json`, teks/URL tombol Lisensi, `LICENSE` | Setiap perubahan di berkas itu adalah pernyataan lisensi baru yang langsung publik | **S1** | **ditahan** |
+| Tag, kenaikan `VERSION`, GitHub Release | Menandai rilis = mengumumkan versi yang klaim lisensinya belum final | **S2** | **ditahan** |
+| CI `main` mendistribusikan APK (`actions/upload-artifact`) | Artefak repo publik dapat diunduh akun GitHub mana pun; setiap push ke `main` dan setiap PR menghasilkan satu APK | **S3** | **ditahan** |
+| Membagikan APK ke orang lain (unduhan manual, chat, toko) | Distribusi memicu kewajiban lisensi (PRD §10 sendiri menyebut momen ini) | D1, D2 | **ditahan** |
+| Pengajuan ke F-Droid / Play Store | Keduanya meminta pernyataan lisensi yang konsisten dengan kode | D1 | **ditahan** |
+| Publikasi plasmoid ke KDE Store | `metadata.json` menyatakan MIT; harus cocok dengan keputusan D3 | D3 | **ditahan** |
+| Menulis ulang teks lisensi di Tentang Aplikasi (SET-2) | String dan URL tujuan mengikuti sumber kebenaran yang baru | D1 | **ditahan** |
+| Pengembangan kode, tes, CI non-distribusi, dokumentasi, dan merge yang tidak menyentuh klaim lisensi | Tidak bergantung pada lisensi | — | berjalan |
+
+**Tidak lagi ditahan — sudah terjadi:** membuka repo menjadi publik. Repo publik sejak
+18 Oktober 2026, `NOTICE` Apache-2.0 terbaca, `LICENSE` `404` (§2.2). Blokir merge tidak
+menahan eksposur itu; risiko bersumber dari **klaim**, bukan dari kode fitur.
+
+> **Keputusan PM (22 Okt 2026) — amandemen butir #4 rapat:** penahanan "tidak merge ke main"
+> dipersempit menjadi penahanan aktivitas rilis/distribusi + merge yang menyentuh klaim
+> lisensi (REQUEST §4, S1–S3). Alasan: repo sudah publik sejak 18 Okt 2026 (`private:false`,
+> `NOTICE` 200, `LICENSE` 404), sehingga blokir merge tidak menahan eksposur; risiko
+> bersumber dari klaim, bukan dari kode fitur. Wewenang membalik: operator.
+
+> **Sisa eksposur yang belum dicabut (S3):** mencabut step `Upload debug APK` hanya
+> menghentikan artefak **berikutnya**. Artefak `dot-debug` yang sudah ada (id `12437095872`,
+> kedaluwarsa 20 Jan 2027) tetap dapat diunduh sampai dihapus eksplisit:
+> `gh api -X DELETE repos/areifzyp/dot/actions/artifacts/12437095872`.
 
 ---
 
@@ -214,6 +259,12 @@ Jawaban tertulis atas pertanyaan berikut menutup kartu ini.
 11. **Q11 — bentuk bukti keputusan:** Apa bentuk bukti yang sah untuk menutup item ini:
     komentar di kartu `t_6cc84cef`, email, atau commit yang menerapkan `LICENSE`? Siapa
     yang berwenang menyatakan keputusan itu final?
+12. **Q12 — penanda "lisensi belum final":** Apakah menambahkan penanda "lisensi belum final"
+    di `README`/`NOTICE` **mengurangi** risiko (pembaca tahu klaim belum final) atau justru
+    **menambah** klaim baru (pernyataan lisensi tambahan di berkas yang dibaca publik)?
+    Konteks: `NOTICE` adalah berkas yang dibuka tombol "Lisensi" di aplikasi (fakta #3), jadi
+    setiap penanda di sana adalah teks yang dilihat pengguna, bukan catatan internal.
+    Perubahan itu sendiri **ditahan** oleh S1 sampai Q12 dijawab.
 
 ---
 
@@ -225,7 +276,7 @@ Checklist ini yang membuat keputusan benar-benar berlaku. Belum dikerjakan — m
 |---|---|
 | `LICENSE` (baru, akar repo) | Teks lisensi penuh sesuai D1 |
 | [`NOTICE:8-12`](../NOTICE) | Samakan dengan D1 |
-| [`docs/PRD-Dot.md:451`](PRD-Dot.md) | §10 butir lisensi: hapus "keputusan pemilik"/"diterapkan nanti" bila D2 = sekarang |
+| [`docs/PRD-Dot.md:451`](PRD-Dot.md) | §10 butir lisensi: hapus "keputusan pemilik"/"diterapkan nanti" bila D2 = sekarang. **Premis baris ini sudah salah**: teks PRD masih menulis "tidak diperlukan selama repo private" dan "dicek sebelum repo dibuka", padahal repo sudah publik 18 Okt 2026. **Ditahan S1** sampai D1/D2 keluar |
 | [`docs/PRD-Dot.md:568`](PRD-Dot.md) | §16.4: tutup pertanyaan terbuka |
 | [`docs/PRD-Dot.md:611`](PRD-Dot.md) | Kriteria selesai Fase 4: ganti "sudah dicek" dengan bukti |
 | [`SettingsScreen.kt:137`](../android/app/src/main/java/io/github/areifzyp/dot/settings/SettingsScreen.kt) | URL tombol Lisensi: arahkan ke `LICENSE` bila berkas itu ada |
@@ -281,6 +332,13 @@ JAVA_HOME=~/jdk/jdk-21.0.12.1+1 ./gradlew --offline :app:dependencies \
   --configuration releaseRuntimeClasspath
 JAVA_HOME=~/jdk/jdk-21.0.12.1+1 ./gradlew --offline :app:dependencies \
   --configuration releaseUnitTestRuntimeClasspath
+
+# 6. Status publik repo + eksposur APK (§2.2)
+curl -s https://api.github.com/repos/areifzyp/dot | grep -E '"(private|visibility|created_at)"'
+curl -s -o /dev/null -w '%{http_code}\n' https://raw.githubusercontent.com/areifzyp/dot/main/NOTICE
+curl -s -o /dev/null -w '%{http_code}\n' https://raw.githubusercontent.com/areifzyp/dot/main/LICENSE
+curl -s https://api.github.com/repos/areifzyp/dot/actions/artifacts | grep -E '"(name|expires_at)"'
+curl -s https://api.github.com/repos/areifzyp/dot/releases
 ```
 
 ---
@@ -301,6 +359,11 @@ Ditandai jujur agar tidak dianggap sudah beres:
 - **Tidak ada pemeriksaan lisensi di CI** (fakta #8). Menambahkannya masuk akal setelah
   D1 keluar, karena alat pemeriksa perlu dikonfigurasi dengan daftar lisensi yang
   diizinkan.
+- **Artefak APK yang sudah terunggah tidak hilang** saat step CI dicabut (S3): artefak
+  `dot-debug` id `12437095872` tetap dapat diunduh sampai dihapus eksplisit atau kedaluwarsa
+  20 Jan 2027 (§2.2).
+- **Tanggal repo menjadi publik tidak dapat diaudit** dari API publik; yang terbukti hanya
+  status publik sekarang dan `created_at` 18 Okt 2026 (§2.2).
 
 ---
 
@@ -314,6 +377,7 @@ ini sudah kedaluwarsa atau sudah terjawab.
 |---|---|---|
 | 22 Okt 2026 ~20:35 | `e1c7f9c` | Paket keputusan disusun; inventaris dependensi dibuat dari graf resolusi Gradle |
 | 22 Okt 2026 22:41 | `27d5917` | Semua fakta §2 diperiksa ulang dengan perintah §9 — hasil identik dengan `e1c7f9c`. Berkas build tidak berubah, jadi §3.1–§3.2 tetap berlaku. **D1–D3 belum terjawab.** |
+| 22 Okt 2026 23:35 | commit ini | **Amandemen butir #4 rapat (S1–S4) diterapkan.** §4 ditulis ulang: "membuka repo" dihapus dari daftar ditahan (sudah terjadi, §2.2), penahanan merge dipersempit ke berkas klaim lisensi (S1), tag/VERSION/Release (S2), CI distribusi APK (S3); teks keputusan PM ditempel verbatim. Premis D2 diperbaiki (opsi "saat repo dibuka" gugur). Q12 (penanda "lisensi belum final") ditambahkan ke §6. §2.2 baru: eksposur publik + artefak APK `dot-debug` yang masih dapat diunduh. §9 perintah verifikasi #6, §10 dua celah baru. **D1–D3 tetap belum terjawab.** |
 
 ---
 
