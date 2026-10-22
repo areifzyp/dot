@@ -145,6 +145,8 @@ Kegagalan yang dicegah bukan "widget berhenti" — melainkan **widget menampilka
 >
 > Pengembangan kode, tes, CI, dan dokumentasi **tidak** ditahan.
 >
+> Tabel eksposur publik (apa yang sudah terlihat, termasuk artefak `dot-debug` per run CI) ada di `LICENSE-DECISION-REQUEST.md` §2.2. Perlu dicatat: **Q12** (penanda "lisensi belum final" di README/NOTICE) belum dijawab — sampai dijawab, S1 menahan juga perubahan `NOTICE`, jadi penanda itu jangan ditulis dulu.
+>
 > **Repo sudah publik sejak 18 Oktober 2026** (`api.github.com/repos/areifzyp/dot` → `private:false`; `NOTICE` → 200, `LICENSE` → 404 — klaim Apache-2.0 sudah terlihat publik tanpa berkas `LICENSE`). Karena eksposur tidak bisa ditarik kembali dengan menahan merge, dan risiko bersumber dari klaim (bukan dari kode fitur), blokir semua merge ke `main` tidak menahan risiko sebenarnya.
 >
 > **Keputusan PM (22 Okt 2026) — amandemen butir #4 rapat:** penahanan "tidak merge ke main" dipersempit menjadi penahanan aktivitas rilis/distribusi + merge yang menyentuh klaim lisensi (REQUEST §4, S1–S3). Alasan: repo sudah publik sejak 18 Okt 2026 (`private:false`, `NOTICE` 200, `LICENSE` 404), sehingga blokir merge tidak menahan eksposur; risiko bersumber dari klaim, bukan dari kode fitur. Wewenang membalik: operator.
