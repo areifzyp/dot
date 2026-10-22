@@ -3,6 +3,8 @@ package io.github.areifzyp.dot.weather
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.glance.appwidget.action.actionRunCallback
+import androidx.glance.action.clickable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -12,7 +14,9 @@ import androidx.glance.LocalContext
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
+import io.github.areifzyp.dot.widget.appWidgetIdOrNull
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
@@ -46,7 +50,7 @@ import java.time.format.DateTimeFormatter
 class WeatherWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val widgetId = (id as? androidx.glance.appwidget.AppWidgetId)?.appWidgetId
+        val widgetId = id.appWidgetIdOrNull()
             ?: AppWidgetManager.INVALID_APPWIDGET_ID
         provideContent {
             WeatherWidgetContent(widgetId = widgetId)
@@ -74,8 +78,9 @@ private fun WeatherWidgetContent(widgetId: Int) {
     Column(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(WtrBackground)
-            .padding(12.dp),
+            .cornerRadius(16.dp).background(WtrBackground)
+            .padding(12.dp)
+            .clickable(actionRunCallback<WeatherRefreshAction>()),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (cityName.isEmpty()) {

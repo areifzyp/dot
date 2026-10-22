@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import io.github.areifzyp.dot.R
 import io.github.areifzyp.dot.ui.theme.DotTheme
+import io.github.areifzyp.dot.widget.appWidgetIdOrNull
+import io.github.areifzyp.dot.widget.toGlanceAppWidgetId
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -96,8 +98,8 @@ class WeatherConfigActivity : ComponentActivity() {
             }
             val manager = GlanceAppWidgetManager(this@WeatherConfigActivity)
             manager.getGlanceIds(WeatherWidget::class.java)
-                .filter { (it as? androidx.glance.appwidget.AppWidgetId)?.appWidgetId == widgetId }
-                .forEach { WeatherWidget().update(this@WeatherConfigActivity, it) }
+                .filter { it.appWidgetIdOrNull() == widgetId }
+                .forEach { WeatherWidget().update(this@WeatherConfigActivity, widgetId.toGlanceAppWidgetId()) }
             setResult(
                 RESULT_OK,
                 android.content.Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId),
