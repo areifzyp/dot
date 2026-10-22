@@ -8,6 +8,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.CoroutineWorker
+import io.github.areifzyp.dot.style.DotStyleSettings
 import java.time.Duration
 
 /**
@@ -39,7 +40,8 @@ class DeviceStatsWorker(
         private const val WORK_NAME = "dot-device-stats-refresh"
 
         fun schedule(context: Context) {
-            val request = PeriodicWorkRequestBuilder<DeviceStatsWorker>(Duration.ofMinutes(15))
+            val minutes = DotStyleSettings.getUpdateIntervalMinutes(context).coerceAtLeast(15)
+            val request = PeriodicWorkRequestBuilder<DeviceStatsWorker>(Duration.ofMinutes(minutes.toLong()))
                 .setConstraints(Constraints.Builder().build())
                 .build()
             WorkManager.getInstance(context).enqueueUniquePeriodicWork(

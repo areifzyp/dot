@@ -43,7 +43,11 @@ import io.github.areifzyp.dot.R
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GalleryScreen(onBack: (() -> Unit)? = null, onStyleClick: (() -> Unit)? = null) {
+fun GalleryScreen(
+    onBack: (() -> Unit)? = null,
+    onStyleClick: (() -> Unit)? = null,
+    onSettingsClick: (() -> Unit)? = null,
+) {
     var selected by remember { mutableStateOf<WidgetEntry?>(null) }
     val detail = selected
     if (detail == null) {
@@ -59,6 +63,11 @@ fun GalleryScreen(onBack: (() -> Unit)? = null, onStyleClick: (() -> Unit)? = nu
                         }
                     },
                     actions = {
+                        if (onSettingsClick != null) {
+                            TextButton(onClick = onSettingsClick) {
+                                Text(stringResource(R.string.settings_title))
+                            }
+                        }
                         if (onStyleClick != null) {
                             TextButton(onClick = onStyleClick) { Text("Gaya") }
                         }

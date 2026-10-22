@@ -17,6 +17,10 @@ object DotStyleSettings {
     private const val KEY_THEME = "theme_mode"
     private const val KEY_FONT = "font_choice"
     private const val KEY_ACCENT = "accent_choice"
+    private const val KEY_UPDATE_INTERVAL = "update_interval_minutes"
+    private const val KEY_AUTO_BACKUP = "auto_backup"
+
+    private const val DEFAULT_UPDATE_INTERVAL = 30
 
     enum class ThemeMode { SYSTEM, LIGHT, DARK }
     enum class FontChoice { DOTO, SYSTEM_SANS }
@@ -51,6 +55,22 @@ object DotStyleSettings {
 
     fun setAccent(context: Context, accent: AccentChoice) {
         prefs(context).edit().putString(KEY_ACCENT, accent.name).apply()
+    }
+
+    /** Interval minimum antar-update perangkat (menit). Default 30 (PRD §6.5 STA). */
+    fun getUpdateIntervalMinutes(context: Context): Int =
+        prefs(context).getInt(KEY_UPDATE_INTERVAL, DEFAULT_UPDATE_INTERVAL)
+
+    fun setUpdateIntervalMinutes(context: Context, minutes: Int) {
+        prefs(context).edit().putInt(KEY_UPDATE_INTERVAL, minutes).apply()
+    }
+
+    /** Apakah pengaturan gaya ikut tercadang (SET-5, P2). */
+    fun isAutoBackup(context: Context): Boolean =
+        prefs(context).getBoolean(KEY_AUTO_BACKUP, true)
+
+    fun setAutoBackup(context: Context, enabled: Boolean) {
+        prefs(context).edit().putBoolean(KEY_AUTO_BACKUP, enabled).apply()
     }
 
     /** Opsi aksen yang boleh ditampilkan di UI (menyembunyikan Material You di API <31). */

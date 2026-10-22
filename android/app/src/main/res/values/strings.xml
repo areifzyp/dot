@@ -72,4 +72,24 @@
     <string name="weather_no_city">Ketuk untuk memilih kota</string>
     <string name="weather_no_data">Menunggu data cuaca…</string>
     <string name="weather_updated_at">Diperbarui %1$s</string>
+
+    <!-- Pengaturan Aplikasi (PRD §6.8 SET-1..5) -->
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_widget_title">Widget</string>
+    <string name="settings_update_interval">Interval pembaruan widget</string>
+    <string name="settings_update_interval_summary">Frekuensi pembaruan perangkat (Status HP)</string>
+    <string name="settings_update_interval_15">15 menit</string>
+    <string name="settings_update_interval_30">30 menit</string>
+    <string name="settings_update_interval_60">1 jam</string>
+    <string name="settings_about_title">Tentang Aplikasi</string>
+    <string name="settings_about_version">Versi %1$s</string>
+    <string name="settings_about_source">Kode sumber</string>
+    <string name="settings_about_license">Lisensi</string>
+    <string name="settings_help_title">Bantuan &amp; Masukan</string>
+    <string name="settings_help_faq">FAQ</string>
+    <string name="settings_help_issue">Laporkan masalah</string>
+    <string name="settings_log_copy">Salin log aplikasi</string>
+    <string name="settings_log_copied">Log disalin ke papan klip</string>
+    <string name="settings_backup_title">Cadangan</string>
+    <string name="settings_backup_summary">Pengaturan ikut tercadang lewat Android Backup</string>
 </resources>

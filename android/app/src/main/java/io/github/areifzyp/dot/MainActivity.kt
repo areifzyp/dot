@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import io.github.areifzyp.dot.gallery.GalleryScreen
+import io.github.areifzyp.dot.settings.SettingsScreen
 import io.github.areifzyp.dot.style.StyleScreen
 import io.github.areifzyp.dot.ui.theme.DotTheme
 
@@ -25,14 +26,21 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-private enum class AppDest { GALLERY, STYLE }
+private enum class AppDest { GALLERY, STYLE, SETTINGS }
 
-/** Layar utama: Galeri Widget (PRD §6.1) + Gaya Nothing (PRD §6.8), tab sederhana. */
+/**
+ * Layar utama: Galeri Widget (PRD §6.1) + Gaya Nothing (PRD §6.8) +
+ * Pengaturan Aplikasi (PRD §6.9), navigasi sederhana via enum.
+ */
 @Composable
 fun DotApp() {
     var dest by remember { mutableStateOf(AppDest.GALLERY) }
     when (dest) {
-        AppDest.GALLERY -> GalleryScreen(onStyleClick = { dest = AppDest.STYLE })
+        AppDest.GALLERY -> GalleryScreen(
+            onStyleClick = { dest = AppDest.STYLE },
+            onSettingsClick = { dest = AppDest.SETTINGS },
+        )
         AppDest.STYLE -> StyleScreen(onBack = { dest = AppDest.GALLERY })
+        AppDest.SETTINGS -> SettingsScreen(onBack = { dest = AppDest.GALLERY })
     }
 }
