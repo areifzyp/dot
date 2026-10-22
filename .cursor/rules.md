@@ -13,8 +13,8 @@ Both must be green. If a build fails, fix it in the same session or note a
 blocker in the Obsidian session file.
 
 ## 2. Application ID is frozen
-`io.github.areifzyp.dot` — never change after the first successful build
-(PRD 9.2).
+`io.github.areifzyp.dot` — never change once the app is installed on a device
+(PRD §9, butir "Struktur repo (usulan)").
 
 ## 3. Code style
 - Kotlin 2.x, official Kotlin coding conventions
@@ -32,7 +32,7 @@ blocker in the Obsidian session file.
 ## 5. Secrets
 Nothing secret in the repo. Signing config is injected by CI from GitHub
 secrets: `SIGNING_STORE_BASE64`, `SIGNING_STORE_PASSWORD`, `SIGNING_KEY_ALIAS`,
-`SIGNING_KEY_PASSWORD` (PRD 8.5).
+`SIGNING_KEY_PASSWORD` (PRD §10, butir "Keamanan repo").
 
 ## 6. Session state
 Agent updates Obsidian project `dot` (`status.md` + session note) at the end
