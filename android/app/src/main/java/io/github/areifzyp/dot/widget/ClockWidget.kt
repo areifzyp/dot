@@ -1,7 +1,15 @@
 package io.github.areifzyp.dot.widget
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
+import android.os.Build
+import android.os.SystemClock
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -11,6 +19,7 @@ import androidx.glance.GlanceModifier
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.updateAll
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
@@ -41,7 +50,8 @@ import java.time.format.DateTimeFormatter
  * Dot. Clock Widget — PRD §5 (JAM-1, JAM-2).
  * Renders current time as dot-matrix digits (5x7 grid per glyph).
  * Tema terang/gelap otomatis via ColorProvider berbasis uiMode.
- * Update tiap menit via updatePeriodMillis di clock_widget_info.xml.
+ * Update tiap menit via AlarmManager exact alarm (ClockUpdateScheduler),
+ * karena updatePeriodMillis dibulatkan sistem ke minimum ~30 menit.
  */
 class ClockWidget : GlanceAppWidget() {
 
@@ -180,6 +190,82 @@ private fun ColonDots() {
     }
 }
 
+/**
+ * Spike PRD Fase 1 tugas 4: mekanisme update tiap menit.
+ * updatePeriodMillis tidak bisa diandalkan (dibulatkan OS ke ~30 menit),
+ * jadi widget menjadwalkan exact alarm ke batas menit berikutnya; tiap kali
+ * alarm berbunyi widget di-recompose lalu jadwal berikutnya dipasang lagi.
+ * Perlu USE_EXACT_ALARM (di-grant otomatis untuk aplikasi jam/alarm, API 33+).
+ */
+object ClockUpdateScheduler {
+    const val ACTION_UPDATE_CLOCK = "io.github.areifzyp.dot.widget.ACTION_UPDATE_CLOCK"
+    private const val REQUEST_CODE = 42
+
+    /** Milidetik menuju batas menit berikutnya. Tepat di batas menit -> 60000. */
+    fun millisToNextMinute(nowMillis: Long = System.currentTimeMillis()): Long {
+        val minuteMs = 60_000L
+        return minuteMs - (nowMillis % minuteMs)
+    }
+
+    fun scheduleNextUpdate(context: Context) {
+        val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !am.canScheduleExactAlarms()) {
+            return // exact alarm dicabut user; fallback = updatePeriodMillis
+        }
+        val intent = Intent(context, ClockWidgetReceiver::class.java)
+            .setAction(ACTION_UPDATE_CLOCK)
+        val pi = PendingIntent.getBroadcast(
+            context, REQUEST_CODE, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        val triggerAt = SystemClock.elapsedRealtime() + millisToNextMinute()
+        try {
+            am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi)
+        } catch (_: SecurityException) {
+            am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi)
+        }
+    }
+
+    fun cancel(context: Context) {
+        val am = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, ClockWidgetReceiver::class.java)
+            .setAction(ACTION_UPDATE_CLOCK)
+        val pi = PendingIntent.getBroadcast(
+            context, REQUEST_CODE, intent,
+            PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+        )
+        if (pi != null) {
+            am.cancel(pi)
+            pi.cancel()
+        }
+    }
+}
+
 class ClockWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget: GlanceAppWidget = ClockWidget()
+
+    override fun onEnabled(context: Context) {
+        super.onEnabled(context)
+        ClockUpdateScheduler.scheduleNextUpdate(context)
+    }
+
+    override fun onDisabled(context: Context) {
+        super.onDisabled(context)
+        ClockUpdateScheduler.cancel(context)
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        if (intent.action == ClockUpdateScheduler.ACTION_UPDATE_CLOCK) {
+            val pending = goAsync()
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    this@ClockWidgetReceiver.glanceAppWidget.updateAll(context)
+                    ClockUpdateScheduler.scheduleNextUpdate(context)
+                } finally {
+                    pending.finish()
+                }
+            }
+        }
+    }
 }
