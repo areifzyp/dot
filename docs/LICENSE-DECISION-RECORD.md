@@ -223,6 +223,7 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | Waktu (WIB) | Commit | Perubahan |
 |---|---|---|
 | 22 Okt 2026 22:47 | commit yang menambahkan berkas ini — lihat `git log --follow -- docs/LICENSE-DECISION-RECORD.md` | Berkas dibuat: catatan status BLOCKED, formulir §3 (kosong), daftar pertanyaan §4, mekanisme cek §5, langkah penutupan §6, tautan pekerjaan diblokir §7. Disertai `scripts/license-status.sh` |
+| 22 Okt 2026 22:50 | `1db18cb` | Gerbang `scripts/license-status.sh` disambungkan ke paket permintaan: `LICENSE-DECISION-REQUEST.md` §8 kini menyebut RECORD §3 harus terisi + memuat perintah gerbang, §0 menunjuk RECORD §3 sebagai tempat jawaban, header menautkan berkas ini. Rujukan baris `SettingsScreen.kt` dikoreksi `:140` → `:137`. Fakta lisensi diperiksa ulang di `27d5917` dan tidak berubah sampai `HEAD` (`git diff 27d5917..HEAD` pada PRD, `NOTICE`, `plasma/*/metadata.json`, `SettingsScreen.kt`, `strings.xml`, berkas Gradle → kosong) |
 
 ---
 
