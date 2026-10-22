@@ -1,7 +1,8 @@
 # Keputusan Lisensi Dot. — Permintaan untuk Tim Hukum/Kepatuhan
 
 **Status:** MENUNGGU KEPUTUSAN · **Memblokir rilis:** ya (lihat §4) ·
-**Terverifikasi pada commit:** `e1c7f9c` · **Tanggal:** 22 Oktober 2026 ·
+**Terverifikasi pada commit:** `27d5917` · **Pemeriksaan ulang terakhir:** 22 Oktober 2026,
+22:41 WIB · **Riwayat pemeriksaan:** §11 ·
 **Penyusun:** doc-writer · **Pemberi keputusan:** tim hukum/kepatuhan + pemilik proyek
 
 Repo Dot. menyatakan lisensinya di tiga tempat, dan ketiganya tidak sama. Tidak ada
@@ -11,6 +12,24 @@ dependensi, dan pertanyaan yang harus dijawab agar satu keputusan bisa diambil.
 > Dokumen ini **bukan nasihat hukum**. Semua pernyataan di sini adalah fakta yang bisa
 > diperiksa di repo atau hasil perintah yang dicantumkan di §9. Konsekuensi hukum
 > sengaja dibiarkan sebagai pertanyaan terbuka di §6.
+
+---
+
+## 0. Formulir jawaban — tiga baris ini yang menutup kartu
+
+Keputusan tidak perlu berbentuk memo. Cukup isi tiga baris berikut, baik sebagai komentar
+di kartu maupun dengan menyunting dokumen ini:
+
+```text
+D1 = ............   (GPL-2.0-or-later | Apache-2.0 | MIT | lain: ........)
+D2 = ............   (sekarang | saat repo dibuka | saat APK pertama dibagikan)
+D3 = ............   (plasmoid tetap MIT | disamakan dengan D1)
+Catatan/persetujuan: nama + tanggal
+```
+
+Bila satu pertanyaan memang belum bisa diputuskan, tulis **"belum diputuskan"** — itu
+tetap merupakan jawaban yang sah dan mencegah agen menebak. Pertanyaan pendukung
+(Q2–Q6, Q8) boleh menyusul; yang menahan rilis hanya D1–D3 (lihat §8).
 
 ---
 
@@ -34,7 +53,7 @@ dokumentasi) **tidak** ditahan.
 | 1 | PRD §10 | Lisensi proyek **GPL-2.0-or-later**, "diterapkan nanti saat repo dibuka atau APK dibagikan" | [`docs/PRD-Dot.md:451`](PRD-Dot.md) |
 | 2 | `NOTICE` | "Licensed under the **Apache License, Version 2.0**" | [`NOTICE:8-12`](../NOTICE) |
 | 3 | Tombol "Lisensi" di aplikasi | Membuka URL `github.com/areifzyp/dot/blob/main/NOTICE`, yaitu sumber #2 — jadi **pengguna melihat Apache-2.0**, bukan GPL | [`SettingsScreen.kt:140`](../android/app/src/main/java/io/github/areifzyp/dot/settings/SettingsScreen.kt), [`strings.xml:86`](../android/app/src/main/res/values/strings.xml) |
-| 4 | Berkas `LICENSE` | **Tidak ada.** `git ls-files` hanya menemukan `NOTICE` | `git ls-files \| grep -i -E "licen\|copying"` → `NOTICE` |
+| 4 | Berkas `LICENSE` | **Tidak ada di akar repo.** `git ls-tree --name-only HEAD` hanya memuat `NOTICE` (tanpa `LICENSE`/`COPYING`) | `git ls-tree --name-only HEAD \| grep -iE "licen\|copying"` → kosong |
 | 5 | Metadata plasmoid Plasma | `"License": "MIT"` pada keenam plasmoid | [`plasma/*/metadata.json:14`](../plasma) |
 | 6 | Font Doto | SIL Open Font License 1.1, teks lisensi ikut di repo | [`design/fonts/OFL.txt`](../design/fonts/OFL.txt), [`NOTICE:20-31`](../NOTICE) |
 | 7 | `packaging` Gradle | Membuang `META-INF/{AL2.0,LGPL2.1}` dari APK | [`build.gradle.kts:52`](../android/app/build.gradle.kts) |
@@ -73,6 +92,19 @@ JAVA_HOME=~/jdk/jdk-21.0.12.1+1 ./gradlew --offline :app:dependencies \
 Setiap koordinat hasil resolusi dicocokkan dengan blok `<licenses>` pada POM artefak
 tersebut di cache Gradle lokal. Daftar lengkap ada di
 [`license-inventory/`](license-inventory/README.md).
+
+Angka di §3.1–§3.2 masih berlaku pada commit `27d5917`: tidak ada berkas build yang
+berubah sejak inventaris dibuat, jadi graf dependensinya identik.
+
+```bash
+git diff --name-only e1c7f9c..27d5917 -- \
+  android/app/build.gradle.kts android/build.gradle.kts android/settings.gradle.kts \
+  android/gradle.properties android/gradle/wrapper/gradle-wrapper.properties
+# → kosong
+```
+
+Bila daftar dependensi berubah, inventaris **wajib** dibuat ulang lebih dulu — lihat
+[`license-inventory/README.md`](license-inventory/README.md).
 
 ### 3.1 Yang ikut terdistribusi di APK (`releaseRuntimeClasspath`)
 
@@ -212,8 +244,8 @@ Sampai ketiganya ada, kartu tetap terbuka dan §4 tetap ditahan.
 grep -n "GPL-2.0-or-later" docs/PRD-Dot.md
 grep -n "Apache License" NOTICE
 
-# 2. Tidak ada berkas LICENSE
-git ls-files | grep -i -E "licen|copying"     # → hanya NOTICE
+# 2. Tidak ada berkas LICENSE di akar repo
+git ls-tree --name-only HEAD | grep -iE "licen|copying"   # → kosong; hanya NOTICE
 
 # 3. Lisensi plasmoid
 grep -n '"License"' plasma/*/metadata.json
@@ -247,6 +279,19 @@ Ditandai jujur agar tidak dianggap sudah beres:
 - **Tidak ada pemeriksaan lisensi di CI** (fakta #8). Menambahkannya masuk akal setelah
   D1 keluar, karena alat pemeriksa perlu dikonfigurasi dengan daftar lisensi yang
   diizinkan.
+
+---
+
+## 11. Riwayat pemeriksaan
+
+Graf dependensi tidak dijaga CI, jadi setiap pemeriksaan ulang dicatat di sini — termasuk
+pemeriksaan yang hasilnya "belum ada keputusan", supaya tidak ada yang menyimpulkan paket
+ini sudah kedaluwarsa atau sudah terjawab.
+
+| Waktu (WIB) | Commit | Hasil |
+|---|---|---|
+| 22 Okt 2026 ~20:35 | `e1c7f9c` | Paket keputusan disusun; inventaris dependensi dibuat dari graf resolusi Gradle |
+| 22 Okt 2026 22:41 | `27d5917` | Semua fakta §2 diperiksa ulang dengan perintah §9 — hasil identik dengan `e1c7f9c`. Berkas build tidak berubah, jadi §3.1–§3.2 tetap berlaku. **D1–D3 belum terjawab.** |
 
 ---
 
