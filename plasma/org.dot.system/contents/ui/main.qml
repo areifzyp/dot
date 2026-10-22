@@ -1,3 +1,4 @@
+import org.kde.kirigami as Kirigami
 import QtQuick
 import QtQuick.Layouts
 import org.kde.plasma.plasmoid
@@ -6,8 +7,8 @@ import org.kde.plasma.core as PlasmaCore
 PlasmoidItem {
     id: root
 
-    preferredWidth: units.gridUnit * 14
-    preferredHeight: units.gridUnit * 8
+    preferredWidth: Kirigami.Units.gridUnit * 14
+    preferredHeight: Kirigami.Units.gridUnit * 8
 
     property string cpuUsage: "CPU: --%"
     property string ramUsage: "RAM: --%"
@@ -15,7 +16,7 @@ PlasmoidItem {
 
     FontLoader {
         id: dotoFont
-        source: "../../../design/fonts/Doto.ttf"
+        source: "../fonts/Doto.ttf"
     }
 
     Timer {
@@ -31,8 +32,8 @@ PlasmoidItem {
     }
 
     fullRepresentation: Item {
-        Layout.minimumWidth: units.gridUnit * 12
-        Layout.minimumHeight: units.gridUnit * 6
+        Layout.minimumWidth: Kirigami.Units.gridUnit * 12
+        Layout.minimumHeight: Kirigami.Units.gridUnit * 6
 
         Rectangle {
             anchors.fill: parent

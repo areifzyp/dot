@@ -13,5 +13,8 @@
     "Category": "System Information",
     "License": "MIT"
   },
-  "X-KDE-PluginInfo-Name": "org.dot.system"
+  "X-KDE-PluginInfo-Name": "org.dot.system",
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "KPackageStructure": "Plasma/Applet",
+  "Version": "0.5.0"
 }

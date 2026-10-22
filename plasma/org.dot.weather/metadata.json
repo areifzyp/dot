@@ -13,5 +13,8 @@
     "Category": "Time and Date",
     "License": "MIT"
   },
-  "X-KDE-PluginInfo-Name": "org.dot.weather"
+  "X-KDE-PluginInfo-Name": "org.dot.weather",
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "KPackageStructure": "Plasma/Applet",
+  "Version": "0.5.0"
 }
