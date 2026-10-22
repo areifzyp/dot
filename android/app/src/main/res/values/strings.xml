@@ -30,6 +30,8 @@
     <string name="catalog_device_desc">Baterai, memori, dan suhu perangkat</string>
     <string name="catalog_music_name">Widget Musik</string>
     <string name="catalog_music_desc">Kontrol pemutaran musik</string>
+    <string name="catalog_decor_name">Widget Dekoratif</string>
+    <string name="catalog_decor_desc">Pola titik dekoratif untuk homescreen</string>
 
     <!-- Widget Teks (PRD §6.11) -->
     <string name="widget_text_description">Dot. Text — teks buatan pengguna dengan font Doto</string>
@@ -51,6 +53,15 @@
     <string name="calendar_no_permission">Izin kalender belum diberikan</string>
     <string name="calendar_empty">Tidak ada acara 24 jam ke depan</string>
 
+    <!-- Widget Status HP (PRD §6.5) -->
+    <string name="widget_device_description">Dot. Device Status — baterai, RAM, storage, dan suhu</string>
+
+    <!-- Widget Musik (PRD §6.6) -->
+    <string name="widget_music_description">Dot. Music — kontrol pemutaran musik</string>
+
+    <!-- Widget Dekoratif (PRD §6.7) -->
+    <string name="widget_decorative_description">Dot. Decor — pola titik dekoratif</string>
+
     <!-- Widget Cuaca (PRD §6.3) -->
     <string name="widget_weather_description">Dot. Weather — suhu dan kondisi kota pilihan</string>
     <string name="weather_config_title">Widget Cuaca — Pilih Kota</string>
@@ -61,4 +72,52 @@
     <string name="weather_no_city">Ketuk untuk memilih kota</string>
     <string name="weather_no_data">Menunggu data cuaca…</string>
     <string name="weather_updated_at">Diperbarui %1$s</string>
+
+    <!-- Pengaturan Aplikasi (PRD §6.8 SET-1..5) -->
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_widget_title">Widget</string>
+    <string name="settings_update_interval_summary">Frekuensi pembaruan perangkat (Status HP)</string>
+    <string name="settings_update_interval_15">15 menit</string>
+    <string name="settings_update_interval_30">30 menit</string>
+    <string name="settings_update_interval_60">1 jam</string>
+    <string name="settings_about_title">Tentang Aplikasi</string>
+    <string name="settings_about_version">Versi %1$s</string>
+    <string name="settings_about_source">Kode sumber</string>
+    <string name="settings_about_license">Lisensi</string>
+    <string name="settings_help_title">Bantuan &amp; Masukan</string>
+    <string name="settings_help_faq">FAQ</string>
+    <string name="settings_help_issue">Laporkan masalah</string>
+    <string name="settings_log_copy">Salin log aplikasi</string>
+    <string name="settings_log_copied">Log disalin ke papan klip</string>
+    <string name="settings_backup_title">Cadangan</string>
+    <string name="settings_backup_summary">Pengaturan ikut tercadang lewat Android Backup</string>
+    <!-- Widget Terpasang (PRD §6.1 GAL-4) -->
+    <string name="gallery_installed_title">Widget Terpasang</string>
+    <string name="gallery_installed_empty">Belum ada widget Dot. di homescreen</string>
+    <plurals name="gallery_installed_count">
+        <item quantity="other">%1$d terpasang</item>
+    </plurals>
+    <string name="app_wordmark" translatable="false">Dot.</string>
+    <string name="gallery_configure">Ubah</string>
+    <string name="gallery_style">Gaya</string>
+
+    <!-- Onboarding pertama kali (PRD §6.9 KON-2) -->
+    <string name="onboarding_skip">Lewati</string>
+    <string name="onboarding_next">Lanjut</string>
+    <string name="onboarding_start">Mulai</string>
+    <string name="onboarding_title_welcome">Selamat datang di Dot.</string>
+    <string name="onboarding_body_welcome">Widget dot-matrix bergaya Nothing untuk homescreen Android. Satu titik, ribuan susunan.</string>
+    <string name="onboarding_title_pin">Pasang widget</string>
+    <string name="onboarding_body_pin">Widget dipasang dari homescreen, bukan dari dalam aplikasi.</string>
+    <string name="onboarding_pin_step_1">Tekan lama area kosong di homescreen.</string>
+    <string name="onboarding_pin_step_2">Pilih Widget, lalu cari Dot.</string>
+    <string name="onboarding_pin_step_3">Tarik widget ke homescreen dan atur ukurannya.</string>
+    <string name="onboarding_title_tune">Atur sesukamu</string>
+    <string name="onboarding_body_tune">Ketuk widget untuk membuka setelannya: tema, format, dan data yang ditampilkan.</string>
+    <string name="onboarding_tune_theme">Tema</string>
+    <string name="onboarding_tune_layout">Ukuran</string>
+    <string name="onboarding_tune_extra">Isi widget</string>
+    <string name="settings_update_interval_changed">Interval update: %1$s</string>
+    <string name="settings_link_failed">Tidak ada aplikasi untuk membuka tautan ini</string>
+    <string name="settings_backup_automatic">Otomatis</string>
 </resources>
