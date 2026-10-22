@@ -97,6 +97,11 @@ Isi sel kanan. Jangan hapus baris. Ganti setiap `_(belum diisi)_` dengan isi seb
 selama penanda itu masih ada, `scripts/license-status.sh` menganggap keputusan belum
 tercatat.
 
+> **Metadata template** — versi `1.0` · dibuat 22 Oktober 2026 · pemilik template: doc-writer
+> (pengusul) · pemilik keputusan: tim hukum/kepatuhan + pemilik proyek. Template ini tidak
+> punya berkas terpisah: §3 **adalah** templatenya, dan record terisi menggantikan isi sel,
+> bukan membuat berkas baru.
+
 | # | Field | Isi |
 |---|---|---|
 | 1 | **Jenis lisensi / komponen yang ditinjau** | _(belum diisi)_ — mis. "kode aplikasi Android (`android/`) + 6 plasmoid Plasma (`plasma/`) + font Doto" |
