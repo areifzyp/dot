@@ -3,7 +3,10 @@ package io.github.areifzyp.dot.widget
 import android.content.Context
 import android.content.res.Configuration
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.Font
 import androidx.glance.unit.ColorProvider
+import io.github.areifzyp.dot.R
 import io.github.areifzyp.dot.style.DotStyleSettings
 import io.github.areifzyp.dot.ui.theme.DotAccentOrange
 import io.github.areifzyp.dot.ui.theme.DotAccentRed
@@ -58,4 +61,16 @@ private fun systemAccentOrFallback(context: Context): Color = try {
 /** ColorProvider aksen yang menghormati pilihan Gaya Nothing (GAY-3/GAY-4). */
 internal class AccentColorProvider : ColorProvider {
     override fun getColor(context: Context): Color = accentColorFor(context)
+}
+
+/**
+ * GAY-2: helper font dinamis untuk widget Glance.
+ * Mengembalikan font Doto jika diaktifkan oleh pengguna, atau null (sans-serif sistem) bila dinonaktifkan.
+ */
+internal fun widgetFontFamily(context: Context): FontFamily? {
+    return if (DotStyleSettings.getFont(context) == DotStyleSettings.FontChoice.DOTO) {
+        FontFamily(Font(R.font.doto))
+    } else {
+        null
+    }
 }
