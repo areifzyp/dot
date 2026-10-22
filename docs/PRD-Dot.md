@@ -1,6 +1,6 @@
 # PRD — Dot. (Inspired by Nothing)
 
-Versi 1.0 · 18 Oktober 2026 · Status: HISTORIS (v1.0) — acuan keputusan
+Versi dokumen: 1.0 · 18 Oktober 2026 · Status: HISTORIS (v1.0) — acuan keputusan · Versi aplikasi (SSOT): berkas `VERSION` di root repo
 
 > Dokumen ini dibekukan sebagai historis: produk telah melewati Fase 1–4 dan
 > mulai mengerjakan kegiatan Pasca-Fase 4 (KDE Plasma). PRD ini bukan peta

@@ -5,7 +5,7 @@
 **Faktor waktu:** 22 Oktober 2026
 **Cakupan:** Status fase, peta status per widget, tiga risiko terbuka, dan keselarasan spesifikasi.
 
-> Enam dasawarsa verifikasi dibuat dari sumber primer: seluruh PRD-Dot.md (613 baris), git log, arsitektur folder `android/` + `/plasma/`, CI, dan catatan TODO/PRD di `docs/`. Tiap claim diberi lihat: `PRD:L<baris>` atau `git:<sha>`.
+> Enam dasawarsa verifikasi dibuat dari sumber primer: seluruh PRD-Dot.md (624 baris), git log, arsitektur folder `android/` + `/plasma/`, CI, dan catatan TODO/PRD di `docs/`. Tiap claim diberi lihat: `PRD:L<baris>` atau `git:<sha>`.
 
 > **Status dokumen: snapshot audit per commit `e1c7f9c` (22 Okt 2026) — bukan dokumen otoritatif.**
 > Peta status terkini ada di [`STATUS-MAP.md`](STATUS-MAP.md). Bila keduanya berbeda,
@@ -97,7 +97,7 @@ Faktor waktu: 22 Oktober 2026.
 **Saat ini (kode sumber):**
 `ClockWidget.kt:199-210` — `scheduleNextUpdate` menggunakan `setExactAndAllowWhileIdle`, dan jatuh ke `am.set(...)` inexact bila `canScheduleExactAlarms()` salah / `SecurityException` dibuang. Jadi **mekanisme fallback ada**, tetapi **tidak ada aturan apa yang ditampilkan pengguna**.
 
-**Bukti PRD:** §7.1 tabel wajib diupdate, baris 311 menulis *"bila dicabut, kode jatuh ke alarm tidak tepat waktu"* — hanya deskripsikan perilaku kode, **tidak ada kriteria layar**.
+**Bukti PRD:** §7.1 tabel wajib diupdate, baris 322 menulis *"bila dicabut, kode jatuh ke alarm tidak tepat waktu"* — hanya deskripsikan perilaku kode, **tidak ada kriteria layar**.
 
 **Kesenjangan:**
 1. Tidak ada kriteria: saat exact alarm ditolak/dicabut, aplikasi **diam** (tidak memberi tahu bahwa jam terlambat/menunggu pembaruan).
@@ -128,7 +128,7 @@ Faktor waktu: 22 Oktober 2026.
 ### 4.3 Token: README desain vs kenyataan — `tokens.md` + generate yang di-referensi **tidak ada di repo**
 
 **Saat ini:**
-- PRD §9 baris 420: *"design token dalam berkas netral (JSON) di folder /design"* → **JSON benar**.
+- PRD §9 baris 431: *"design token dalam berkas netral (JSON) di folder /design"* → **JSON benar**.
 - `design/tokens.json` ada (single source of truth, color/font/shape/spacing, `$schema`, backup note).
 - `design/README.md` baris 5–7 mengakui `tokens.md`, `layout.md`, `icons/` — **ketiganya tidak ada** di `design/`.
 - **Tidak ada script generate** di repo (cari `tokens.md|layout.md|*generate*` → 0 hasil).
