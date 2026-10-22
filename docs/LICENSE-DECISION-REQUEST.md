@@ -205,6 +205,15 @@ Jawaban tertulis atas pertanyaan berikut menutup kartu ini.
    README, dan `NOTICE` perlu ditinjau terpisah sebelum publikasi? (Risiko ini sudah
    tercatat di [`PRD-Dot.md:543`](PRD-Dot.md); di sini hanya untuk memastikan jalurnya
    tidak tertinggal.)
+9. **Q9 — cakupan penggunaan:** Apakah keputusan berlaku untuk penggunaan internal,
+   komersial (mis. versi berbayar atau beriklan), dan redistribusi APK lewat toko
+   aplikasi? Bila ada yang **tidak** diizinkan, sebutkan yang mana.
+10. **Q10 — modifikasi, sublicensing, redistribusi source:** Bolehkah pihak lain
+    memodifikasi dan mendistribusikan ulang kode (fork, build komunitas)? Apakah
+    sublicensing diizinkan? Apakah source wajib disertakan saat APK dibagikan?
+11. **Q11 — bentuk bukti keputusan:** Apa bentuk bukti yang sah untuk menutup item ini:
+    komentar di kartu `t_6cc84cef`, email, atau commit yang menerapkan `LICENSE`? Siapa
+    yang berwenang menyatakan keputusan itu final?
 
 ---
 

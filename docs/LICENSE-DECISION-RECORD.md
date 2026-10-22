@@ -151,6 +151,9 @@ Daftar kanonik ada di [`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUE
 | **Q6** | Font Doto (SIL OFL 1.1): apakah ketentuan *Reserved Font Name* terpicu bila kelak dibuat instance statis dari font variabel? | Risiko saat font di-instance ulang (skenario tercatat di PRD `:354`) | _(menunggu jawaban)_ |
 | **Q7** | Sama dengan D2, dari sisi hukum: boleh ditunda atau harus sekarang? | Jawaban D2 bisa datang tanpa dasar; ini yang menutup celahnya | _(menunggu jawaban)_ |
 | **Q8** | Pemakaian nama "Nothing" dan tagline "Inspired by Nothing" di judul/README/`NOTICE` perlu ditinjau terpisah sebelum publikasi? | Jalur merek bisa tertinggal saat publikasi | _(menunggu jawaban)_ |
+| **Q9** | Cakupan penggunaan: internal, komersial (berbayar/beriklan), redistribusi APK di toko — mana yang diizinkan, mana yang tidak? | Rilis bisa melanggar batas yang tidak pernah ditulis | _(menunggu jawaban)_ |
+| **Q10** | Bolehkah pihak lain memodifikasi & mendistribusikan ulang kode (fork, build komunitas)? Sublicensing? Source wajib disertakan saat APK dibagikan? | Kewajiban redistribusi source bisa terlewat saat APK keluar | _(menunggu jawaban)_ |
+| **Q11** | Bentuk bukti keputusan yang sah: komentar kartu, email, atau commit `LICENSE`? Siapa yang berwenang menyatakan final? | Item bisa ditutup dengan "bukti" yang tidak sah | _(menunggu jawaban)_ |
 
 ### 4.1 Uji ambiguitas sebelum menerima jawaban
 
