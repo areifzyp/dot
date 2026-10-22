@@ -43,7 +43,9 @@ Unit test yang ada (`android/app/src/test/java/io/github/areifzyp/dot/`): `Smoke
 | `org.dot.music` | Dot Music | [`metadata.json`](../plasma/org.dot.music/metadata.json) | Dibuat · **belum diuji pasang** |
 | `org.dot.text` | Dot Text Note | [`metadata.json`](../plasma/org.dot.text/metadata.json) | Dibuat · **belum diuji pasang** |
 
-Pemasangan: [`plasma/install-all.sh`](../plasma/install-all.sh) menyalin keenam folder ke `$HOME/.local/share/plasma/plasmoids`. Skrip berhenti pada galat (`set -e`) dan mencetak "Refreshing KPackage index..." tanpa benar-benar menjalankan perintah refresh — **belum diverifikasi** apakah Plasma 6 memerlukan langkah refresh manual setelahnya.
+Pemasangan: [`plasma/install-all.sh`](../plasma/install-all.sh) menyalin keenam folder ke `$HOME/.local/share/plasma/plasmoids`. **Terverifikasi 22 Okt 2026 (PM):** skrip berhenti pada galat (`set -e`), dan baris `echo "Refreshing KPackage index..."` **tidak diikuti perintah apa pun** — murni teks, index tidak di-refresh. Apakah Plasma 6 butuh langkah refresh manual setelahnya tetap **belum diverifikasi**; penguji harus memastikannya.
+
+Dua hazard lain di skrip yang sama, terverifikasi: `rm -rf "$DEST_DIR/$widget"` dijalankan **sebelum** `cp` — bila `cp` gagal, plasmoid lama sudah terhapus dan tidak ada rollback. Dan `set -e` tidak menolong bila `cp` berhasil sebagian.
 
 Status "belum diuji pasang" konsisten dengan PRD baris 74: *"6 widget dibuat, instal & uji belum"*.
 
@@ -88,7 +90,22 @@ Kriteria selesai: keenam plasmoid tercatat dengan tiga kolom di atas terisi. Has
 | **Risiko** | Di Android 12+, izin exact alarm bisa dicabut. Widget tetap menjadwalkan alarm inexact, tetapi tidak ada definisi kapan pembaruan dianggap "terlambat" dan tidak ada test untuk cabang penolakan izin. |
 | **Bukti di repo** | [`widget/ClockWidget.kt:199–211`](../android/app/src/main/java/io/github/areifzyp/dot/widget/ClockWidget.kt) — `canScheduleExactAlarms()` di baris 199, lalu `am.set(...)` sebagai fallback di baris 210. Test [`ClockUpdateSchedulerTest.kt`](../android/app/src/test/java/io/github/areifzyp/dot/widget/ClockUpdateSchedulerTest.kt) hanya menguji `millisToNextMinute` (2 test), tidak menyentuh cabang izin. |
 | **Pemilik** | Kriteria UX: **PM (Sekar)** — ditulis di §4a ini, bukan di PRD (PRD dibekukan). Test cabang izin: **frontend/dev Android**. |
-| **Kriteria penerimaan** | (1) Widget tidak pernah tampak diam: bila pembaruan tertunda, tampilkan penanda "pembaruan tertunda" beserta waktu pembaruan terakhir. (2) Ada unit test yang mencakup cabang izin ditolak. |
+| **Kriteria penerimaan** | (1) Kriteria UX "tidak pernah tampak diam" — dirinci UX-1..6 di bawah. (2) Ada unit test yang mencakup cabang izin ditolak. |
+
+#### Kriteria UX "tidak pernah tampak diam" (ditetapkan PM, 22 Oktober 2026)
+
+Kegagalan yang dicegah bukan "widget berhenti" — melainkan **widget menampilkan menit yang salah tanpa memberi tahu**. Jam yang diam terlihat identik dengan jam yang benar, jadi pengguna tidak punya cara mendeteksinya. Karena itu acuannya bukan "apakah alarm menyala", tapi "apakah tampilan jujur".
+
+| ID | Kriteria | Cara uji |
+|---|---|---|
+| **UX-1** | **Ambang.** Widget dianggap *tertunda* bila menit yang ditampilkan berbeda dari menit berjalan **dan** selisihnya ≥ 2 menit. Di bawah 2 menit tidak ada penanda (mencegah kedipan saat render normal). | Unit test state machine dengan waktu disuntik: offset 0/1 menit → `OnTime`; 2/5/60 menit → `Delayed`. |
+| **UX-2** | **Penanda.** Saat `Delayed`, widget menampilkan indikator visual (mengikuti gaya §8.3 Nothing, warna aksen) **dan** label waktu pembaruan terakhir berformat `HH:MM`. Label memakai gaya sekunder, bukan menggantikan digit jam. | Snapshot state `Delayed` (lihat §4b). |
+| **UX-3** | **Tata letak tidak bergeser.** Munculnya penanda tidak boleh mengubah posisi atau ukuran digit jam. | Bandingkan snapshot `OnTime` vs `Delayed`: kotak digit jam identik. |
+| **UX-4** | **Pulih.** Begitu pembaruan berhasil, penanda hilang pada render berikutnya. Tidak ada state "macet tertunda" setelah widget kembali akurat. | Unit test transisi `Delayed` → `OnTime`. |
+| **UX-5** | **Tidak bergantung warna.** Penanda membawa `contentDescription` "Pembaruan tertunda, terakhir <HH:MM>"; status tidak boleh dikomunikasikan lewat warna saja. | Pemeriksaan aksesibilitas + tinjauan accessibility-auditor. |
+| **UX-6** | **Terbaca tanpa interaksi.** Penanda tampil tanpa pengguna harus membuka aplikasi atau menekan widget. | Tinjauan manual. |
+
+**Konsekuensi & wewenang pembalik:** ambang 2 menit dan bentuk penanda adalah keputusan produk yang bisa dibalik tanpa menyentuh PRD — cukup ubah tabel ini. Yang **tidak** boleh dibalik oleh implementasi: UX-1 (ambang didefinisikan, bukan diserahkan ke perilaku AlarmManager) dan UX-5 (status tidak boleh hanya warna). Keduanya yang membuat AC ini bisa diuji.
 
 ### b) Snapshot test — tidak ada gate visual untuk hybrid 6 Glance + 1 RemoteViews
 
@@ -97,7 +114,7 @@ Kriteria selesai: keenam plasmoid tercatat dengan tiga kolom di atas terisi. Has
 | **Risiko** | Tidak ada yang mencegah regresi tampilan. Enam widget Glance dan satu widget RemoteViews punya jalur render berbeda, jadi regresi bisa lolos tanpa terdeteksi oleh unit test biasa. |
 | **Bukti di repo** | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) hanya menjalankan `:app:testDebugUnitTest` dan `:app:assembleDebug`. Tidak ada dependensi snapshot di `android/app/build.gradle.kts` (tidak ada Paparazzi/Roborazzi). |
 | **Pemilik** | **frontend/dev Android** (gate CI), ditinjau arsitek untuk pemilihan alat snapshot. |
-| **Kriteria penerimaan** | Gate snapshot per widget × tema (terang/gelap), dijalankan di CI, dan kegagalan gate memblokir merge. |
+| **Kriteria penerimaan** | Gate snapshot per widget × tema (terang/gelap), dijalankan di CI, dan kegagalan gate memblokir merge. **Wajib mencakup state `Delayed` widget Jam** (UX-2/UX-3 §4a) — kalau tidak, satu-satunya state baru yang ditambahkan untuk risiko §4a lolos tanpa gate visual. |
 
 ### c) Token — `design/tokens.json` disebut SSOT tetapi nol konsumen mesin
 
