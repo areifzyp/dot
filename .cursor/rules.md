@@ -19,7 +19,9 @@ blocker in the Obsidian session file.
 ## 3. Code style
 - Kotlin 2.x, official Kotlin coding conventions
 - Compose: prefer small, pure `@Composable` functions; no magic numbers —
-  read from `theme/Dimens.kt` (generated from `design/tokens.md`)
+  read from `theme/Dimens.kt` / `theme/Color.kt`, both generated from
+  `design/tokens.json` (generator kanonik belum ada — lihat
+  `docs/STATUS-MAP.md` §4c)
 - No `TODO` left in committed code without an issue reference
 
 ## 4. Commits
