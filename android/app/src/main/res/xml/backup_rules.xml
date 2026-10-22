@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- PRD SET-5: hanya preferensi (gaya, interval, lokasi cuaca) yang dicadangkan.
+     Log diagnostik dan berkas lain tidak ikut, jadi cadangan tetap kecil. -->
+<full-backup-content>
+    <include domain="sharedpref" path="." />
+</full-backup-content>

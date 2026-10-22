@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Exact alarm untuk update widget tiap menit (di-grant otomatis untuk
-         aplikasi jam/alarm di API 33+; diabaikan pada versi Android lebih lama). -->
+    <!-- KON-4: paket aplikasi jam & kalender harus terlihat agar intent ketuk widget
+         bisa divalidasi (Android 11+ menyembunyikan paket tanpa <queries>). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SHOW_ALARMS" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SET_ALARM" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="vnd.android.cursor.item/event" />
+        </intent>
+        <!-- Widget Musik: perlu melihat paket pemutar untuk getLaunchIntentForPackage. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
+    <!-- Exact alarm untuk update widget tiap menit.
+         - API 31-32: SCHEDULE_EXACT_ALARM (dapat dicabut user -> kode fallback ke alarm inexact)
+         - API 33+  : USE_EXACT_ALARM (di-grant otomatis untuk aplikasi jam/alarm) -->
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <!-- Widget Cuaca: fetch Open-Meteo (PRD §6.3) -->
@@ -13,6 +37,8 @@
 
     <application
         android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -110,6 +136,69 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/weather_widget_info" />
+        </receiver>
+
+        <!-- Widget Status HP (PRD §6.5) -->
+        <receiver
+            android:name=".system.DeviceStatusWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
+                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.BATTERY_CHANGED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/device_widget_info" />
+        </receiver>
+
+        <!-- Widget Musik (PRD §6.6) -->
+        <receiver
+            android:name=".music.MusicWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/music_widget_info" />
+        </receiver>
+
+        <!-- Pembaca notifikasi media untuk Widget Musik (MUS-1/2) -->
+        <service
+            android:name=".music.MusicListenerService"
+            android:exported="false"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
+        <!-- Konfigurasi Widget Dekoratif (PRD §6.8) -->
+        <activity
+            android:name=".decorative.DecorativeWidgetConfigActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- Widget Dekoratif (PRD §6.8) -->
+        <receiver
+            android:name=".decorative.DecorativeWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/decorative_widget_info" />
         </receiver>
     </application>
 
