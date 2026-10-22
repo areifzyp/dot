@@ -30,6 +30,8 @@
     <string name="catalog_device_desc">Baterai, memori, dan suhu perangkat</string>
     <string name="catalog_music_name">Widget Musik</string>
     <string name="catalog_music_desc">Kontrol pemutaran musik</string>
+    <string name="catalog_decor_name">Widget Dekoratif</string>
+    <string name="catalog_decor_desc">Pola titik dekoratif untuk homescreen</string>
 
     <!-- Widget Teks (PRD §6.11) -->
     <string name="widget_text_description">Dot. Text — teks buatan pengguna dengan font Doto</string>
@@ -50,6 +52,15 @@
     <string name="calendar_mode_agenda">Tanggal + agenda (butuh izin kalender)</string>
     <string name="calendar_no_permission">Izin kalender belum diberikan</string>
     <string name="calendar_empty">Tidak ada acara 24 jam ke depan</string>
+
+    <!-- Widget Status HP (PRD §6.5) -->
+    <string name="widget_device_description">Dot. Device Status — baterai, RAM, storage, dan suhu</string>
+
+    <!-- Widget Musik (PRD §6.6) -->
+    <string name="widget_music_description">Dot. Music — kontrol pemutaran musik</string>
+
+    <!-- Widget Dekoratif (PRD §6.7) -->
+    <string name="widget_decorative_description">Dot. Decor — pola titik dekoratif</string>
 
     <!-- Widget Cuaca (PRD §6.3) -->
     <string name="widget_weather_description">Dot. Weather — suhu dan kondisi kota pilihan</string>

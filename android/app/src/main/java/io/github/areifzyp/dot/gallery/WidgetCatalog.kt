@@ -8,7 +8,7 @@ import io.github.areifzyp.dot.widget.ClockWidgetReceiver
  * Katalog widget untuk Galeri (PRD §6.1 GAL-1, GAL-5).
  * Fase 1: hanya Widget Jam yang dapat dipasang; sisanya berstatus "Segera hadir".
  */
-enum class WidgetKind { CLOCK, TEXT, WEATHER, CALENDAR, DEVICE, MUSIC }
+enum class WidgetKind { CLOCK, TEXT, WEATHER, CALENDAR, DEVICE, MUSIC, DECORATIVE }
 
 enum class SizeVariant(@StringRes val labelRes: Int) {
     SMALL(R.string.size_small),
@@ -57,15 +57,22 @@ data class WidgetEntry(
                 kind = WidgetKind.DEVICE,
                 nameRes = R.string.catalog_device_name,
                 descRes = R.string.catalog_device_desc,
-                sizes = listOf(SizeVariant.MEDIUM),
-                available = false,
+                sizes = listOf(SizeVariant.MEDIUM, SizeVariant.LARGE),
+                available = true,
             ),
             WidgetEntry(
                 kind = WidgetKind.MUSIC,
                 nameRes = R.string.catalog_music_name,
                 descRes = R.string.catalog_music_desc,
                 sizes = listOf(SizeVariant.MEDIUM),
-                available = false,
+                available = true,
+            ),
+            WidgetEntry(
+                kind = WidgetKind.DECORATIVE,
+                nameRes = R.string.catalog_decor_name,
+                descRes = R.string.catalog_decor_desc,
+                sizes = listOf(SizeVariant.SMALL, SizeVariant.MEDIUM),
+                available = true,
             ),
         )
     }
@@ -85,6 +92,9 @@ object WidgetPinRequest {
             WidgetKind.TEXT -> io.github.areifzyp.dot.widget.TextWidgetProvider::class.java
             WidgetKind.CALENDAR -> io.github.areifzyp.dot.widget.CalendarWidgetReceiver::class.java
             WidgetKind.WEATHER -> io.github.areifzyp.dot.weather.WeatherWidgetReceiver::class.java
+            WidgetKind.DEVICE -> io.github.areifzyp.dot.system.DeviceStatusWidgetReceiver::class.java
+            WidgetKind.MUSIC -> io.github.areifzyp.dot.music.MusicWidgetReceiver::class.java
+            WidgetKind.DECORATIVE -> io.github.areifzyp.dot.decorative.DecorativeWidgetReceiver::class.java
             else -> return false // belum rilis
         }
         val provider = android.content.ComponentName(context, receiverClass)

@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.LocalContext
-import androidx.glance.appwidget.AppWidgetId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
@@ -59,7 +58,7 @@ import java.time.format.DateTimeFormatter
 class ClockWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val widgetId = (id as? AppWidgetId)?.appWidgetId
+        val widgetId = id.appWidgetIdOrNull()
             ?: AppWidgetManager.INVALID_APPWIDGET_ID
         provideContent {
             ClockWidgetContent(widgetId = widgetId)

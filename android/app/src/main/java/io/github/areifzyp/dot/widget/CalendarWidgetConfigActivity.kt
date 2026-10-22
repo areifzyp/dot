@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.glance.appwidget.AppWidgetId
 import androidx.lifecycle.lifecycleScope
 import io.github.areifzyp.dot.R
 import io.github.areifzyp.dot.ui.theme.DotTheme
@@ -90,7 +89,7 @@ class CalendarWidgetConfigActivity : ComponentActivity() {
     private fun saveAndFinish(mode: CalendarMode) {
         CalendarWidgetSettings.setMode(this, widgetId, mode)
         lifecycleScope.launch {
-            CalendarWidget().update(this@CalendarWidgetConfigActivity, AppWidgetId(widgetId))
+            CalendarWidget().update(this@CalendarWidgetConfigActivity, widgetId.toGlanceAppWidgetId())
             setResult(
                 RESULT_OK,
                 Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId),

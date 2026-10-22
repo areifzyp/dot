@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.glance.appwidget.AppWidgetId
 import androidx.lifecycle.lifecycleScope
 import io.github.areifzyp.dot.R
 import io.github.areifzyp.dot.ui.theme.DotTheme
@@ -66,7 +65,7 @@ class ClockWidgetConfigActivity : ComponentActivity() {
     private fun saveAndFinish(format: TimeFormat) {
         DotSettings.setTimeFormat(this, widgetId, format)
         lifecycleScope.launch {
-            ClockWidget().update(this@ClockWidgetConfigActivity, AppWidgetId(widgetId))
+            ClockWidget().update(this@ClockWidgetConfigActivity, widgetId.toGlanceAppWidgetId())
             setResult(
                 RESULT_OK,
                 Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId),

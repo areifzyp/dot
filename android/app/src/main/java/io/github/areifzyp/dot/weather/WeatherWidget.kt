@@ -13,6 +13,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
+import io.github.areifzyp.dot.widget.appWidgetIdOrNull
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
@@ -46,7 +47,7 @@ import java.time.format.DateTimeFormatter
 class WeatherWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        val widgetId = (id as? androidx.glance.appwidget.AppWidgetId)?.appWidgetId
+        val widgetId = id.appWidgetIdOrNull()
             ?: AppWidgetManager.INVALID_APPWIDGET_ID
         provideContent {
             WeatherWidgetContent(widgetId = widgetId)

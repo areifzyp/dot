@@ -43,7 +43,7 @@ import io.github.areifzyp.dot.R
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GalleryScreen(onBack: (() -> Unit)? = null) {
+fun GalleryScreen(onBack: (() -> Unit)? = null, onStyleClick: (() -> Unit)? = null) {
     var selected by remember { mutableStateOf<WidgetEntry?>(null) }
     val detail = selected
     if (detail == null) {
@@ -56,6 +56,11 @@ fun GalleryScreen(onBack: (() -> Unit)? = null) {
                             IconButton(onClick = onBack) {
                                 Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
                             }
+                        }
+                    },
+                    actions = {
+                        if (onStyleClick != null) {
+                            TextButton(onClick = onStyleClick) { Text("Gaya") }
                         }
                     },
                 )

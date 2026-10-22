@@ -5,6 +5,7 @@ import android.content.ComponentName
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.work.Constraints
+import io.github.areifzyp.dot.widget.appWidgetIdOrNull
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
@@ -29,7 +30,7 @@ class WeatherRefreshWorker(
 
         var anyFailure = false
         ids.forEach { glanceId ->
-            val widgetId = (glanceId as? androidx.glance.appwidget.AppWidgetId)?.appWidgetId
+            val widgetId = glanceId.appWidgetIdOrNull()
                 ?: AppWidgetManager.INVALID_APPWIDGET_ID
             val coords = WeatherSettings.getCoords(applicationContext, widgetId)
                 ?: return@forEach
