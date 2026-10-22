@@ -4,6 +4,16 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+// Versi aplikasi: SSOT = berkas VERSION di root repo (docs/PRD-PETA.md §3).
+// Jangan tulis ulang angka versi di sini — ubah VERSION saat rilis.
+// Berkas ini berada di android/app/, jadi root repo = dua tingkat di atas modul;
+// rootProject.projectDir adalah android/, sehingga parent-nya adalah root repo.
+val repoRootDir = rootProject.projectDir.parentFile
+val appVersionName: String = repoRootDir.resolve("VERSION").readText().trim()
+require(appVersionName.isNotEmpty()) {
+    "Berkas VERSION di ${repoRootDir.path} kosong — lihat docs/PRD-PETA.md §3"
+}
+
 android {
     namespace = "io.github.areifzyp.dot"
     compileSdk = 34
@@ -12,8 +22,10 @@ android {
         applicationId = "io.github.areifzyp.dot"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.0"
+        // versionCode naik satu per rilis (v0.2.0→2, v0.3.0→3, v0.5.0→5);
+        // Android mewajibkan integer monoton, jadi tidak diturunkan dari VERSION.
+        versionCode = 5
+        versionName = appVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
