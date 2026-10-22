@@ -4,6 +4,16 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
 }
 
+// Versi aplikasi: SSOT = berkas VERSION di root repo (docs/PRD-PETA.md §3).
+// Jangan tulis ulang angka versi di sini — ubah VERSION saat rilis.
+// Berkas ini berada di android/app/, jadi root repo = dua tingkat di atas modul;
+// rootProject.projectDir adalah android/, sehingga parent-nya adalah root repo.
+val repoRootDir = rootProject.projectDir.parentFile
+val appVersionName: String = repoRootDir.resolve("VERSION").readText().trim()
+require(appVersionName.isNotEmpty()) {
+    "Berkas VERSION di ${repoRootDir.path} kosong — lihat docs/PRD-PETA.md §3"
+}
+
 android {
     namespace = "io.github.areifzyp.dot"
     compileSdk = 34
@@ -12,8 +22,10 @@ android {
         applicationId = "io.github.areifzyp.dot"
         minSdk = 26
         targetSdk = 34
-        versionCode = 1
-        versionName = "0.1.0"
+        // versionCode naik satu per rilis (v0.2.0→2, v0.3.0→3, v0.5.0→5);
+        // Android mewajibkan integer monoton, jadi tidak diturunkan dari VERSION.
+        versionCode = 5
+        versionName = appVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -30,7 +42,6 @@ android {
             )
         }
         debug {
-            applicationIdSuffix = ".debug"
             isDebuggable = true
         }
     }
@@ -53,6 +64,10 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -68,6 +83,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.foundation:foundation")
 
     // Glance for AppWidgets (PRD §5)
     implementation("androidx.glance:glance-appwidget:1.1.0")
@@ -77,6 +93,8 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.9.1")
 
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.robolectric:robolectric:4.13")
+    testImplementation("androidx.test:core-ktx:1.6.1")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
