@@ -159,5 +159,5 @@ Faktor waktu: 22 Oktober 2026.
 4. MR: `ClockUpdateScheduler` → badan fallback UX + test penolakan exact alarm (pos 4.1).
 5. File README/PRD: header status diganti historis; prid tersisa sebagai acuan keputusan.
 
-> TODO: nilai aksen `#D71921` (PRD §16.2) masih perkiraan — perlu verifikasi vs tangkapan layar Nothing OS sebelum ada pembukaan publik.
+> TODO: nilai aksen `#D71921` (PRD §16 "Pertanyaan Terbuka" butir 2) masih perkiraan — perlu verifikasi vs tangkapan layar Nothing OS sebelum ada pembukaan publik.
 > TODO: belum ada test snapshot; kriteria detail (format golden PNG, tolerance) masih dibuka untuk disepakati.

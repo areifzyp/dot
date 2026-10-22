@@ -165,8 +165,8 @@ isi §6.
 
 | Opsi | Konsisten dengan | Konsekuensi teknis terverifikasi | Bertentangan dengan |
 |---|---|---|---|
-| **A. `GPL-2.0-or-later`** | PRD §10, §16.4 | 101 dari 103 artefak APK berlisensi Apache-2.0; PRD memilih varian *or-later* justru karena Apache-2.0 tidak cocok dengan GPL-2.0-*only* | `NOTICE`, tombol Lisensi di aplikasi, `metadata.json` plasmoid |
-| **B. `Apache-2.0`** | `NOTICE`, seluruh 101 dependensi inti | Tidak ada perubahan pada teks yang sudah dilihat pengguna; perlu `LICENSE` baru berisi teks Apache-2.0 | PRD §10 dan §16.4 harus diubah; plasmoid MIT perlu penjelasan |
+| **A. `GPL-2.0-or-later`** | PRD §10, §16 "Pertanyaan Terbuka" butir 4 | 101 dari 103 artefak APK berlisensi Apache-2.0; PRD memilih varian *or-later* justru karena Apache-2.0 tidak cocok dengan GPL-2.0-*only* | `NOTICE`, tombol Lisensi di aplikasi, `metadata.json` plasmoid |
+| **B. `Apache-2.0`** | `NOTICE`, seluruh 101 dependensi inti | Tidak ada perubahan pada teks yang sudah dilihat pengguna; perlu `LICENSE` baru berisi teks Apache-2.0 | PRD §10 dan §16 butir 4 harus diubah; plasmoid MIT perlu penjelasan |
 | **C. `MIT`** | `metadata.json` keenam plasmoid | Repo jadi satu lisensi paling permisif; `NOTICE` tetap menyebut Apache-2.0 sehingga tetap harus diubah | PRD §10; kesan "copyleft" yang jadi alasan pemilihan GPL di PRD hilang |
 
 Opsi lain (mis. GPL-3.0-only, dual-license, lisensi berbeda per folder) belum punya
@@ -211,12 +211,12 @@ Checklist ini yang membuat keputusan benar-benar berlaku. Belum dikerjakan — m
 | `LICENSE` (baru, akar repo) | Teks lisensi penuh sesuai D1 |
 | [`NOTICE:8-12`](../NOTICE) | Samakan dengan D1 |
 | [`docs/PRD-Dot.md:451`](PRD-Dot.md) | §10 butir lisensi: hapus "keputusan pemilik"/"diterapkan nanti" bila D2 = sekarang |
-| [`docs/PRD-Dot.md:568`](PRD-Dot.md) | §16.4: tutup pertanyaan terbuka |
+| [`docs/PRD-Dot.md:568`](PRD-Dot.md) | §16 butir 4: tutup pertanyaan terbuka |
 | [`docs/PRD-Dot.md:611`](PRD-Dot.md) | Kriteria selesai Fase 4: ganti "sudah dicek" dengan bukti |
 | [`SettingsScreen.kt:140`](../android/app/src/main/java/io/github/areifzyp/dot/settings/SettingsScreen.kt) | URL tombol Lisensi: arahkan ke `LICENSE` bila berkas itu ada |
 | [`strings.xml:86`](../android/app/src/main/res/values/strings.xml) | Label "Lisensi" — cek juga `values-in` bila ada terjemahan |
 | [`plasma/*/metadata.json:14`](../plasma) | Field `License` untuk 6 plasmoid, sesuai D3 |
-| [`AGENTS.md`](../AGENTS.md) §Conventions | Aturan: lisensi dependensi baru dicek sebelum digabung (PRD §11.7) |
+| [`AGENTS.md`](../AGENTS.md) §Conventions | Aturan: lisensi dependensi baru dicek sebelum digabung (PRD §11 "Pengembangan dengan AI" butir 7) |
 | [`docs/README.md`](README.md) | Tambahkan aturan lisensi ke indeks |
 
 > **Catatan hotspot:** `docs/PRD-Dot.md` sedang disentuh beberapa kartu lain pada saat
