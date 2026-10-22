@@ -164,6 +164,12 @@ Daftar kanonik ada di [`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUE
 | **Q10** | Bolehkah pihak lain memodifikasi & mendistribusikan ulang kode (fork, build komunitas)? Sublicensing? Source wajib disertakan saat APK dibagikan? | Kewajiban redistribusi source bisa terlewat saat APK keluar | _(menunggu jawaban)_ |
 | **Q11** | Bentuk bukti keputusan yang sah: komentar kartu, email, atau commit `LICENSE`? Siapa yang berwenang menyatakan final? | Item bisa ditutup dengan "bukti" yang tidak sah | _(menunggu jawaban)_ |
 | **Q12** | Apakah penanda "lisensi belum final" di `README`/`NOTICE` mengurangi risiko atau justru menambah klaim lisensi baru? (`NOTICE` = teks yang dibuka tombol "Lisensi" di aplikasi) | Penanda bisa dibaca sebagai pernyataan lisensi tambahan; perubahan `NOTICE` ditahan S1 sampai Q12 dijawab | _(menunggu jawaban)_ |
+| **Q13** | Apakah `GPL-2.0-or-later` sah dipakai bersama 101 dependensi Apache-2.0 di APK? (Apache-2.0 kompatibel dengan GPL-3.0, tidak dengan GPL-2.0-only) | `LICENSE` bisa ditulis dengan pilihan yang tidak dapat dieksekusi; bila jawabannya bukan opsi (a), D1 harus dijawab ulang | _(menunggu jawaban)_ |
+| **Q14** | Dependensi khusus tes (`EPL-1.0` JUnit, `CDDL + GPLv2-CE` javax.annotation, plus Bouncy Castle & ASM/BSD-3) cukup dicatat atau perlu atribusi? | 141 artefak non-APK tanpa pernyataan tertulis akan terangkat lagi di audit berikutnya | _(menunggu jawaban)_ |
+| **Q15** | Teks OFL font Doto wajib ikut di paket mana: repo saja, APK, atau juga setiap paket plasmoid? | Font didistribusikan di 8 berkas / 3 lokasi (termasuk di dalam APK) tetapi teks OFL hanya ada di `design/fonts/OFL.txt` | _(menunggu jawaban)_ |
+| **Q16** | Bila D1 bukan `Apache-2.0`, apa yang terjadi pada isi `NOTICE`? | `NOTICE` dibaca pengguna lewat tombol "Lisensi"; dua klaim bertentangan bisa tampil bersamaan | _(menunggu jawaban)_ |
+| **Q17** | Perlu pernyataan/klausa paten terpisah? | Eksposur paten berubah mengikuti D1 tanpa pernah diputuskan (Apache-2.0 §3 grant eksplisit, GPL-2.0 tidak, MIT tanpa grant) | _(menunggu jawaban)_ |
+| **Q18** | Nama "Dot." + `io.github.areifzyp.dot` perlu clearance merek sebelum publikasi? | Application ID immutable — kesalahan penamaan baru ketahuan setelah rilis | _(menunggu jawaban)_ |
 
 ### 4.1 Uji ambiguitas sebelum menerima jawaban
 
@@ -223,18 +229,19 @@ masih ada di §3. Item tetap **BLOCKED**.
 | # | Artefak | Berkas | Tautan dari sini | Diperiksa |
 |---|---|---|---|---|
 | 1 | Template record siap isi (field a–i) | [`templates/LICENSE-DECISION-RECORD.template.md`](templates/LICENSE-DECISION-RECORD.template.md) — v1.0, dibuat 23 Okt 2026, pemilik doc-writer | §3 (catatan metadata) · §6.1 butir (a) | ada · 23 Okt 2026 00:38 WIB |
-| 2 | Daftar pertanyaan hukum | kanonik: [`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUEST.md) (Q1–Q12) + §4 berkas ini (D1–D3, Q2–Q12); rumusan tertutup: [`LICENSE-DECISION-QUESTIONS.md`](LICENSE-DECISION-QUESTIONS.md) | §3 field 2 · §4 · §6.1 butir (b) | ada · id pertanyaan cocok (Q1 = D1, Q5 = D3, Q7 = D2) |
+| 2 | Daftar pertanyaan hukum | kanonik: [`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUEST.md) (Q1–Q18) + §4 berkas ini (D1–D3, Q2–Q18); rumusan tertutup: [`LICENSE-DECISION-QUESTIONS.md`](LICENSE-DECISION-QUESTIONS.md) | §3 field 2 · §4 · §6.1 butir (b) | ada · 18 id pertanyaan cocok (Q1 = D1, Q5 = D3, Q7 = D2) · disamakan 23 Okt 2026 |
 | 3 | Mekanisme follow-up | §5 berkas ini + job cron `3d4aef87edac` (`every monday 9am`, next run 26 Okt 2026 09:00 WIB, `Last run: ok`) | §1 tabel · §5.1 log | aktif · dibaca 23 Okt 2026 00:38 WIB |
 
 Bila salah satu dari ketiganya hilang, checklist ini tidak boleh dijalankan — perbaiki
 tautannya lebih dulu. Pemeriksaan ulang ketiganya ada di §6.2.
 
-**Satu inkonsistensi yang diketahui (23 Okt 2026 00:52 WIB):** `LICENSE-DECISION-QUESTIONS.md`
-memuat **Q13–Q18** sebagai butir baru dari audit 23 Okt 2026 yang **belum** ada di §6
-`LICENSE-DECISION-REQUEST.md` maupun di tabel §4 berkas ini. Kedua tempat itu daftar kanonik,
-jadi paket yang dikirim ke tim hukum tetap harus memuat §6 — dan Q13–Q18 wajib disalin ke
-§6 + §4 sebelum paket dikirim. Selama belum, berkas itu berstatus **usulan**. Penyalinan itu
-bukan bagian dari prosedur penutupan; ia harus selesai **sebelum** butir (b) dijalankan.
+**Inkonsistensi Q13–Q18 — selesai 23 Okt 2026 01:12 WIB.** `LICENSE-DECISION-QUESTIONS.md`
+memuat **Q13–Q18** sebagai butir baru dari audit 23 Okt 2026. Butir-butir itu kini **sudah
+disalin** ke dua tempat kanonik — §6 `LICENSE-DECISION-REQUEST.md` (butir 13–18) dan tabel §4
+berkas ini — dengan ID yang sama persis, sehingga ketiga berkas saling cocok dan paket boleh
+dikirim apa adanya. Bila salah satu daftar diubah lagi, ubah ketiganya sekaligus (§4, §6
+REQUEST, dan `LICENSE-DECISION-QUESTIONS.md`); `bash scripts/license-status.sh` tidak
+memeriksa kesamaan ini, jadi pemeriksaan manual tetap perlu.
 
 ### 6.1 Checklist penutupan
 
@@ -398,6 +405,7 @@ Jangan jalankan §6.1. Yang dilakukan justru sebaliknya:
 | 23 Okt 2026 00:27 | commit ini | Template berdiri sendiri ditambahkan: `docs/templates/LICENSE-DECISION-RECORD.template.md` (v1.0, metadata + field a–i, tiap field dengan placeholder dan satu baris petunjuk). Catatan §3 diperbarui: template kini punya berkas, §3 tetap formulir kanonik untuk lisensi Dot. |
 | 23 Okt 2026 00:36 | commit ini | Mekanisme follow-up §5 dilengkapi (kartu `t_f62a7c52`): tanggal follow-up pertama 26 Okt 2026, PIC & kanal diisi usulan default + `TODO` konfirmasi, baris "Yang diperbarui setiap follow-up" dan "Eskalasi bila tidak ada respons" (4 minggu). §1 dan tabel ringkasan atas diselaraskan; log §5.1 ditambah satu baris |
 | 23 Okt 2026 00:45 | commit ini | **§6 diganti prosedur penutupan** (kartu `t_cecf5a53`): §6.0 memverifikasi tiga artefak prasyarat (template v1.0, daftar pertanyaan Q1–Q12, mekanisme follow-up + cron `3d4aef87edac`) dan tautannya; §6.1 checklist (a)–(f) — record dari template, aturan tiga keadaan field (`terisi` / `N/A — alasan` / `belum diputuskan`) + tabel padanan field a–i ↔ §3 1–10, lampiran bukti, `BLOCKED`→`RESOLVED` + tanggal, tautan ke pekerjaan diblokir, notifikasi pengusul & pemilik; §6.2 enam gerbang verifikasi; §6.3 prosedur bila keputusan belum keluar; §6.4 anti-pola. Diperbaiki juga: field 2 §3 (`Q2–Q8` → `Q2–Q12`, id dipetakan), status kartu kembar `t_2e27c818` (§1, §7) yang sudah `done` 22 Okt 2026 23:55 WIB. **Keputusan belum ada — item tetap BLOCKED**. Commit lanjutan: §6.0 butir 2 kini menautkan `LICENSE-DECISION-QUESTIONS.md` dan mencatat inkonsistensi Q13–Q18 (belum ada di §6/§4) |
+| 23 Okt 2026 01:12 | commit ini | **Q13–Q18 disalin ke daftar kanonik** (kartu `t_6cc84cef`): §6 `LICENSE-DECISION-REQUEST.md` bertambah butir 13–18, tabel §4 berkas ini bertambah baris Q13–Q18 dengan ID yang sama, dan `LICENSE-DECISION-QUESTIONS.md` tidak lagi menyebut dirinya "usulan". §6.0 butir 2 kini menyebut Q1–Q18. **Tidak ada keputusan lisensi yang dibuat** — §3 tetap kosong (11 penanda), `LICENSE` tetap tidak ada, item tetap BLOCKED |
 
 ---
 

@@ -21,9 +21,10 @@ di [`LICENSE-DECISION-RECORD.md` §4](LICENSE-DECISION-RECORD.md).
 
 **Asal butir:** Q1–Q12 adalah rumusan tertutup dari §6 dengan **ID yang sama persis**
 (Q1 = D1, Q5 = D3, Q7 = D2, Q11 = bentuk bukti, Q12 = penanda status) — hanya bentuknya yang
-dipertegas menjadi pilihan tertutup. **Q13–Q18 adalah butir baru** yang lahir dari audit 23 Okt 2026
-dan **belum ada di §6** — jangan dikirim sebagai bagian paket resmi sebelum §6 dan RECORD §4
-diperbarui (lihat catatan di akhir berkas).
+dipertegas menjadi pilihan tertutup. **Q13–Q18 adalah butir baru** yang lahir dari audit
+23 Okt 2026; keduanya sudah disalin ke dua daftar kanonik (§6 `LICENSE-DECISION-REQUEST.md`
+butir 13–18 dan tabel §4 `LICENSE-DECISION-RECORD.md`) dengan ID yang sama, sehingga berkas ini
+dan daftar kanonik tidak lagi berbeda.
 
 ---
 
@@ -283,9 +284,9 @@ dikirim sebelum pengusul melengkapi fakta/niat yang disebut di masing-masing but
 
 ## Catatan pemeliharaan
 
-Q13–Q18 adalah usulan baru dari audit 23 Okt 2026 dan **belum** tercantum di
-[`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUEST.md) maupun tabel
-[`LICENSE-DECISION-RECORD.md` §4](LICENSE-DECISION-RECORD.md). Kedua tempat itu adalah daftar
-kanonik dan wajib saling cocok. Selama Q13–Q18 belum disalin ke sana, berkas ini berstatus
-**usulan**, bukan paket resmi — dan paket yang dikirim ke tim hukum tetap harus memuat §6 versi
-terbaru. Penyalinan itu dikerjakan di kartu penutupan (`t_cecf5a53`) atau kartu terpisah.
+Q13–Q18 adalah butir baru dari audit 23 Okt 2026 dan **sudah** tercantum di
+[`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUEST.md) (butir 13–18) serta tabel
+[`LICENSE-DECISION-RECORD.md` §4](LICENSE-DECISION-RECORD.md) sejak 23 Okt 2026 01:12 WIB.
+Ketiga tempat itu harus tetap saling cocok: bila satu butir ditambah, diubah, atau dihapus,
+ubah ketiganya dalam satu commit. `bash scripts/license-status.sh` tidak memeriksa kesamaan
+daftar pertanyaan — ia hanya memeriksa `LICENSE`/`NOTICE`/PRD §10/plasmoid dan kesiapan §3.

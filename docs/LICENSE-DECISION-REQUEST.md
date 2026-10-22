@@ -288,6 +288,47 @@ Jawaban tertulis atas pertanyaan berikut menutup kartu ini.
     Konteks: `NOTICE` adalah berkas yang dibuka tombol "Lisensi" di aplikasi (fakta #3), jadi
     setiap penanda di sana adalah teks yang dilihat pengguna, bukan catatan internal.
     Perubahan itu sendiri **ditahan** oleh S1 sampai Q12 dijawab.
+13. **Q13 — kompatibilitas lisensi:** Apakah `GPL-2.0-or-later` (pilihan pemilik di PRD §10)
+    sah dipakai bersama 101 dependensi Apache-2.0 yang ikut terdistribusi di APK? Apache-2.0
+    kompatibel dengan GPL-3.0 tetapi **tidak** dengan GPL-2.0-only, jadi varian "or later"
+    menentukan apakah pilihan pemilik bisa dieksekusi. Bila jawabannya "hanya
+    `GPL-3.0-or-later`" atau "perlu langkah tambahan", Q1 harus dijawab ulang — karena itu
+    butir ini ikut menahan isi `LICENSE` (S1).
+14. **Q14 — dependensi khusus tes:** `docs/license-inventory/android-unit-test.tsv` memuat
+    141 artefak di `releaseUnitTestRuntimeClasspath` (tidak masuk APK). Mayoritas Apache-2.0,
+    tetapi ada dua lisensi copyleft lemah — EPL-1.0 (`junit:junit:4.13.2`) dan
+    CDDL + GPLv2 with classpath exception (`javax.annotation:javax.annotation-api:1.3.2`) —
+    plus artefak non-Apache yang menuntut atribusi (`org.bouncycastle:bcprov-jdk18on:1.78.1`
+    → Bouncy Castle Licence; `org.ow2.asm:*` → BSD-3-Clause) dan 6 artefak tanpa deklarasi
+    POM. Cukup dicatat sebagai dependensi tes, atau perlu tindakan (mis. atribusi di `NOTICE`
+    untuk artefak tes yang ikut dibagikan)?
+15. **Q15 — teks OFL font Doto:** font Doto (SIL OFL 1.1) didistribusikan dalam **8 berkas
+    identik** (`sha256` awalan `6f4fe7d37853b91d`) di **tiga lokasi**:
+    `android/app/src/main/res/font/doto.ttf` (masuk APK), `design/fonts/Doto.ttf` (repo), dan
+    `plasma/org.dot.*/contents/fonts/Doto.ttf` (6 paket plasmoid). Teks lisensi hanya ada di
+    `design/fonts/OFL.txt`; `NOTICE` memang sudah menyebut font + menunjuk ke berkas itu, tetapi
+    hanya untuk dua dari tiga lokasi — 6 salinan plasmoid tidak disebut. Teks OFL wajib ikut di
+    paket mana: repo saja, di dalam APK, atau juga di setiap paket plasmoid?
+16. **Q16 — isi `NOTICE` bila Q1 bukan `Apache-2.0`:** `NOTICE` adalah berkas yang dibuka
+    tombol "Lisensi" di aplikasi (`SettingsScreen.kt:137`), jadi isinya teks yang dibaca
+    pengguna. Isinya sekarang: header proyek, pernyataan "Licensed under the Apache License,
+    Version 2.0" (baris 8–12), lalu bagian "Third-party assets" (Doto font/OFL). Bila `LICENSE`
+    kelak menyatakan lisensi lain sementara pernyataan Apache-2.0 itu masih ada, pembaca melihat
+    dua klaim yang bertentangan. Ganti seluruhnya, pertahankan sebagai lisensi pihak ketiga,
+    atau hapus pernyataan lisensi dan arahkan tombol ke `LICENSE`?
+17. **Q17 — klausa paten:** ketiga kandidat berbeda soal paten — Apache-2.0 §3 memberi grant
+    paten eksplisit, GPL-2.0 tidak eksplisit, MIT tanpa grant sama sekali. Repo belum punya
+    pernyataan paten apa pun, sehingga eksposur paten berubah mengikuti Q1 tanpa pernah
+    diputuskan.
+18. **Q18 — nama dan identitas aplikasi:** `AGENTS.md` menyatakan Application ID
+    `io.github.areifzyp.dot` **immutable** — kesalahan penamaan yang baru ketahuan setelah
+    rilis tidak bisa diganti tanpa aplikasi baru. Perlu clearance merek "Dot." dan penafian
+    afiliasi terhadap Nothing sebelum publikasi?
+
+> **Q13–Q18** adalah butir baru dari audit 23 Okt 2026. Rumusan **tertutup** (satu pilihan
+> tegas per butir, plus opsi `lain: …`) ada di
+> [`LICENSE-DECISION-QUESTIONS.md`](LICENSE-DECISION-QUESTIONS.md). Yang menahan rilis hanya
+> **Q1, Q5, Q7**; Q13 tidak menahan rilis tetapi menahan isi `LICENSE` (S1).
 
 ---
 
