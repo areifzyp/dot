@@ -5,6 +5,8 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.compose.runtime.Composable
+import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -15,6 +17,7 @@ import androidx.glance.LocalContext
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.background
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
@@ -91,8 +94,9 @@ private fun CalendarWidgetContent(
     Column(
         modifier = GlanceModifier
             .fillMaxSize()
-            .background(CalBackground)
-            .padding(12.dp),
+            .cornerRadius(16.dp).background(CalBackground)
+            .padding(12.dp)
+            .clickable(actionStartActivity(WidgetIntents.calendar(LocalContext.current))),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // KAL-1: tanggal hari ini

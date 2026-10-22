@@ -6,13 +6,14 @@ import android.provider.Settings
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
 import androidx.glance.action.actionParametersOf
-import androidx.glance.action.actionStartActivity
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.action.ActionCallback
 import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.layout.Alignment
 import androidx.glance.layout.Column
 import androidx.glance.layout.Row
@@ -28,6 +29,8 @@ import androidx.glance.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.areifzyp.dot.MainActivity
+import io.github.areifzyp.dot.widget.WidgetIntents
+import androidx.glance.LocalContext
 import io.github.areifzyp.dot.ui.theme.DotBlack
 import io.github.areifzyp.dot.ui.theme.DotDarkSecondary
 import io.github.areifzyp.dot.ui.theme.DotGraySecondaryLight
@@ -67,7 +70,12 @@ private fun PlaybackContent(snapshot: PlaybackSnapshot) {
         modifier = GlanceModifier
             .fillMaxSize()
             .padding(12.dp)
-            .clickable(actionStartActivity<MainActivity>()),
+            // PRD KON-4: buka pemutar yang sedang aktif, bukan aplikasi Dot.
+            .clickable(
+                actionStartActivity(
+                    WidgetIntents.app(LocalContext.current, snapshot.packageName),
+                ),
+            ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         // Judul & artis dipotong elipsis oleh Text Glance (maxLines=1) — tidak menutupi tombol
@@ -146,7 +154,7 @@ private fun EmptyContent() {
         modifier = GlanceModifier
             .fillMaxSize()
             .padding(12.dp)
-            .clickable(actionStartActivity<MainActivity>()),
+            .clickable(actionStartActivity(Intent(LocalContext.current, MainActivity::class.java))),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(

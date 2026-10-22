@@ -9,6 +9,7 @@ import io.github.areifzyp.dot.system.DeviceStatusWidget
 import io.github.areifzyp.dot.weather.WeatherWidget
 import io.github.areifzyp.dot.widget.CalendarWidget
 import io.github.areifzyp.dot.widget.ClockWidget
+import io.github.areifzyp.dot.widget.TextWidgetProvider
 
 /**
  * GAY-4: setiap perubahan gaya memicu update SELURUH widget terpasang.
@@ -29,6 +30,8 @@ object StyleRefresher {
     )
 
     suspend fun refreshAll(context: Context) {
+        // Widget Teks memakai RemoteViews biasa, bukan Glance — update terpisah.
+        runCatching { TextWidgetProvider.updateAll(context) }
         allWidgets.forEach { cls ->
             try {
                 cls.getDeclaredConstructor().newInstance().updateAll(context)

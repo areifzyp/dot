@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Exact alarm untuk update widget tiap menit (di-grant otomatis untuk
-         aplikasi jam/alarm di API 33+; diabaikan pada versi Android lebih lama). -->
+    <!-- KON-4: paket aplikasi jam & kalender harus terlihat agar intent ketuk widget
+         bisa divalidasi (Android 11+ menyembunyikan paket tanpa <queries>). -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SHOW_ALARMS" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SET_ALARM" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="vnd.android.cursor.item/event" />
+        </intent>
+        <!-- Widget Musik: perlu melihat paket pemutar untuk getLaunchIntentForPackage. -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
+    <!-- Exact alarm untuk update widget tiap menit.
+         - API 31-32: SCHEDULE_EXACT_ALARM (dapat dicabut user -> kode fallback ke alarm inexact)
+         - API 33+  : USE_EXACT_ALARM (di-grant otomatis untuk aplikasi jam/alarm) -->
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
     <!-- Widget Cuaca: fetch Open-Meteo (PRD §6.3) -->

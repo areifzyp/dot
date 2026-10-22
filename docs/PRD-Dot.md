@@ -82,8 +82,8 @@ Prioritas: **P0** = wajib untuk rilis fase tersebut, **P1** = sebaiknya ada, **P
 | GAL-1 | Menampilkan katalog semua widget yang tersedia dalam daftar/grid dengan nama, ikon, dan ukuran yang didukung | P0 |
 | GAL-2 | Pratinjau widget dalam tampilan yang mendekati hasil akhir, termasuk pilihan ukuran; berupa gambar statis versi terang dan gelap per ukuran (bukan widget hidup) agar Fase 1 tetap sederhana | P0 |
 | GAL-3 | Tombol “Tambah ke Homescreen” yang memicu proses pemasangan widget lewat sistem Android | P0 |
-| GAL-4 | Sub-fitur ke-4: **belum terlihat di diagram**. Usulan: Widget Terpasang (daftar widget Dot. yang sudah dipasang, dengan jalan pintas mengubah konfigurasinya); filter kategori sederhana cukup di Jelajahi Katalog, bukan fitur terpisah | P1 |
-| GAL-5 | Widget yang belum rilis ditandai “Segera hadir” agar katalog tidak terlihat kosong (pada Fase 1 katalog berisi Widget Jam, sisanya berstatus Segera hadir) | P1 |
+| GAL-4 | Widget Terpasang: daftar widget Dot. yang sudah ada di homescreen (dibaca lewat `GlanceAppWidgetManager`), masing-masing dengan jalan pintas membuka layar konfigurasinya; filter kategori sederhana cukup di Jelajahi Katalog, bukan fitur terpisah | P1 |
+| GAL-5 | Widget yang belum rilis ditandai “Segera hadir”. Semua tujuh widget sudah dapat dipasang, jadi penanda ini kini hanya dipakai bila sebuah widget ditarik dari rilis | P1 |
 
 **Kriteria penerimaan:**
 
@@ -221,13 +221,15 @@ Prioritas: **P0** = wajib untuk rilis fase tersebut, **P1** = sebaiknya ada, **P
 - Global (Gaya Nothing dan Pengaturan Aplikasi): tema, font, warna aksen, satuan, interval pembaruan, bahasa.
 - Per widget (layar konfigurasi): kota, tampilan, ukuran, zona waktu tambahan, pemutar musik.
 
-**Usulan aksi ketuk (perlu dikonfirmasi):**
+**Aksi ketuk (diterapkan, `widget/WidgetIntents.kt` + `weather/WeatherRefreshAction.kt`):**
 
-- Jam: membuka aplikasi jam bawaan perangkat.
-- Cuaca: menyegarkan data cuaca.
-- Kalender: membuka aplikasi kalender.
-- Status HP: membuka pengaturan baterai sistem.
-- Musik: membuka pemutar musik yang dipilih.
+- Jam: membuka aplikasi jam bawaan perangkat (`ACTION_SHOW_ALARMS`).
+- Cuaca: menyegarkan data cuaca sekarang lewat WorkManager (`ActionCallback`).
+- Kalender: membuka aplikasi kalender pada hari ini (`CalendarContract` `time`).
+- Status HP: membuka pengaturan baterai sistem (`ACTION_POWER_USAGE_SUMMARY`).
+- Musik: membuka pemutar yang sedang aktif (`getLaunchIntentForPackage` dari paket sesi media).
+
+Bila aplikasi tujuan tidak terpasang (mis. ROM tanpa aplikasi jam), ketukan jatuh ke aplikasi Dot; `<queries>` di manifes menjaga resolusi intent tetap berhasil di Android 11+.
 
 ### 6.10 Keadaan Kosong dan Error (lintas widget)
 
@@ -306,6 +308,7 @@ Tabel ini jadi acuan izin. Izin baru tidak boleh ditambahkan sebelum tabel ini d
 | Status HP | Tidak ada izin berbahaya | Tidak berlaku | Baterai dan suhu dibaca lewat siaran sistem, memori lewat API standar; CPU dibatasi sistem (lihat Risiko) |
 | Musik | Akses notifikasi (akses khusus lewat pengaturan sistem) untuk membaca sesi media yang aktif | Saat widget Musik pertama kali dipasang, dengan penjelasan lebih dulu | Hanya dipakai untuk info lagu dan kontrol putar; tidak disimpan atau dikirim ke mana pun |
 | Pembaruan latar belakang | Tidak ada izin berbahaya | Tidak berlaku | Tidak meminta pengecualian optimasi baterai otomatis; hanya panduan manual (KON-5) |
+| Widget Jam (pembaruan tiap menit) | `SCHEDULE_EXACT_ALARM` (API 31–32, dapat dicabut) dan `USE_EXACT_ALARM` (API 33+) | Otomatis saat dipasang; bila dicabut, kode jatuh ke alarm tidak tepat waktu | Bukan izin berbahaya, tetapi akses khusus: dipakai hanya untuk menyegarkan tampilan jam, tanpa membangunkan perangkat |
 
 ## 8. Prinsip Desain dan UX
 
@@ -360,6 +363,12 @@ Aplikasi dan semua widget punya dua varian, terang dan gelap. Keduanya tetap mon
 5. **Tema per widget:** opsional dan tidak dijadwalkan (P2).
 6. **Catatan teknis untuk AI:** bila teks widget dirender sebagai gambar karena font Doto (lihat 8.1), gambar dibuat satu warna lalu diwarnai ulang atau dirender ulang saat tema berubah, supaya tidak tertinggal di tema lama. Uji ini sejak Widget Jam di Fase 1.
 7. **Pengujian:** ganti tema sistem dan pilihan tema aplikasi saat widget terpasang; semua widget harus ikut berubah tanpa dipasang ulang.
+
+**Catatan implementasi (sudah diterapkan):**
+- Satu sumber kebenaran: `widget/WidgetColors.kt` → `DayNightColor` memanggil `isWidgetDark()`, yang membaca `DotStyleSettings.getTheme()` (Ikuti Sistem → `uiMode`; Terang → paksa terang; Gelap → paksa gelap). Tidak ada widget yang membaca `uiMode` langsung, sehingga pilihan manual benar-benar mengunci palet.
+- Widget Teks (RemoteViews, bukan Glance) mewarnai ulang latar dan teks dari palet yang sama saat `updateWidget`, dan memilih varian font Doto/sistem sesuai pilihan Gaya.
+- Mengubah gaya di layar Gaya langsung memicu `StyleRefresher.refreshAll()` untuk seluruh widget terpasang (Glance + Widget Teks).
+- Perubahan tema sistem memicu update dari launcher; bila launcher tidak memicunya, widget menyusul pada siklus update berikutnya (Jam ≤ 1 menit, widget lain ≤ 30 menit).
 
 ### 8.4 Peta Layar dan Navigasi
 
@@ -564,10 +573,10 @@ Satu fase dianggap selesai bila semua poinnya terpenuhi.
 
 **Fase 1 selesai bila:**
 
-- Galeri menampilkan Widget Jam (widget lain berstatus Segera hadir), dengan pratinjau terang dan gelap.
+- Galeri menampilkan seluruh widget yang sudah rilis (kini ketujuh widget) dengan pratinjau terang dan gelap.
 - Widget Jam bisa dipasang dari galeri ke homescreen dan tampil benar dengan font Doto dan palet dasar Nothing (8.5).
 - Widget Jam mengikuti tema sistem dan pilihan tema (Ikuti Sistem, Terang, Gelap).
-- Layar Widget Terpasang, onboarding, dan panduan manual (untuk launcher tanpa pemasangan langsung) berfungsi.
+- Panel Widget Terpasang (kartu di atas katalog), onboarding, dan panduan manual (untuk launcher tanpa pemasangan langsung) berfungsi.
 - Lolos uji di minimal 2 merek atau launcher berbeda (emulator boleh), CI hijau, dan NOTICE sudah memuat Doto.
 
 **Fase 2 selesai bila:**

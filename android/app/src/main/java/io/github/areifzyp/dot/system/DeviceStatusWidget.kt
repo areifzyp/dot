@@ -4,12 +4,13 @@ import android.content.Context
 import android.content.Intent
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
-import androidx.glance.action.actionStartActivity
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.action.clickable
 import androidx.glance.background
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
+import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.updateAll
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,8 @@ import androidx.glance.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.areifzyp.dot.MainActivity
+import io.github.areifzyp.dot.widget.WidgetIntents
+import androidx.glance.LocalContext
 import io.github.areifzyp.dot.ui.theme.DotBlack
 import io.github.areifzyp.dot.ui.theme.DotDarkInactiveDot
 import io.github.areifzyp.dot.ui.theme.DotDarkSecondary
@@ -93,7 +96,7 @@ private fun DeviceStatusContent(stats: SystemStats) {
         modifier = GlanceModifier
             .fillMaxSize()
             .padding(12.dp)
-            .clickable(actionStartActivity<MainActivity>()),
+            .clickable(actionStartActivity(WidgetIntents.battery(LocalContext.current))),
     ) {
         MetricRow(
             label = "Baterai",

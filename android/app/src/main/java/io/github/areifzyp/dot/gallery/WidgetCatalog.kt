@@ -6,7 +6,8 @@ import io.github.areifzyp.dot.widget.ClockWidgetReceiver
 
 /**
  * Katalog widget untuk Galeri (PRD §6.1 GAL-1, GAL-5).
- * Fase 1: hanya Widget Jam yang dapat dipasang; sisanya berstatus "Segera hadir".
+ * Ketujuh widget sudah rilis dan dapat dipasang; flag [WidgetEntry.available]
+ * tetap ada agar widget fase berikutnya bisa ditandai "Segera hadir".
  */
 enum class WidgetKind { CLOCK, TEXT, WEATHER, CALENDAR, DEVICE, MUSIC, DECORATIVE }
 
@@ -84,19 +85,51 @@ data class WidgetEntry(
  * pemanggil wajib menampilkan panduan manual (PRD §6.1 kriteria penerimaan).
  */
 object WidgetPinRequest {
+    /** Receiver AppWidget untuk tiap jenis widget. */
+    fun receiverFor(kind: WidgetKind): Class<*> = when (kind) {
+        WidgetKind.CLOCK -> ClockWidgetReceiver::class.java
+        WidgetKind.TEXT -> io.github.areifzyp.dot.widget.TextWidgetProvider::class.java
+        WidgetKind.CALENDAR -> io.github.areifzyp.dot.widget.CalendarWidgetReceiver::class.java
+        WidgetKind.WEATHER -> io.github.areifzyp.dot.weather.WeatherWidgetReceiver::class.java
+        WidgetKind.DEVICE -> io.github.areifzyp.dot.system.DeviceStatusWidgetReceiver::class.java
+        WidgetKind.MUSIC -> io.github.areifzyp.dot.music.MusicWidgetReceiver::class.java
+        WidgetKind.DECORATIVE -> io.github.areifzyp.dot.decorative.DecorativeWidgetReceiver::class.java
+    }
+
+    /**
+     * GAL-4: activity konfigurasi untuk widget yang sudah terpasang, supaya
+     * pengguna bisa mengubah setelannya tanpa melepas widget dari homescreen.
+     * Null bila widget tidak punya setelan.
+     */
+    fun configActivityFor(kind: WidgetKind): Class<*>? = when (kind) {
+        WidgetKind.CLOCK -> io.github.areifzyp.dot.widget.ClockWidgetConfigActivity::class.java
+        WidgetKind.TEXT -> io.github.areifzyp.dot.widget.TextWidgetConfigActivity::class.java
+        WidgetKind.CALENDAR -> io.github.areifzyp.dot.widget.CalendarWidgetConfigActivity::class.java
+        WidgetKind.WEATHER -> io.github.areifzyp.dot.weather.WeatherConfigActivity::class.java
+        WidgetKind.DEVICE -> null // widget status HP tidak punya setelan
+        WidgetKind.MUSIC -> null // widget musik mengikuti sesi media aktif
+        WidgetKind.DECORATIVE -> io.github.areifzyp.dot.decorative.DecorativeWidgetConfigActivity::class.java
+    }
+
+    /**
+     * GlanceAppWidget untuk tiap jenis — dipakai [GlanceAppWidgetManager.getGlanceIds].
+     * Null untuk widget berbasis RemoteViews (Widget Teks), yang tidak punya GlanceId.
+     */
+    fun glanceWidgetFor(kind: WidgetKind): androidx.glance.appwidget.GlanceAppWidget? = when (kind) {
+        WidgetKind.CLOCK -> io.github.areifzyp.dot.widget.ClockWidget()
+        WidgetKind.TEXT -> null
+        WidgetKind.CALENDAR -> io.github.areifzyp.dot.widget.CalendarWidget()
+        WidgetKind.WEATHER -> io.github.areifzyp.dot.weather.WeatherWidget()
+        WidgetKind.DEVICE -> io.github.areifzyp.dot.system.DeviceStatusWidget()
+        WidgetKind.MUSIC -> io.github.areifzyp.dot.music.MusicWidget()
+        WidgetKind.DECORATIVE -> io.github.areifzyp.dot.decorative.DecorativeWidget()
+    }
+
     fun request(context: android.content.Context, kind: WidgetKind): Boolean {
         val awm = android.appwidget.AppWidgetManager.getInstance(context)
         if (!awm.isRequestPinAppWidgetSupported) return false
-        val receiverClass: Class<*> = when (kind) {
-            WidgetKind.CLOCK -> ClockWidgetReceiver::class.java
-            WidgetKind.TEXT -> io.github.areifzyp.dot.widget.TextWidgetProvider::class.java
-            WidgetKind.CALENDAR -> io.github.areifzyp.dot.widget.CalendarWidgetReceiver::class.java
-            WidgetKind.WEATHER -> io.github.areifzyp.dot.weather.WeatherWidgetReceiver::class.java
-            WidgetKind.DEVICE -> io.github.areifzyp.dot.system.DeviceStatusWidgetReceiver::class.java
-            WidgetKind.MUSIC -> io.github.areifzyp.dot.music.MusicWidgetReceiver::class.java
-            WidgetKind.DECORATIVE -> io.github.areifzyp.dot.decorative.DecorativeWidgetReceiver::class.java
-            else -> return false // belum rilis
-        }
+        val receiverClass: Class<*> = receiverFor(kind)
+
         val provider = android.content.ComponentName(context, receiverClass)
         val confirmation = android.app.PendingIntent.getBroadcast(
             context,

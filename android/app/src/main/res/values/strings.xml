@@ -76,7 +76,6 @@
     <!-- Pengaturan Aplikasi (PRD §6.8 SET-1..5) -->
     <string name="settings_title">Pengaturan</string>
     <string name="settings_widget_title">Widget</string>
-    <string name="settings_update_interval">Interval pembaruan widget</string>
     <string name="settings_update_interval_summary">Frekuensi pembaruan perangkat (Status HP)</string>
     <string name="settings_update_interval_15">15 menit</string>
     <string name="settings_update_interval_30">30 menit</string>
@@ -92,4 +91,30 @@
     <string name="settings_log_copied">Log disalin ke papan klip</string>
     <string name="settings_backup_title">Cadangan</string>
     <string name="settings_backup_summary">Pengaturan ikut tercadang lewat Android Backup</string>
+    <!-- Widget Terpasang (PRD §6.1 GAL-4) -->
+    <string name="gallery_installed_title">Widget Terpasang</string>
+    <string name="gallery_installed_empty">Belum ada widget Dot. di homescreen</string>
+    <plurals name="gallery_installed_count">
+        <item quantity="other">%1$d terpasang</item>
+    </plurals>
+    <string name="app_wordmark" translatable="false">Dot.</string>
+    <string name="gallery_configure">Ubah</string>
+    <string name="gallery_style">Gaya</string>
+
+    <!-- Onboarding pertama kali (PRD §6.9 KON-2) -->
+    <string name="onboarding_skip">Lewati</string>
+    <string name="onboarding_next">Lanjut</string>
+    <string name="onboarding_start">Mulai</string>
+    <string name="onboarding_title_welcome">Selamat datang di Dot.</string>
+    <string name="onboarding_body_welcome">Widget dot-matrix bergaya Nothing untuk homescreen Android. Satu titik, ribuan susunan.</string>
+    <string name="onboarding_title_pin">Pasang widget</string>
+    <string name="onboarding_body_pin">Widget dipasang dari homescreen, bukan dari dalam aplikasi.</string>
+    <string name="onboarding_pin_step_1">Tekan lama area kosong di homescreen.</string>
+    <string name="onboarding_pin_step_2">Pilih Widget, lalu cari Dot.</string>
+    <string name="onboarding_pin_step_3">Tarik widget ke homescreen dan atur ukurannya.</string>
+    <string name="onboarding_title_tune">Atur sesukamu</string>
+    <string name="onboarding_body_tune">Ketuk widget untuk membuka setelannya: tema, format, dan data yang ditampilkan.</string>
+    <string name="onboarding_tune_theme">Tema</string>
+    <string name="onboarding_tune_layout">Ukuran</string>
+    <string name="onboarding_tune_extra">Isi widget</string>
 </resources>
