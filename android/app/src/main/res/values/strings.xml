@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Dot.</string>
     <string name="widget_clock_description">Dot. Clock — dot-matrix time display</string>
+    <string name="config_title">Widget Jam — Format Waktu</string>
+    <string name="config_option_system">Ikuti sistem</string>
+    <string name="config_option_12">12 jam</string>
+    <string name="config_option_24">24 jam</string>
+    <string name="config_save">Simpan</string>
 </resources>

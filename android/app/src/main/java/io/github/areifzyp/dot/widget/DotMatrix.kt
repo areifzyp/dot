@@ -132,11 +132,20 @@ object DotMatrix {
         return ((rowData shr shift) and 1) == 1
     }
 
+    /** Konversi jam 0-23 ke tampilan format 12 jam (1-12). */
+    fun to12HourDisplay(hour: Int): Int = when {
+        hour == 0 -> 12
+        hour > 12 -> hour - 12
+        else -> hour
+    }
+
     /**
      * Build the full time string "HH:MM" as a list of glyph patterns.
+     * [use24Hour]=false menampilkan jam dalam format 12 jam (1-12).
      */
-    fun timeToGlyphs(hour: Int, minute: Int): List<Pair<String, List<Int>>> {
-        val h = hour.toString().padStart(2, '0')
+    fun timeToGlyphs(hour: Int, minute: Int, use24Hour: Boolean = true): List<Pair<String, List<Int>>> {
+        val displayHour = if (use24Hour) hour else to12HourDisplay(hour)
+        val h = displayHour.toString().padStart(2, '0')
         val m = minute.toString().padStart(2, '0')
         val chars = "$h:$m"
         return chars.map { c ->

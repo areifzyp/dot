@@ -22,6 +22,15 @@
             </intent-filter>
         </activity>
 
+        <!-- Konfigurasi Widget Jam (PRD §5 JAM-2) -->
+        <activity
+            android:name=".widget.ClockWidgetConfigActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
         <!-- Clock Widget (PRD §5) -->
         <receiver
             android:name=".widget.ClockWidgetReceiver"

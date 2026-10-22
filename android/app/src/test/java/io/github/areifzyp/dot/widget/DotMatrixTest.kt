@@ -64,4 +64,26 @@ class DotMatrixTest {
         val glyphs = DotMatrix.timeToGlyphs(23, 59)
         assertEquals(listOf("2", "3", ":", "5", "9"), glyphs.map { it.first })
     }
+
+    @Test
+    fun to12HourDisplayConvertsCorrectly() {
+        assertEquals(12, DotMatrix.to12HourDisplay(0))
+        assertEquals(1, DotMatrix.to12HourDisplay(1))
+        assertEquals(12, DotMatrix.to12HourDisplay(12))
+        assertEquals(11, DotMatrix.to12HourDisplay(23))
+        assertEquals(1, DotMatrix.to12HourDisplay(13))
+    }
+
+    @Test
+    fun timeToGlyphsRespects12HourFormat() {
+        // 00:05 -> 12:05 dalam format 12 jam
+        val midnight = DotMatrix.timeToGlyphs(0, 5, use24Hour = false)
+        assertEquals(listOf("1", "2", ":", "0", "5"), midnight.map { it.first })
+        // 23:59 -> 11:59
+        val late = DotMatrix.timeToGlyphs(23, 59, use24Hour = false)
+        assertEquals(listOf("1", "1", ":", "5", "9"), late.map { it.first })
+        // 13:00 -> 01:00 (padStart tetap berlaku)
+        val afternoon = DotMatrix.timeToGlyphs(13, 0, use24Hour = false)
+        assertEquals(listOf("0", "1", ":", "0", "0"), afternoon.map { it.first })
+    }
 }

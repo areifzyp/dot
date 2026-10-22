@@ -2,6 +2,7 @@ package io.github.areifzyp.dot.widget
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -16,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
+import androidx.glance.LocalContext
+import androidx.glance.appwidget.AppWidgetId
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.provideContent
@@ -56,8 +59,10 @@ import java.time.format.DateTimeFormatter
 class ClockWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
+        val widgetId = (id as? AppWidgetId)?.appWidgetId
+            ?: AppWidgetManager.INVALID_APPWIDGET_ID
         provideContent {
-            ClockWidgetContent()
+            ClockWidgetContent(widgetId = widgetId)
         }
     }
 }
@@ -89,9 +94,13 @@ private val WidgetSecondary: ColorProvider = DayNightColor(
 )
 
 @Composable
-private fun ClockWidgetContent() {
+private fun ClockWidgetContent(widgetId: Int) {
+    val context = LocalContext.current
     val now = LocalTime.now()
-    val glyphs = DotMatrix.timeToGlyphs(now.hour, now.minute)
+    val format = DotSettings.getTimeFormat(context, widgetId)
+    val use24Hour = DotSettings.is24Hour(context, format)
+    val glyphs = DotMatrix.timeToGlyphs(now.hour, now.minute, use24Hour = use24Hour)
+    val amPm = if (!use24Hour) if (now.hour < 12) "AM" else "PM" else null
 
     Box(
         modifier = GlanceModifier
@@ -109,10 +118,11 @@ private fun ClockWidgetContent() {
 
             Spacer(modifier = GlanceModifier.height(8.dp))
 
-            // JAM-2: baris tanggal
+            // JAM-2: baris tanggal (+ indikator AM/PM saat format 12 jam)
             val dateText = LocalDate.now().format(DateTimeFormatter.ofPattern("EEE, d MMM"))
+            val dateLabel = if (amPm != null) "${dateText.uppercase()} · $amPm" else dateText.uppercase()
             Text(
-                text = dateText.uppercase(),
+                text = dateLabel,
                 style = TextStyle(
                     color = WidgetSecondary,
                     fontWeight = FontWeight.Medium,
@@ -252,6 +262,11 @@ class ClockWidgetReceiver : GlanceAppWidgetReceiver() {
     override fun onDisabled(context: Context) {
         super.onDisabled(context)
         ClockUpdateScheduler.cancel(context)
+    }
+
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        super.onDeleted(context, appWidgetIds)
+        appWidgetIds.forEach { DotSettings.onWidgetDeleted(context, it) }
     }
 
     override fun onReceive(context: Context, intent: Intent) {
