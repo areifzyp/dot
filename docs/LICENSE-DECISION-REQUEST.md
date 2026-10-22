@@ -2,8 +2,8 @@
 
 **Status:** MENUNGGU KEPUTUSAN · **Memblokir rilis/distribusi:** ya — lingkup dipersempit
 22 Oktober 2026, lihat §4 (S1–S4) ·
-**Terverifikasi pada commit:** `27d5917` · **Pemeriksaan ulang terakhir:** 22 Oktober 2026,
-23:35 WIB · **Riwayat pemeriksaan:** §11 ·
+**Terverifikasi pada commit:** `27d5917` (inventaris §3; berkas build tidak berubah sejak itu) ·
+**Pemeriksaan ulang terakhir:** 23 Oktober 2026, 01:05 WIB · **Riwayat pemeriksaan:** §11 ·
 **Penyusun:** doc-writer · **Pemberi keputusan:** tim hukum/kepatuhan + pemilik proyek ·
 **Catatan & formulir keputusan:** [`LICENSE-DECISION-RECORD.md`](LICENSE-DECISION-RECORD.md)
 
@@ -202,9 +202,11 @@ menahan eksposur itu; risiko bersumber dari **klaim**, bukan dari kode fitur.
 > `NOTICE` 200, `LICENSE` 404), sehingga blokir merge tidak menahan eksposur; risiko
 > bersumber dari klaim, bukan dari kode fitur. Wewenang membalik: operator.
 
-> **Sisa eksposur yang belum dicabut (S3):** step `Upload debug APK` sudah dicabut (`ab5d4ff`,
-> 22 Okt 2026), jadi tidak ada artefak **baru** — jumlahnya statis di satu, bukan bertambah per
-> run CI. Artefak `dot-debug` yang sudah ada (id `12437095872`, 11.087.580 byte, kedaluwarsa
+> **Sisa eksposur yang belum dicabut (S3):** step `Upload debug APK` dicabut di cabang ini
+> (`ab5d4ff`, 22 Okt 2026), tetapi **`main` masih memuatnya** (`.github/workflows/ci.yml:55-56`;
+> PR #4 belum merge, `ab5d4ff` hanya ada di cabang). Run yang sukses di `main` atau PR mana pun
+> karena itu masih dapat membuat artefak baru — sekarang tetap satu hanya karena run terakhir
+> gagal. Artefak `dot-debug` yang sudah ada (id `12437095872`, 11.087.580 byte, kedaluwarsa
 > 20 Jan 2027) tetap dapat diunduh sampai dihapus eksplisit. Penghapusan adalah tindakan
 > distribusi terbalik → wewenang operator, dilacak di kartu `t_40fc5231`:
 > `gh api -X DELETE repos/areifzyp/dot/actions/artifacts/12437095872`.
@@ -366,6 +368,11 @@ Ditandai jujur agar tidak dianggap sudah beres:
   20 Jan 2027 (§2.2).
 - **Tanggal repo menjadi publik tidak dapat diaudit** dari API publik; yang terbukti hanya
   status publik sekarang dan `created_at` 18 Okt 2026 (§2.2).
+- **Penghapusan artefak `dot-debug` id `12437095872` belum diputuskan** dan bukan wewenang
+  agen: operator memilih hapus sekarang atau biarkan kedaluwarsa 20 Jan 2027 (§2.2, §4 S3).
+  Pelacakan satu pintu di kartu `t_40fc5231` (assignee `pm`, menunggu keputusan operator);
+  jangan buat baris pelacak duplikat di dokumen lain. Selama PR #4 belum merge, `main` masih
+  memuat step unggah, jadi artefak baru masih dapat muncul (§4).
 
 ---
 
@@ -381,6 +388,7 @@ ini sudah kedaluwarsa atau sudah terjawab.
 | 22 Okt 2026 22:41 | `27d5917` | Semua fakta §2 diperiksa ulang dengan perintah §9 — hasil identik dengan `e1c7f9c`. Berkas build tidak berubah, jadi §3.1–§3.2 tetap berlaku. **D1–D3 belum terjawab.** |
 | 22 Okt 2026 23:35 | commit ini | **Amandemen butir #4 rapat (S1–S4) diterapkan.** §4 ditulis ulang: "membuka repo" dihapus dari daftar ditahan (sudah terjadi, §2.2), penahanan merge dipersempit ke berkas klaim lisensi (S1), tag/VERSION/Release (S2), CI distribusi APK (S3); teks keputusan PM ditempel verbatim. Premis D2 diperbaiki (opsi "saat repo dibuka" gugur). Q12 (penanda "lisensi belum final") ditambahkan ke §6. §2.2 baru: eksposur publik + artefak APK `dot-debug` yang masih dapat diunduh. §9 perintah verifikasi #6, §10 dua celah baru. **D1–D3 tetap belum terjawab.** |
 | 22 Okt 2026 23:44 | commit ini | Perbaikan rujukan usang: §8 butir 1 menyebut "Q1–Q8" padahal §6 sudah memuat Q1–Q12 sejak amandemen 23:35. Tidak ada perubahan fakta; D1–D3 tetap belum terjawab. |
+| 23 Okt 2026 01:05 | `991ab35` | §2.2 diperiksa ulang dengan §9 #6 pada head PR #4 (`991ab35`): repo publik, `NOTICE` 200, `LICENSE` 404, 0 rilis, tag `v0.2.0` tanpa aset, artefak tetap satu (`dot-debug` id `12437095872`, kedaluwarsa 20 Jan 2027) — identik dengan `27d5917`. §3 tidak dijalankan ulang: berkas build tidak berubah sejak `27d5917`. **Koreksi premis §4:** `ab5d4ff` hanya ada di cabang, `main` masih memuat step `Upload debug APK`, jadi "tidak ada artefak baru" tidak berlaku sampai PR #4 merge. §10 butir baru: penghapusan artefak dilacak di kartu `t_40fc5231` (assignee `pm`). **D1–D3 belum terjawab.** |
 
 ---
 
