@@ -10,9 +10,10 @@ index into those rules; individual rules live in their own files under
 2. **Immutable Application ID** → `io.github.areifzyp.dot` (see `../AGENTS.md`).
 3. **Release cadence** → PRD 9.1: Phase 1 = internal debug; Phase 2/3 =
    signed APK via GitHub workflow dispatch; Phase 4 = Play Store.
-4. **Design handoff** → all tokens first appear in `../design/tokens.md`;
-   the Compose theme imports a generated file, never hand-written magic
-   numbers.
+4. **Design handoff** → all token values live in `../design/tokens.json`;
+   the Compose theme imports a file generated from it, never hand-written magic
+   numbers. Generator kanonik belum ada — lihat risiko terbuka di
+   `STATUS-MAP.md` §4c.
 
 ## Folders
 

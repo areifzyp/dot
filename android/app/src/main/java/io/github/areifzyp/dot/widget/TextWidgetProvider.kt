@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.view.Gravity
 import android.widget.RemoteViews
+import io.github.areifzyp.dot.style.DotStyleSettings
 import io.github.areifzyp.dot.R
 
 /**
@@ -30,9 +31,23 @@ class TextWidgetProvider : AppWidgetProvider() {
             val size = TextWidgetSettings.getSize(context, widgetId)
 
             val views = RemoteViews(context.packageName, R.layout.widget_text)
-            views.setTextViewText(R.id.text_widget_content, text.ifEmpty { "Dot." })
-            views.setInt(R.id.text_widget_content, "setGravity", gravityFor(align))
-            views.setFloat(R.id.text_widget_content, "setTextSize", spFor(size))
+
+            // TXT-2 + §8.3: ikuti tema aplikasi (bukan hanya uiMode sistem).
+            views.setInt(R.id.text_widget_root, "setBackgroundColor", widgetBackgroundArgb(context))
+            val fg = widgetForegroundArgb(context)
+            views.setTextColor(R.id.text_widget_content, fg)
+            views.setTextColor(R.id.text_widget_content_sans, fg)
+
+            // GAY-2: pilih varian font sesuai pilihan Gaya Nothing.
+            val useDoto = DotStyleSettings.getFont(context) == DotStyleSettings.FontChoice.DOTO
+            val activeId = if (useDoto) R.id.text_widget_content else R.id.text_widget_content_sans
+            val idleId = if (useDoto) R.id.text_widget_content_sans else R.id.text_widget_content
+            views.setViewVisibility(activeId, android.view.View.VISIBLE)
+            views.setViewVisibility(idleId, android.view.View.GONE)
+
+            views.setTextViewText(activeId, text.ifEmpty { "Dot." })
+            views.setInt(activeId, "setGravity", gravityFor(align))
+            views.setFloat(activeId, "setTextSize", spFor(size))
 
             awm.updateAppWidget(widgetId, views)
         }

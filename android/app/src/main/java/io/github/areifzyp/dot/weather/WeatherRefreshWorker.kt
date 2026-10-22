@@ -5,8 +5,11 @@ import android.content.ComponentName
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.work.Constraints
+import io.github.areifzyp.dot.widget.appWidgetIdOrNull
 import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.ExistingWorkPolicy
 import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
@@ -29,7 +32,7 @@ class WeatherRefreshWorker(
 
         var anyFailure = false
         ids.forEach { glanceId ->
-            val widgetId = (glanceId as? androidx.glance.appwidget.AppWidgetId)?.appWidgetId
+            val widgetId = glanceId.appWidgetIdOrNull()
                 ?: AppWidgetManager.INVALID_APPWIDGET_ID
             val coords = WeatherSettings.getCoords(applicationContext, widgetId)
                 ?: return@forEach
@@ -64,8 +67,20 @@ class WeatherRefreshWorker(
         }
 
         fun refreshNow(context: Context) {
-            WorkManager.getInstance(context).enqueue(
-                PeriodicWorkRequestBuilder<WeatherRefreshWorker>(Duration.ofHours(1)).build(),
+            // One-time work dengan nama unik: memakai PeriodicWorkRequestBuilder di sini
+            // membuat worker periodik baru setiap panggilan (tak pernah dibatalkan →
+            // dobel refresh tiap jam). REPLACE menjamin paling banyak satu refresh manual
+            // yang mengantre pada satu waktu.
+            WorkManager.getInstance(context).enqueueUniqueWork(
+                "${WORK_NAME}-now",
+                ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequestBuilder<WeatherRefreshWorker>()
+                    .setConstraints(
+                        Constraints.Builder()
+                            .setRequiredNetworkType(NetworkType.CONNECTED)
+                            .build(),
+                    )
+                    .build(),
             )
         }
 

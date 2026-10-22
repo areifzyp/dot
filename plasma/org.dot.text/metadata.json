@@ -1,0 +1,20 @@
+{
+  "KPlugin": {
+    "Id": "org.dot.text",
+    "Name": "Dot Text Note",
+    "Description": "Nothing-style sticky text note widget for KDE Plasma",
+    "Authors": [
+      {
+        "Name": "Arif",
+        "Email": ""
+      }
+    ],
+    "Icon": "text-plain",
+    "Category": "Utilities",
+    "License": "MIT"
+  },
+  "X-KDE-PluginInfo-Name": "org.dot.text",
+  "X-Plasma-API-Minimum-Version": "6.0",
+  "KPackageStructure": "Plasma/Applet",
+  "Version": "0.5.0"
+}
