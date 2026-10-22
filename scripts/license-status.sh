@@ -103,12 +103,17 @@ fi
 record_state="berkas tidak ada"
 record_open=1
 if [ -f "$RECORD" ]; then
-  blanks="$(grep -c '_(belum diisi)_' "$RECORD" || true)"
+  # Hanya baris tabel di dalam §3 yang dihitung. Prosa di §1.1 dan instruksi §3
+  # sengaja memuat penanda yang sama sebagai rujukan; ikut menghitungnya membuat
+  # gerbang tidak pernah bisa exit 0 walau formulir sudah terisi.
+  blanks="$(awk '/^## 3\./{f=1} /^## 4\./{f=0}
+                 f && /^\|/ { t += gsub(/_\(belum diisi\)_/, "&") }
+                 END { print t+0 }' "$RECORD")"
   if [ "${blanks:-0}" -eq 0 ]; then
     record_state="terisi"
     record_open=0
   else
-    record_state="BELUM DIISI (${blanks} field kosong)"
+    record_state="BELUM DIISI (${blanks} penanda kosong di §3)"
   fi
 fi
 

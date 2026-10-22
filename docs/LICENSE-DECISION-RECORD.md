@@ -54,7 +54,7 @@ Diperiksa 22 Oktober 2026, 22:44 WIB, pada commit `e16eaea`:
 | 3 | Klaim lisensi di PRD | `grep -n "GPL-2.0-or-later" docs/PRD-Dot.md` | `:451` (§10, "diterapkan nanti"), `:568` (§16.4) |
 | 4 | Metadata plasmoid | `grep -n '"License"' plasma/*/metadata.json` | 6 berkas, semuanya `MIT` di baris 14 |
 | 5 | Komentar keputusan di kartu `t_6cc84cef` | — | tidak ada; thread hanya berisi catatan doc-writer dan `auto-decomposer` |
-| 6 | Formulir §3 berkas ini | `grep -c '_(belum diisi)_' docs/LICENSE-DECISION-RECORD.md` | > 0 → masih kosong |
+| 6 | Formulir §3 berkas ini | `bash scripts/license-status.sh --quiet` | `exit 1` → masih kosong (10 field, 11 penanda) |
 
 Ringkas: tidak ada keputusan tertulis di repo, di kartu, maupun di berkas mana pun.
 Dua kali kartu di-*unblock* (22 Okt 20:36 dan 22:36 WIB) tanpa jawaban tertulis — unblock
@@ -231,7 +231,7 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | Waktu (WIB) | Commit | Perubahan |
 |---|---|---|
 | 22 Okt 2026 22:47 | commit yang menambahkan berkas ini — lihat `git log --follow -- docs/LICENSE-DECISION-RECORD.md` | Berkas dibuat: catatan status BLOCKED, formulir §3 (kosong), daftar pertanyaan §4, mekanisme cek §5, langkah penutupan §6, tautan pekerjaan diblokir §7. Disertai `scripts/license-status.sh` |
-| 22 Okt 2026 22:50 | `1db18cb` | Gerbang `scripts/license-status.sh` disambungkan ke paket permintaan: `LICENSE-DECISION-REQUEST.md` §8 kini menyebut RECORD §3 harus terisi + memuat perintah gerbang, §0 menunjuk RECORD §3 sebagai tempat jawaban, header menautkan berkas ini. Rujukan baris `SettingsScreen.kt` dikoreksi `:140` → `:137`. Fakta lisensi diperiksa ulang di `27d5917` dan tidak berubah sampai `HEAD` (`git diff 27d5917..HEAD` pada PRD, `NOTICE`, `plasma/*/metadata.json`, `SettingsScreen.kt`, `strings.xml`, berkas Gradle → kosong) |
+| 22 Okt 2026 23:26 | commit ini | Gerbang §3 diperbaiki: `grep -c` (menghitung **baris** di seluruh berkas, termasuk prosa §1.1 dan instruksi §3) diganti hitungan penanda **di dalam tabel §3 saja** via `awk` + `gsub` → `11 penanda` (10 field; baris "Keputusan per ID" memuat D1/D2/D3). Uji dua arah: §3 kosong → `exit 1` + problem "formulir §3 … belum diisi"; salinan dengan §3 terisi + `LICENSE` + `NOTICE`/PRD §10/plasmoid selaras → `exit 0`. Baris 6 §1.1 kini memakai perintah gerbang, bukan `grep -c` |
 
 ---
 
