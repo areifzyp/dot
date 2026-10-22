@@ -7,19 +7,22 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
+import io.github.areifzyp.dot.ui.theme.DotTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            DotApp()
+            DotTheme {
+                DotApp()
+            }
         }
     }
 }
@@ -29,13 +32,14 @@ fun DotApp() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black),
+            .background(MaterialTheme.colorScheme.background),
         contentAlignment = Alignment.Center
     ) {
         Text(
             text = "Dot.",
-            color = Color.White,
-            fontSize = 32.sp
+            color = MaterialTheme.colorScheme.onBackground,
+            fontSize = 32.sp,
+            style = MaterialTheme.typography.displayMedium,
         )
     }
 }

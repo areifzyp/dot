@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Dot.</string>
+    <string name="widget_clock_description">Dot. Clock — dot-matrix time display</string>
 </resources>
