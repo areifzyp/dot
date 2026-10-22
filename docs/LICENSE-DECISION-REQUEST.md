@@ -295,7 +295,7 @@ Checklist ini yang membuat keputusan benar-benar berlaku. Belum dikerjakan — m
 
 Kartu "sampai ada keputusan lisensi dari tim hukum/kepatuhan" selesai bila:
 
-1. D1, D2, D3 terjawab tertulis oleh tim hukum/kepatuhan (§6, Q1–Q8), dan
+1. D1, D2, D3 terjawab tertulis oleh tim hukum/kepatuhan (§6, Q1–Q12), dan
    [`LICENSE-DECISION-RECORD.md` §3](LICENSE-DECISION-RECORD.md) terisi.
 2. Satu sumber kebenaran lisensi ditunjuk (PRD, `LICENSE`, atau `NOTICE`).
 3. Checklist §7 punya pemilik dan kartu tindak lanjut.
@@ -378,6 +378,7 @@ ini sudah kedaluwarsa atau sudah terjawab.
 | 22 Okt 2026 ~20:35 | `e1c7f9c` | Paket keputusan disusun; inventaris dependensi dibuat dari graf resolusi Gradle |
 | 22 Okt 2026 22:41 | `27d5917` | Semua fakta §2 diperiksa ulang dengan perintah §9 — hasil identik dengan `e1c7f9c`. Berkas build tidak berubah, jadi §3.1–§3.2 tetap berlaku. **D1–D3 belum terjawab.** |
 | 22 Okt 2026 23:35 | commit ini | **Amandemen butir #4 rapat (S1–S4) diterapkan.** §4 ditulis ulang: "membuka repo" dihapus dari daftar ditahan (sudah terjadi, §2.2), penahanan merge dipersempit ke berkas klaim lisensi (S1), tag/VERSION/Release (S2), CI distribusi APK (S3); teks keputusan PM ditempel verbatim. Premis D2 diperbaiki (opsi "saat repo dibuka" gugur). Q12 (penanda "lisensi belum final") ditambahkan ke §6. §2.2 baru: eksposur publik + artefak APK `dot-debug` yang masih dapat diunduh. §9 perintah verifikasi #6, §10 dua celah baru. **D1–D3 tetap belum terjawab.** |
+| 22 Okt 2026 23:44 | commit ini | Perbaikan rujukan usang: §8 butir 1 menyebut "Q1–Q8" padahal §6 sudah memuat Q1–Q12 sejak amandemen 23:35. Tidak ada perubahan fakta; D1–D3 tetap belum terjawab. |
 
 ---
 
