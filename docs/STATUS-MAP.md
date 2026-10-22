@@ -116,14 +116,16 @@ Kegagalan yang dicegah bukan "widget berhenti" — melainkan **widget menampilka
 | **Pemilik** | **frontend/dev Android** (gate CI), ditinjau arsitek untuk pemilihan alat snapshot. |
 | **Kriteria penerimaan** | Gate snapshot per widget × tema (terang/gelap), dijalankan di CI, dan kegagalan gate memblokir merge. **Wajib mencakup state `Delayed` widget Jam** (UX-2/UX-3 §4a) — kalau tidak, satu-satunya state baru yang ditambahkan untuk risiko §4a lolos tanpa gate visual. |
 
-### c) Token — `design/tokens.json` disebut SSOT tetapi nol konsumen mesin
+### c) Token — sumbu warna ditutup oleh generator kanonik; font/radius menunggu lane QML
 
 | | |
 |---|---|
-| **Risiko** | Token dideklarasikan sebagai single source of truth, tetapi tidak ada kode yang membacanya. Nilai ditranskripsi tangan ke Kotlin, sehingga `tokens.json` dan `Color.kt` bisa menyimpang tanpa ada yang mendeteksi. |
-| **Bukti di repo** | [`design/tokens.json`](../design/tokens.json) hanya dirujuk sebagai komentar di [`widget/ClockWidget.kt:72`](../android/app/src/main/java/io/github/areifzyp/dot/widget/ClockWidget.kt) dan [`ui/theme/Color.kt:5`](../android/app/src/main/java/io/github/areifzyp/dot/ui/theme/Color.kt). Tidak ada skrip generator di repo. Catatan tambahan: rujukan mati ke `design/tokens.md` (yang **tidak ada** di repo) sudah dihapus dari `docs/README.md`, `design/README.md`, dan `.cursor/rules.md` di commit pembekuan. |
-| **Pemilik** | **Arsitek** (generator kanonik + step CI — bagian dari increment ekstraksi kontrak token yang sudah approve-with-amendments). |
-| **Kriteria penerimaan** | (1) Satu generator kanonik `tokens.json` → `Color.kt`. (2) Generator dijalankan di CI sehingga drift gagal build. (3) PRD dan README menyebut generator tersebut. Rujukan mati ke `design/tokens.md` sudah dihapus di `docs/README.md` dan `design/README.md` (commit pembekuan); sisa `layout.md`/`icons/` juga sudah dibersihkan dari `design/README.md`. |
+| **Status** | **Sumbu warna DITUTUP** (generator + CI gate, arsitek, 22 Oktober 2026). Sisa: kontrak sisi QML — lane refaktor terpisah. |
+| **Risiko awal** | Token dideklarasikan sebagai single source of truth, tetapi tidak ada kode yang membacanya. Nilai ditranskripsi tangan ke Kotlin, sehingga `tokens.json` dan `Color.kt` bisa menyimpang tanpa ada yang mendeteksi. |
+| **Pemutusan** | [`design/generate_color_kt.py`](../design/generate_color_kt.py) adalah generator kanonik `tokens.json` → [`Color.kt`](../android/app/src/main/java/io/github/areifzyp/dot/ui/theme/Color.kt) (header berkas menandai diri sebagai hasil generator). CI menjalankannya dengan `git diff --exit-code` pada step *Token drift gate* di [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) — drift (termasuk token baru tanpa nama Kotlin) memblokir build. Nilai kanonik untuk pasangan QML yang menyimpang diputuskan dan ditulis di tabel [`design/README.md`](../design/README.md) (border `#333333`/`#D4D4D4` sebagai peran baru; `#888888` kalah dari `secondary_dark=#999999`; `radius: 4` kalah dari `widget=16` dengan peran baru `item=4`; skala `font.size` 56/42/22/16/14/12/10; `nothing_orange=#F97316` masuk token karena dipakai `Theme.kt`). |
+| **Risiko residual** | `font.size`, `shape.radius`, dan `border` sudah kanonik di token tetapi belum punya konsumen mesin: 6 plasmoid QML masih dark-only hard `pixelSize`/warna (lihat §2). Drift sisi itu tidak tertangkap gate karena belum ada kode yang membaca token — baru ditutup saat lane refaktor QML mengonsumsi `tokens.json`. |
+| **Pemilik** | Arsip increment: **arsitek**. Sisa kontrak QML: **frontend** (kartu lane terpisah). |
+| **Kriteria penerimaan** | (1) Satu generator kanonik `tokens.json` → `Color.kt` — terpenuhi. (2) Generator dijalankan di CI sehingga drift gagal build — terpenuhi (step *Token drift gate*, pull_request trigger, merge-blocking). (3) Readme menyebut generator — terpenuhi di `design/README.md` (baris di `docs/README.md` yang masih menulis "generator belum ada" menunggu commit WIP pm yang sedang jalan; saat itu mendarat, baris itu wajib diperbarui). Rujukan mati `design/tokens.md` sudah dihapus di commit pembekuan — tidak ditagih ulang. |
 
 ---
 
@@ -134,3 +136,4 @@ Kegagalan yang dicegah bukan "widget berhenti" — melainkan **widget menampilka
 - Setiap klaim status di dokumen ini harus punya path bukti. Klaim tanpa path dihapus atau ditandai **belum diverifikasi**.
 - Bila sebuah berkas dipindahkan atau dihapus, perbarui peta ini pada commit yang sama.
 - Jangan menautkan berkas yang belum ada di repo, termasuk berkas yang "sedang direncanakan".
+- [`Color.kt`](../android/app/src/main/java/io/github/areifzyp/dot/ui/theme/Color.kt) adalah **berkas hasil generator** (`design/generate_color_kt.py`, SSOT `design/tokens.json`). Edit token lalu regenerasi — jangan edit tangan; CI menolak drift.
