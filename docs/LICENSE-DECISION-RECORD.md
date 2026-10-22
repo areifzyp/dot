@@ -35,7 +35,7 @@ masih kosong:
 | Status | **BLOCKED** — menunggu keputusan lisensi dari tim hukum/kepatuhan |
 | Alasan | Repo menyatakan lisensi di tiga tempat yang saling bertentangan (PRD §10 `GPL-2.0-or-later`, `NOTICE` `Apache-2.0`, 6 × `metadata.json` `MIT`) dan tidak punya berkas `LICENSE`. Memilih salah satunya adalah keputusan pemilik atas saran hukum, bukan pekerjaan dokumentasi. |
 | Dicatat pertama | 22 Oktober 2026, 20:33 WIB (catatan status pertama di kartu `t_6cc84cef`) |
-| Dicatat ulang | 22 Oktober 2026, 22:47 WIB (berkas ini dibuat; keputusan tetap belum ada) |
+| Dicatat ulang | 23 Oktober 2026, 01:53 WIB (pemeriksaan ulang #5 — 5 kartu anak dekomposisi selesai, seluruh kriteria dokumentasi diverifikasi ulang; keputusan tetap belum ada) — baris sebelumnya: 22 Oktober 2026, 22:47 WIB (berkas ini dibuat; keputusan tetap belum ada) |
 | Diamandemen | 22 Oktober 2026, 23:35 WIB — lingkup penahanan dipersempit (S1–S4), premis "repo private" dicabut karena repo sudah publik sejak 18 Okt 2026 |
 | Pengusul | doc-writer |
 | Penanggung jawab follow-up | `> TODO:` belum ditunjuk — **usulan default: pemilik repo `@areifzyp`** (peran: pemilik proyek, pihak yang berwenang memutuskan lisensi). Konfirmasi ke pengusul (doc-writer) diperlukan; rincian di §5 |
@@ -210,6 +210,7 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | 22 Okt 2026 22:47 | doc-writer | kartu `t_6cc84cef` | Pemeriksaan ulang #3: tetap belum ada keputusan; berkas ini dibuat + skrip cek status | BLOCKED |
 | 22 Okt 2026 22:57 | job cron `3d4aef87edac` | kartu `t_6cc84cef` | Uji job pertama: komentar mingguan terpasang di kartu (terverifikasi di thread) — mekanisme pengingat aktif, jadwal berikutnya Senin 26 Okt 2026 09:00 WIB | BLOCKED |
 | 23 Okt 2026 00:36 | doc-writer | kartu `t_6cc84cef` | **Mekanisme follow-up ditetapkan** (kartu `t_f62a7c52`): kadens mingguan Senin 09:00 WIB, follow-up pertama **26 Okt 2026**, PIC & kanal diisi usulan default + TODO konfirmasi (§5). Belum ada respons dari pihak keputusan; keputusan lisensi tetap belum ada | BLOCKED |
+| 23 Okt 2026 01:53 | doc-writer | kartu `t_6cc84cef` | Pemeriksaan ulang #5 — fan-in dekomposisi: 5 kartu anak (`t_235bfbea`, `t_0018f4e8`, `t_f5322d55`, `t_f62a7c52`, `t_cecf5a53`) selesai; keempat kriteria dokumentasi diverifikasi ulang terhadap berkas di branch ini (70 tautan relatif 0 rusak; paritas Q1–Q18 di tiga berkas; §3 baris 1–10 lengkap; §5 kadens/PIC/kanal/eskalasi; §6 checklist a–f + `RESOLVED` + 4 tautan). `bash scripts/license-status.sh` → `exit 1` (diharapkan). **Tidak ada jawaban tertulis** dari pihak keputusan | BLOCKED |
 
 ---
 
