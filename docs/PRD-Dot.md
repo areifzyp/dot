@@ -202,7 +202,7 @@ Prioritas: **P0** = wajib untuk rilis fase tersebut, **P1** = sebaiknya ada, **P
 | SET-2 | Tentang Aplikasi: versi, lisensi aplikasi dan pihak ketiga, tautan kode sumber dan kebijakan privasi (keduanya bila kelak dirilis publik) | P0 |
 | SET-3 | Bantuan dan Masukan: FAQ dan tautan ke pelacak isu (issue tracker) proyek | P1 |
 | SET-4 | Salin log: tombol untuk menyalin log aplikasi ke papan klip saat melaporkan masalah, tanpa telemetri dan tanpa data pribadi | P1 |
-| SET-5 | Cadangan pengaturan: pengaturan ikut tercadang lewat cadangan otomatis Android sehingga pulih saat ganti ponsel | P2 |
+| SET-5 | Cadangan pengaturan: pengaturan ikut tercadang lewat cadangan otomatis Android sehingga pulih saat ganti ponsel. Diterapkan sebagai `backup_rules.xml` + `data_extraction_rules.xml` (hanya domain `sharedpref`); layar Pengaturan menampilkan status "Otomatis" tanpa sakelar, karena pencadangan dikendalikan sistem, bukan aplikasi | P2 |
 
 ### 6.9 Konfigurasi, Onboarding, dan Aksi Ketuk (lintas widget, Fase 1)
 

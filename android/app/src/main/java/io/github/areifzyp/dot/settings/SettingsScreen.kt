@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -173,22 +172,14 @@ fun SettingsScreen(
                     }
 
                     is SettingsSection.Backup -> {
+                        // Status saja, bukan sakelar: pencadangan dikendalikan sistem
+                        // (Android Backup, allowBackup=true + backup_rules.xml), bukan
+                        // oleh preferensi aplikasi — sakelar di sini akan bohong.
                         SettingsItem(
                             title = stringResource(R.string.settings_backup_title),
                             subtitle = stringResource(R.string.settings_backup_summary),
                             trailing = {
-                                Checkbox(
-                                    checked = DotStyleSettings.isAutoBackup(context),
-                                    onCheckedChange = { enabled ->
-                                        DotStyleSettings.setAutoBackup(context, enabled)
-                                        Toast.makeText(
-                                            context,
-                                            if (enabled) "Cadangan diaktifkan"
-                                            else "Cadangan dinonaktifkan",
-                                            Toast.LENGTH_SHORT,
-                                        ).show()
-                                    },
-                                )
+                                Text(stringResource(R.string.settings_backup_automatic))
                             },
                         )
                     }
@@ -223,27 +214,37 @@ private fun IntervalSelector(
     val options = listOf(15, 30, 60)
     val current = options.indexOfFirst { it == intervalMinutes }.let { if (it < 0) 0 else it }
     val next = options[(current + 1) % options.size]
-    val label = when (next) {
-        15 -> context.getString(R.string.settings_update_interval_15)
-        30 -> context.getString(R.string.settings_update_interval_30)
-        else -> context.getString(R.string.settings_update_interval_60)
-    }
-    val summaryLabel = context.getString(R.string.settings_update_interval_summary)
+    // Label menampilkan nilai yang SEDANG aktif; mengetuk akan beralih ke berikutnya.
+    val currentLabel = intervalLabel(context, options[current])
+    val nextLabel = intervalLabel(context, next)
     AssistChip(
         onClick = {
             onSelect(next)
             Toast.makeText(
                 context,
-                "$summaryLabel: $label",
+                context.getString(R.string.settings_update_interval_changed, nextLabel),
                 Toast.LENGTH_SHORT,
             ).show()
         },
-        label = { Text(label) },
+        label = { Text(currentLabel) },
     )
 }
 
+private fun intervalLabel(context: Context, minutes: Int): String = context.getString(
+    when (minutes) {
+        15 -> R.string.settings_update_interval_15
+        30 -> R.string.settings_update_interval_30
+        else -> R.string.settings_update_interval_60
+    },
+)
+
+/** Buka tautan eksternal tanpa membuat aplikasi crash bila tidak ada browser. */
 private fun openUri(context: Context, url: String) {
-    context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    val opened = runCatching { context.startActivity(intent) }.isSuccess
+    if (!opened) {
+        Toast.makeText(context, R.string.settings_link_failed, Toast.LENGTH_SHORT).show()
+    }
 }
 
 private fun copyAppLog(context: Context) {

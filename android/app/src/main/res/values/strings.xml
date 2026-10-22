@@ -117,4 +117,7 @@
     <string name="onboarding_tune_theme">Tema</string>
     <string name="onboarding_tune_layout">Ukuran</string>
     <string name="onboarding_tune_extra">Isi widget</string>
+    <string name="settings_update_interval_changed">Interval update: %1$s</string>
+    <string name="settings_link_failed">Tidak ada aplikasi untuk membuka tautan ini</string>
+    <string name="settings_backup_automatic">Otomatis</string>
 </resources>
