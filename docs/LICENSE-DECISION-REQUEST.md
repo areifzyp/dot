@@ -2,8 +2,8 @@
 
 **Status:** MENUNGGU KEPUTUSAN · **Memblokir rilis/distribusi:** ya — lingkup dipersempit
 22 Oktober 2026, lihat §4 (S1–S4) ·
-**Terverifikasi pada commit:** `27d5917` · **Pemeriksaan ulang terakhir:** 22 Oktober 2026,
-23:35 WIB · **Riwayat pemeriksaan:** §11 ·
+**Terverifikasi pada commit:** `27d5917` · **Pemeriksaan ulang terakhir:** 23 Oktober 2026,
+00:33 WIB · **Riwayat pemeriksaan:** §11 ·
 **Penyusun:** doc-writer · **Pemberi keputusan:** tim hukum/kepatuhan + pemilik proyek ·
 **Catatan & formulir keputusan:** [`LICENSE-DECISION-RECORD.md`](LICENSE-DECISION-RECORD.md)
 
@@ -97,9 +97,30 @@ Klaim lisensi **sudah publik**. Menahan merge tidak menariknya kembali — ini d
 | Repo publik | `curl -s https://api.github.com/repos/areifzyp/dot` → `"private": false`, `"visibility": "public"` | `created_at` `2026-10-18T21:22:52Z` |
 | `NOTICE` (klaim Apache-2.0) terbaca siapa pun | `curl -s -o /dev/null -w '%{http_code}' .../areifzyp/dot/main/NOTICE` → `200` | 18 Okt 2026 (klaim ikut terbuka saat repo publik) |
 | `LICENSE` tetap tidak ada | URL yang sama untuk `/main/LICENSE` → `404` | — |
-| APK debug artefak CI dapat diunduh | `GET /repos/areifzyp/dot/actions/artifacts` → `dot-debug`, 11.087.580 byte, dibuat `2026-10-22T15:18:38Z`, kedaluwarsa `2027-01-20T15:15:00Z` | 22 Okt 2026 22:18 WIB |
+| APK debug artefak CI dapat diunduh **oleh akun GitHub yang login** (anonim → `401`) | `GET /repos/areifzyp/dot/actions/artifacts` → `dot-debug` id `12437095872`, 11.087.580 byte, dibuat `2026-10-22T15:18:38Z`, kedaluwarsa `2027-01-20T15:15:00Z`; `GET …/artifacts/12437095872/zip` → `401` tanpa token, `200` dengan token | 22 Okt 2026 22:18 WIB |
 | GitHub Release | `GET /repos/areifzyp/dot/releases` → `[]` (0 rilis) | belum pernah ada |
 | Tag | `GET /repos/areifzyp/dot/tags` → `v0.2.0` (tag tanpa aset) | sebelum amandemen |
+
+> **Status saluran artefak — diperiksa ulang 23 Okt 2026, 00:33 WIB.** Tiga hal yang
+> mengubah gambaran "satu artefak, kedaluwarsa 20 Jan 2027":
+>
+> 1. **Unduhan butuh login.** `…/artifacts/12437095872/zip` → `401` tanpa token, `200`
+>    dengan token. Artefak ini tidak terbuka untuk anonim seperti berkas `raw`.
+> 2. **Step pembuatnya masih ada di `main`.** `git show origin/main:.github/workflows/ci.yml`
+>    baris 49–53 masih memuat `Upload debug APK`, dan workflow berjalan pada `push` ke
+>    `main` maupun setiap `pull_request`. Menghapus artefak hari ini **tidak** menutup
+>    salurannya — step itulah yang harus dicabut (ada di PR #4, belum merge).
+> 3. **Namun saat ini tidak ada artefak baru yang lahir.** Dari 21 run yang tercatat, 20
+>    berakhir `failure` dan hanya `a1cde36` (PR #3) yang `success`. Penyebabnya bukan kode:
+>    langkah `Setup Android SDK` menulis `packages:` sebagai blok YAML, sedangkan
+>    `android-actions/setup-android` memecah input hanya pada spasi tunggal, sehingga
+>    `sdkmanager` menerima satu nama paket rusak dan keluar `1` —
+>    `Failed to find package 'platforms;android-26`. PR #3 sudah memuat perbaikan
+>    satu-barisnya, jadi **saluran artefak terbuka kembali begitu ada run yang sukses**,
+>    termasuk bila PR #3 di-merge.
+>
+> Kesimpulan: "tepat satu artefak" adalah keadaan sesaat, bukan sifat sistem, dan tanggal
+> 20 Jan 2027 hanya berlaku untuk artefak yang sudah ada.
 
 > **Batas kepastian:** API publik hanya membuktikan keadaan **sekarang** + `created_at`.
 > Tanggal repo berubah dari privat ke publik tidak dapat diaudit tanpa log admin; yang bisa
@@ -381,6 +402,7 @@ ini sudah kedaluwarsa atau sudah terjawab.
 | 22 Okt 2026 22:41 | `27d5917` | Semua fakta §2 diperiksa ulang dengan perintah §9 — hasil identik dengan `e1c7f9c`. Berkas build tidak berubah, jadi §3.1–§3.2 tetap berlaku. **D1–D3 belum terjawab.** |
 | 22 Okt 2026 23:35 | commit ini | **Amandemen butir #4 rapat (S1–S4) diterapkan.** §4 ditulis ulang: "membuka repo" dihapus dari daftar ditahan (sudah terjadi, §2.2), penahanan merge dipersempit ke berkas klaim lisensi (S1), tag/VERSION/Release (S2), CI distribusi APK (S3); teks keputusan PM ditempel verbatim. Premis D2 diperbaiki (opsi "saat repo dibuka" gugur). Q12 (penanda "lisensi belum final") ditambahkan ke §6. §2.2 baru: eksposur publik + artefak APK `dot-debug` yang masih dapat diunduh. §9 perintah verifikasi #6, §10 dua celah baru. **D1–D3 tetap belum terjawab.** |
 | 22 Okt 2026 23:44 | commit ini | Perbaikan rujukan usang: §8 butir 1 menyebut "Q1–Q8" padahal §6 sudah memuat Q1–Q12 sejak amandemen 23:35. Tidak ada perubahan fakta; D1–D3 tetap belum terjawab. |
+| 23 Okt 2026 00:33 | commit ini | **§2.2 diperiksa ulang atas laporan peninjau.** Tiga fakta baru: (a) unduhan artefak butuh login (`401` anonim / `200` bertoken); (b) step `Upload debug APK` masih ada di `main` (baris 49–53), jadi menghapus artefak tidak menutup salurannya; (c) 20 dari 21 run gagal di `Setup Android SDK` (`packages:` blok YAML → `sdkmanager` exit 1), satu-satunya sukses `a1cde36` (PR #3) — saluran artefak terbuka lagi begitu ada run sukses. Tidak ada perubahan pada D1–D3; **D1–D3 tetap belum terjawab.** |
 
 ---
 
