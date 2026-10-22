@@ -185,7 +185,7 @@ lisensi, yang kedua sudah tidak relevan — lihat §2.2.
 | Membuat berkas `LICENSE` | Isinya bergantung pada D1; salah pilih berarti teks hukum yang keliru | D1 | **ditahan** |
 | Merge ke `main` yang **menyentuh klaim lisensi** — `NOTICE`, PRD §10/§16.4, `plasma/*/metadata.json`, teks/URL tombol Lisensi, `LICENSE` | Setiap perubahan di berkas itu adalah pernyataan lisensi baru yang langsung publik | **S1** | **ditahan** |
 | Tag, kenaikan `VERSION`, GitHub Release | Menandai rilis = mengumumkan versi yang klaim lisensinya belum final | **S2** | **ditahan** |
-| CI `main` mendistribusikan APK (`actions/upload-artifact`) | Artefak repo publik dapat diunduh akun GitHub mana pun; setiap push ke `main` dan setiap PR menghasilkan satu APK | **S3** | **ditahan** |
+| CI `main` mendistribusikan APK (`actions/upload-artifact`) | Artefak repo publik dapat diunduh akun GitHub mana pun; **sebelum dicabut**, setiap push ke `main` dan setiap PR menghasilkan satu APK | **S3** | **dicabut** 22 Okt 2026 (`ab5d4ff`) |
 | Membagikan APK ke orang lain (unduhan manual, chat, toko) | Distribusi memicu kewajiban lisensi (PRD §10 sendiri menyebut momen ini) | D1, D2 | **ditahan** |
 | Pengajuan ke F-Droid / Play Store | Keduanya meminta pernyataan lisensi yang konsisten dengan kode | D1 | **ditahan** |
 | Publikasi plasmoid ke KDE Store | `metadata.json` menyatakan MIT; harus cocok dengan keputusan D3 | D3 | **ditahan** |
@@ -202,9 +202,11 @@ menahan eksposur itu; risiko bersumber dari **klaim**, bukan dari kode fitur.
 > `NOTICE` 200, `LICENSE` 404), sehingga blokir merge tidak menahan eksposur; risiko
 > bersumber dari klaim, bukan dari kode fitur. Wewenang membalik: operator.
 
-> **Sisa eksposur yang belum dicabut (S3):** mencabut step `Upload debug APK` hanya
-> menghentikan artefak **berikutnya**. Artefak `dot-debug` yang sudah ada (id `12437095872`,
-> kedaluwarsa 20 Jan 2027) tetap dapat diunduh sampai dihapus eksplisit:
+> **Sisa eksposur yang belum dicabut (S3):** step `Upload debug APK` sudah dicabut (`ab5d4ff`,
+> 22 Okt 2026), jadi tidak ada artefak **baru** — jumlahnya statis di satu, bukan bertambah per
+> run CI. Artefak `dot-debug` yang sudah ada (id `12437095872`, 11.087.580 byte, kedaluwarsa
+> 20 Jan 2027) tetap dapat diunduh sampai dihapus eksplisit. Penghapusan adalah tindakan
+> distribusi terbalik → wewenang operator, dilacak di kartu `t_40fc5231`:
 > `gh api -X DELETE repos/areifzyp/dot/actions/artifacts/12437095872`.
 
 ---
