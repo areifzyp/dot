@@ -17,7 +17,7 @@ masih kosong:
 | §2 | Syarat "keputusan dianggap diterima" (agar tidak ambigu) | terisi |
 | §3 | **License Decision Record** — formulir keputusan | **kosong, menunggu keputusan** |
 | §4 | Pertanyaan eksplisit untuk tim hukum/kepatuhan | terisi |
-| §5 | Mekanisme cek berkala + log follow-up | terisi (pemilik follow-up: belum ditunjuk) |
+| §5 | Mekanisme cek berkala + log follow-up | terisi (PIC & kanal: TODO + usulan default, menunggu konfirmasi) |
 | §6 | Langkah menutup item setelah keputusan keluar | terisi |
 | §7 | Pekerjaan yang diblokir + tautan | terisi |
 | §8 | Riwayat berkas ini | terisi |
@@ -38,9 +38,10 @@ masih kosong:
 | Dicatat ulang | 22 Oktober 2026, 22:47 WIB (berkas ini dibuat; keputusan tetap belum ada) |
 | Diamandemen | 22 Oktober 2026, 23:35 WIB — lingkup penahanan dipersempit (S1–S4), premis "repo private" dicabut karena repo sudah publik sejak 18 Okt 2026 |
 | Pengusul | doc-writer |
-| Penanggung jawab follow-up | `> TODO:` belum ada orang yang ditunjuk — lihat §5 |
-| Kanal komunikasi ke tim hukum | `> TODO:` belum ditentukan (email / Slack / tiket) — lihat §5 |
+| Penanggung jawab follow-up | `> TODO:` belum ditunjuk — **usulan default: pemilik repo `@areifzyp`** (peran: pemilik proyek, pihak yang berwenang memutuskan lisensi). Konfirmasi ke pengusul (doc-writer) diperlukan; rincian di §5 |
+| Kanal komunikasi ke tim hukum | `> TODO:` belum ditentukan — **usulan default: email resmi ke `areifzyp@gmail.com`** (narahubung pemilik repo, dari `git config user.email`; repo tidak mencatat kontak tim hukum). Setiap follow-up juga ditulis sebagai komentar di kartu `t_6cc84cef`. Rincian di §5 |
 | Kadens cek | mingguan, Senin 09:00 WIB — job cron `3d4aef87edac` (§5) |
+| Follow-up pertama | **Senin, 26 Oktober 2026, 09:00 WIB** (§5) |
 | Kartu pelacak | `t_6cc84cef` (doc-writer) — kartu ini |
 | Kartu kembar | `t_2e27c818` (arsitek), judul sama, isi kosong — salah satu harus ditutup agar tidak dua kartu menunggu hal yang sama |
 
@@ -181,10 +182,13 @@ Bila ada yang tidak terjawab, jangan isi §3 — tanyakan ulang butir itu saja.
 
 | Aspek | Isi |
 |---|---|
-| Kadens | mingguan — **Senin 09:00 WIB** (UTC+7) |
+| Kadens | mingguan — **Senin 09:00 WIB** (UTC+7), hari kerja yang sama setiap minggu. Tidak ada cek di antara jadwal kecuali ada pemicu luar (lihat baris "Eskalasi") |
+| Tanggal follow-up pertama | **Senin, 26 Oktober 2026, 09:00 WIB**. Terverifikasi dari job `3d4aef87edac`: `schedule = every monday 9am`, `next_run_at = 2026-10-26T09:00:00+07:00`, `last_run_at = 2026-10-22T22:57:38+07:00`, `last_status = ok` (dibaca 23 Okt 2026 00:36 WIB) |
 | Pelaksana cek | job cron `3d4aef87edac` ("Dot. — cek mingguan keputusan lisensi", `every monday 9am`, `deliver: local`). Setiap Senin ia menjalankan skrip cek lalu **memposting hasilnya sebagai komentar di kartu `t_6cc84cef`** |
-| Penanggung jawab follow-up | `> TODO:` **belum ada orang yang ditunjuk.** Pengusul (doc-writer) hanya mencatat status dan menjalankan cek otomatis; doc-writer tidak bisa menjadi pihak yang menghubungi tim hukum. Pemilik proyek perlu menunjuk satu orang + kanal |
-| Kanal komunikasi ke tim hukum | `> TODO:` email / Slack / tiket — belum ditentukan. Repo tidak mencatat kontak tim hukum/kepatuhan: `git ls-tree -r --name-only HEAD \| grep -iE 'CODEOWNERS\|CONTRIBUTING\|GOVERNANCE\|SECURITY\|MAINTAINERS'` → kosong (diperiksa 22 Okt 2026 22:46 WIB). Bila memang tidak ada tim hukum formal, **calon default** adalah pemilik repo `@areifzyp` yang menyatakan bertindak atas nama mereka — usulan, bukan keputusan; pemilik yang menetapkan. Catatan teknis: profil `doc-writer` tidak punya kanal Telegram aktif, jadi keluaran job masuk ke kartu (bukan chat) |
+| Penanggung jawab follow-up (PIC) | `> TODO:` **belum ditunjuk.** Usulan default: **pemilik repo `@areifzyp`** — peran: pemilik proyek, pihak yang berwenang memutuskan D1–D3 dan satu-satunya narahubung yang tercatat (`git config user.email` → `areifzyp@gmail.com`; `git ls-tree -r --name-only HEAD \| grep -iE 'CODEOWNERS\|CONTRIBUTING\|GOVERNANCE\|SECURITY\|MAINTAINERS'` → kosong, diperiksa 23 Okt 2026 00:36 WIB pada `a7a6041`). **Konfirmasi ke pengusul (doc-writer) diperlukan** — doc-writer hanya mencatat status dan menjalankan cek otomatis, bukan pihak yang menghubungi tim hukum. Bila pemilik menunjuk orang lain, ganti baris ini **dan** §1; jangan biarkan tetap TODO |
+| Kanal komunikasi ke tim hukum | `> TODO:` **belum ditentukan.** Usulan default dua lapis: (1) **pengajuan ke pihak keputusan** — email resmi ke narahubung pemilik repo, `areifzyp@gmail.com` (satu-satunya kontak yang tercatat; repo tidak punya berkas kontak tim hukum); (2) **kanal catatan resmi** — komentar di kartu `t_6cc84cef`, sudah aktif dan terbukti (§5.1). Bila pemilik menyediakan, (1) boleh diganti thread Slack kanal legal atau tiket sistem internal — ganti baris ini saat ditentukan. **Konfirmasi ke pengusul (doc-writer) diperlukan.** Catatan teknis: profil `doc-writer` tidak punya kanal Telegram aktif, jadi keluaran job masuk ke kartu (bukan chat) |
+| Yang diperbarui setiap follow-up | (1) Satu baris baru di log §5.1: tanggal + jam WIB, oleh, kanal, **ringkasan respons** (atau `tidak ada respons`), status item. (2) Field "Dicatat ulang" di §1 bila status berubah. (3) §3 **hanya** bila ada keputusan tertulis — bukan dugaan. (4) Hitungan follow-up tanpa respons, dipakai baris "Eskalasi" |
+| Eskalasi bila tidak ada respons | 4 follow-up mingguan berturut-turut tanpa jawaban tertulis (≈ 1 bulan: 26 Okt, 2 Nov, 9 Nov, 16 Nov 2026) → tulis baris eskalasi di §5.1 dan ajukan keputusan ke operator board. Kartu tetap BLOCKED; agen tidak boleh menebak lisensi |
 | Cek otomatis (tanpa menghubungi siapa pun) | `bash scripts/license-status.sh` — mencetak status LICENSE/NOTICE/PRD/plasmoid + apakah §3 sudah terisi; exit `0` hanya bila LICENSE ada, NOTICE & PRD sejalan, dan §3 terisi |
 | Pemicu berhenti | skrip menjadi senyap (exit `0`, tanpa keluaran) saat `LICENSE` ada, `NOTICE` dan PRD §10 sejalan dengan `LICENSE`, dan §3 terisi. Metadata plasmoid hanya dicatat sebagai catatan, tidak menahan — karena D3 boleh memutuskan plasmoid tetap `MIT` di repo yang lisensi utamanya lain |
 | Mematikan pengingat | `hermes cron remove 3d4aef87edac` (setelah keputusan diterapkan, atau bila pengingat tidak diperlukan) |
@@ -199,6 +203,7 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | 22 Okt 2026 22:36 | doc-writer | kartu `t_6cc84cef` | Pemeriksaan ulang #2: tidak ada `LICENSE`, tidak ada jawaban tertulis; formulir jawaban 3 baris ditambahkan (commit `e16eaea`) | BLOCKED |
 | 22 Okt 2026 22:47 | doc-writer | kartu `t_6cc84cef` | Pemeriksaan ulang #3: tetap belum ada keputusan; berkas ini dibuat + skrip cek status | BLOCKED |
 | 22 Okt 2026 22:57 | job cron `3d4aef87edac` | kartu `t_6cc84cef` | Uji job pertama: komentar mingguan terpasang di kartu (terverifikasi di thread) — mekanisme pengingat aktif, jadwal berikutnya Senin 26 Okt 2026 09:00 WIB | BLOCKED |
+| 23 Okt 2026 00:36 | doc-writer | kartu `t_6cc84cef` | **Mekanisme follow-up ditetapkan** (kartu `t_f62a7c52`): kadens mingguan Senin 09:00 WIB, follow-up pertama **26 Okt 2026**, PIC & kanal diisi usulan default + TODO konfirmasi (§5). Belum ada respons dari pihak keputusan; keputusan lisensi tetap belum ada | BLOCKED |
 
 ---
 
@@ -244,6 +249,7 @@ Satu baris per pemeriksaan. Jangan hapus baris lama.
 | 22 Okt 2026 23:26 | commit ini | Gerbang §3 diperbaiki: `grep -c` (menghitung **baris** di seluruh berkas, termasuk prosa §1.1 dan instruksi §3) diganti hitungan penanda **di dalam tabel §3 saja** via `awk` + `gsub` → `11 penanda` (10 field; baris "Keputusan per ID" memuat D1/D2/D3). Uji dua arah: §3 kosong → `exit 1` + problem "formulir §3 … belum diisi"; salinan dengan §3 terisi + `LICENSE` + `NOTICE`/PRD §10/plasmoid selaras → `exit 0`. Baris 6 §1.1 kini memakai perintah gerbang, bukan `grep -c` |
 | 22 Okt 2026 23:35 | commit ini | Amandemen butir #4 (S1–S4): "membuka repo" keluar dari daftar ditahan (sudah terjadi), penahanan dipersempit ke merge berkas klaim lisensi (S1), tag/`VERSION`/Release (S2), CI distribusi APK (S3). Premis D2 diperbaiki di §1, §3 field 7, format jawaban, §4, §4.1. Q12 ditambahkan ke §4. §7 diperbarui |
 | 23 Okt 2026 00:27 | commit ini | Template berdiri sendiri ditambahkan: `docs/templates/LICENSE-DECISION-RECORD.template.md` (v1.0, metadata + field a–i, tiap field dengan placeholder dan satu baris petunjuk). Catatan §3 diperbarui: template kini punya berkas, §3 tetap formulir kanonik untuk lisensi Dot. |
+| 23 Okt 2026 00:36 | commit ini | Mekanisme follow-up §5 dilengkapi (kartu `t_f62a7c52`): tanggal follow-up pertama 26 Okt 2026, PIC & kanal diisi usulan default + `TODO` konfirmasi, baris "Yang diperbarui setiap follow-up" dan "Eskalasi bila tidak ada respons" (4 minggu). §1 dan tabel ringkasan atas diselaraskan; log §5.1 ditambah satu baris |
 
 ---
 
