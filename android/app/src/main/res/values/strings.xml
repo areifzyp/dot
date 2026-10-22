@@ -6,4 +6,28 @@
     <string name="config_option_12">12 jam</string>
     <string name="config_option_24">24 jam</string>
     <string name="config_save">Simpan</string>
+
+    <!-- Galeri Widget (PRD §6.1) -->
+    <string name="gallery_title">Galeri Widget</string>
+    <string name="gallery_back">Kembali</string>
+    <string name="gallery_add">Tambah ke Homescreen</string>
+    <string name="catalog_soon">Segera hadir</string>
+    <string name="catalog_sizes">Ukuran: %1$s</string>
+    <string name="size_small">Kecil</string>
+    <string name="size_medium">Sedang</string>
+    <string name="size_large">Besar</string>
+    <string name="guide_title">Pemasangan langsung tidak didukung</string>
+    <string name="guide_body">Launcher ini tidak menerima permintaan pasang otomatis. Buka panel widget launcher (tekan &amp; tahan layar utama → Widget), lalu seret "Dot. Clock" ke homescreen.</string>
+    <string name="guide_ok">Mengerti</string>
+
+    <string name="catalog_clock_name">Widget Jam</string>
+    <string name="catalog_clock_desc">Jam digital dot-matrix, format 12/24 jam</string>
+    <string name="catalog_weather_name">Widget Cuaca</string>
+    <string name="catalog_weather_desc">Suhu dan kondisi kota pilihan</string>
+    <string name="catalog_calendar_name">Widget Kalender</string>
+    <string name="catalog_calendar_desc">Tanggal dan agenda terdekat</string>
+    <string name="catalog_device_name">Widget Status HP</string>
+    <string name="catalog_device_desc">Baterai, memori, dan suhu perangkat</string>
+    <string name="catalog_music_name">Widget Musik</string>
+    <string name="catalog_music_desc">Kontrol pemutaran musik</string>
 </resources>
