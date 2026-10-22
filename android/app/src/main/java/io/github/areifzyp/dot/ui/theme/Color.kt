@@ -11,6 +11,7 @@ val DotGraySecondaryLight = Color(0xFF666666)
 val DotGraySecondaryDark = Color(0xFF999999)
 val DotGrayInactive = Color(0xFF444444)
 val DotAccentRed = Color(0xFFD71921)
+val DotAccentOrange = Color(0xFFF97316)
 
 // Light theme
 val DotLightBackground = Color(0xFFFFFFFF)
