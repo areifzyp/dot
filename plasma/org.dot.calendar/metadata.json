@@ -1,0 +1,17 @@
+{
+  "KPlugin": {
+    "Id": "org.dot.calendar",
+    "Name": "Dot Calendar",
+    "Description": "Nothing-style minimalist calendar widget for KDE Plasma",
+    "Authors": [
+      {
+        "Name": "Arif",
+        "Email": ""
+      }
+    ],
+    "Icon": "view-calendar",
+    "Category": "Time and Date",
+    "License": "MIT"
+  },
+  "X-KDE-PluginInfo-Name": "org.dot.calendar"
+}
