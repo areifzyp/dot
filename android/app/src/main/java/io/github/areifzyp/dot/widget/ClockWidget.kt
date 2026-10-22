@@ -34,6 +34,7 @@ import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
 import androidx.glance.layout.ContentScale
+import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.fillMaxWidth
@@ -47,8 +48,10 @@ import io.github.areifzyp.dot.ui.theme.DotDarkInactiveDot
 import io.github.areifzyp.dot.ui.theme.DotLightBackground
 import io.github.areifzyp.dot.ui.theme.DotLightForeground
 import io.github.areifzyp.dot.ui.theme.DotLightInactiveDot
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 /**
@@ -57,14 +60,37 @@ import java.time.format.DateTimeFormatter
  * Tema terang/gelap otomatis via ColorProvider berbasis uiMode.
  * Update tiap menit via AlarmManager exact alarm (ClockUpdateScheduler),
  * karena updatePeriodMillis dibulatkan sistem ke minimum ~30 menit.
+ *
+ * STATUS-MAP §4a: bila izin exact alarm dicabut, alarm menjadi inexact dan
+ * pembaruan bisa terlambat. Supaya widget tidak pernah *tampak* diam tanpa
+ * memberi tahu, setiap render membandingkan stempel pembaruan terakhir dengan
+ * jam berjalan (ClockFreshnessPolicy) dan menampilkan penanda "TERTUNDA HH:MM"
+ * saat selisihnya ≥ 2 menit.
  */
 class ClockWidget : GlanceAppWidget() {
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         val widgetId = id.appWidgetIdOrNull()
             ?: AppWidgetManager.INVALID_APPWIDGET_ID
+
+        // Satu instan waktu per render: digit jam, label tanggal, dan stempel
+        // memakai nilai yang sama supaya "menit yang ditampilkan" bisa
+        // dibandingkan dengan menit berjalan (UX-1).
+        val nowMillis = System.currentTimeMillis()
+        val now = Instant.ofEpochMilli(nowMillis)
+            .atZone(ZoneId.systemDefault())
+            .toLocalTime()
+        val minuteOfDay = ClockFreshnessPolicy.minuteOfDay(now)
+
+        // Stempel pembaruan *sebelumnya* yang menentukan status; setelah itu
+        // stempel diganti, sehingga penanda hilang pada render berikutnya (UX-4).
+        val previous = ClockFreshnessStore.load(context)
+        val freshness = previous?.let { ClockFreshnessPolicy.evaluate(it, nowMillis) }
+            ?: ClockFreshness.OnTime
+        ClockFreshnessStore.save(context, ClockUpdateStamp(nowMillis, minuteOfDay))
+
         provideContent {
-            ClockWidgetContent(widgetId = widgetId)
+            ClockWidgetContent(widgetId = widgetId, now = now, freshness = freshness)
         }
     }
 }
@@ -78,10 +104,47 @@ private val WidgetSecondary: ColorProvider = DayNightColor(
     night = DotDarkForeground.copy(alpha = 0.6f),
 )
 
+/**
+ * Stempel pembaruan terakhir widget jam (STATUS-MAP §4a).
+ *
+ * Global, bukan per appwidget ID: semua widget jam digambar ulang oleh alarm
+ * yang sama (satu PendingIntent, satu REQUEST_CODE), jadi stempelnya pun satu.
+ * Disimpan di prefs yang sama dengan pengaturan widget supaya tidak menambah
+ * berkas preferensi baru.
+ */
+internal object ClockFreshnessStore {
+
+    private const val PREFS = "dot_widget_prefs"
+    private const val KEY_EPOCH_MS = "clock_last_update_epoch_ms"
+    private const val KEY_MINUTE_OF_DAY = "clock_last_update_minute_of_day"
+
+    /** `null` bila widget belum pernah render (mis. baru dipasang) — jangan tampilkan penanda. */
+    fun load(context: Context): ClockUpdateStamp? {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val epochMillis = prefs.getLong(KEY_EPOCH_MS, -1L)
+        val minuteOfDay = prefs.getInt(KEY_MINUTE_OF_DAY, -1)
+        if (epochMillis <= 0L || minuteOfDay !in 0 until ClockFreshnessPolicy.MINUTES_PER_DAY) {
+            return null
+        }
+        return ClockUpdateStamp(epochMillis = epochMillis, minuteOfDay = minuteOfDay)
+    }
+
+    fun save(context: Context, stamp: ClockUpdateStamp) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit()
+            .putLong(KEY_EPOCH_MS, stamp.epochMillis)
+            .putInt(KEY_MINUTE_OF_DAY, stamp.minuteOfDay)
+            .apply()
+    }
+}
+
 @Composable
-private fun ClockWidgetContent(widgetId: Int) {
+private fun ClockWidgetContent(
+    widgetId: Int,
+    now: LocalTime,
+    freshness: ClockFreshness,
+) {
     val context = LocalContext.current
-    val now = LocalTime.now()
     val format = DotSettings.getTimeFormat(context, widgetId)
     val use24Hour = DotSettings.is24Hour(context, format)
     val glyphs = DotMatrix.timeToGlyphs(now.hour, now.minute, use24Hour = use24Hour)
@@ -89,25 +152,29 @@ private fun ClockWidgetContent(widgetId: Int) {
 
     val density = context.resources.displayMetrics.density
     val sizeDp = LocalSize.current
-    val padDp = 14f
-    val availWdp = if (sizeDp.width.value.isFinite() && sizeDp.width.value > 60f) {
-        sizeDp.width.value - padDp * 2
-    } else {
-        250f - padDp * 2
-    }
-    val availHdp = if (sizeDp.height.value.isFinite() && sizeDp.height.value > 60f) {
-        sizeDp.height.value - padDp * 2
-    } else {
-        110f - padDp * 2
-    }
+    val padDp = ClockLayout.PAD_DP
+    val availWdp = ClockLayout.availableWidthDp(sizeDp.width.value)
+    val availHdp = ClockLayout.availableHeightDp(sizeDp.height.value)
 
-    val labelSp = 12f
+    val labelSp = ClockLayout.LABEL_SP
     val labelPx = labelSp * context.resources.displayMetrics.scaledDensity
-    val matrixHdp = (availHdp - labelSp * 1.7f - 6f).coerceAtLeast(20f)
+
+    // UX-2/UX-3: tinggi baris penanda dipesan *selalu*, juga saat OnTime.
+    // Kalau slot ini hanya muncul saat Delayed, digit jam akan mengecil/bergeser
+    // tepat ketika penanda muncul — persis yang dilarang UX-3. Aritmetikanya
+    // ada di ClockLayout (tanpa parameter status) dan dikunci ClockLayoutTest.
+    val markerSp = ClockLayout.MARKER_SP
+    val markerPx = markerSp * context.resources.displayMetrics.scaledDensity
+    val markerGapDp = ClockLayout.MARKER_GAP_DP
+    val markerSlotHdp = ClockLayout.markerSlotHeightDp
+
+    val matrixHdp = ClockLayout.matrixHeightDp(availHdp)
 
     val onColor = WidgetForeground.getColor(context).toArgb()
     val offColor = WidgetInactiveDot.getColor(context).toArgb()
     val labelColor = WidgetSecondary.getColor(context).toArgb()
+    // UX-2: indikator memakai warna aksen (GAY-3/GAY-4), label waktunya sekunder.
+    val markerAccentColor = AccentColorProvider().getColor(context).toArgb()
 
     val matrix = remember(glyphs, availWdp, matrixHdp, onColor, offColor) {
         DotRender.dotMatrix(
@@ -129,6 +196,37 @@ private fun ClockWidgetContent(widgetId: Int) {
             color = labelColor,
             letterSpacingEm = 0.14f,
         )
+    }
+
+    val delayed = freshness as? ClockFreshness.Delayed
+    val markerLabel = delayed?.let { ClockFreshnessPolicy.markerLabel() }
+    val markerTime = delayed?.let { ClockFreshnessPolicy.formatLastUpdate(it.lastUpdate.minuteOfDay) }
+    // UX-5: kalimat lengkap dibawa gambar pertama, gambar kedua dekoratif (null)
+    // supaya pembaca layar tidak mengumumkan status dua kali.
+    val markerDescription = delayed?.let {
+        ClockFreshnessPolicy.markerContentDescription(it.lastUpdate.minuteOfDay)
+    }
+    val markerLabelBitmap = remember(markerLabel, markerPx, markerAccentColor) {
+        markerLabel?.let {
+            DotRender.text(
+                text = it,
+                typeface = DotRender.typeface(context),
+                textSizePx = markerPx,
+                color = markerAccentColor,
+                letterSpacingEm = 0.12f,
+            )
+        }
+    }
+    val markerTimeBitmap = remember(markerTime, markerPx, labelColor) {
+        markerTime?.let {
+            DotRender.text(
+                text = it,
+                typeface = DotRender.typeface(context),
+                textSizePx = markerPx,
+                color = labelColor,
+                letterSpacingEm = 0.12f,
+            )
+        }
     }
 
     Box(
@@ -166,6 +264,40 @@ private fun ClockWidgetContent(widgetId: Int) {
                     .width((label.width / density).dp)
                     .height((label.height / density).dp),
             )
+
+            Spacer(modifier = GlanceModifier.height(markerGapDp.dp))
+
+            // STATUS-MAP §4a (UX-2, UX-3, UX-5, UX-6): slot penanda berukuran
+            // tetap — kosong saat OnTime — sehingga kotak digit jam tidak
+            // bergerak ketika status berubah. Terbaca tanpa interaksi pengguna.
+            Box(
+                modifier = GlanceModifier
+                    .fillMaxWidth()
+                    .height(markerSlotHdp.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (markerLabelBitmap != null && markerTimeBitmap != null) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            provider = ImageProvider(markerLabelBitmap),
+                            contentDescription = markerDescription,
+                            contentScale = ContentScale.Fit,
+                            modifier = GlanceModifier
+                                .width((markerLabelBitmap.width / density).dp)
+                                .height((markerLabelBitmap.height / density).dp),
+                        )
+                        Spacer(modifier = GlanceModifier.width(4.dp))
+                        Image(
+                            provider = ImageProvider(markerTimeBitmap),
+                            contentDescription = null,
+                            contentScale = ContentScale.Fit,
+                            modifier = GlanceModifier
+                                .width((markerTimeBitmap.width / density).dp)
+                                .height((markerTimeBitmap.height / density).dp),
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -181,10 +313,48 @@ object ClockUpdateScheduler {
     const val ACTION_UPDATE_CLOCK = "io.github.areifzyp.dot.widget.ACTION_UPDATE_CLOCK"
     private const val REQUEST_CODE = 42
 
+    /** Alarm yang benar-benar dipasang; dipakai untuk menguji cabang izin (AC-2). */
+    enum class AlarmMode { EXACT, INEXACT }
+
     /** Milidetik menuju batas menit berikutnya. Tepat di batas menit -> 60000. */
     fun millisToNextMinute(nowMillis: Long = System.currentTimeMillis()): Long {
         val minuteMs = 60_000L
         return minuteMs - (nowMillis % minuteMs)
+    }
+
+    /**
+     * STATUS-MAP §4a (AC-2): keputusan cabang izin exact alarm.
+     *
+     * Sebelum Android 12 (S) izin ini belum ada, jadi exact selalu boleh —
+     * `canScheduleExactAlarms()` tidak dipanggil di sana. Murni (tanpa tipe
+     * Android) supaya cabang "izin ditolak" bisa diuji di JVM.
+     */
+    fun alarmMode(sdkInt: Int, canScheduleExactAlarms: Boolean): AlarmMode =
+        if (sdkInt < Build.VERSION_CODES.S || canScheduleExactAlarms) {
+            AlarmMode.EXACT
+        } else {
+            AlarmMode.INEXACT
+        }
+
+    /**
+     * Pasang alarm sesuai [mode] dan laporkan mode yang akhirnya dipakai.
+     *
+     * Bila izin dicabut *di antara* pemeriksaan dan pemanggilan (balapan dengan
+     * pengguna mencabut izin), `setExactAndAllowWhileIdle` melempar
+     * `SecurityException`; widget tidak boleh berhenti menjadwalkan, jadi alarm
+     * inexact tetap dipasang.
+     */
+    fun schedule(mode: AlarmMode, setExact: () -> Unit, setInexact: () -> Unit): AlarmMode {
+        if (mode == AlarmMode.EXACT) {
+            try {
+                setExact()
+                return AlarmMode.EXACT
+            } catch (_: SecurityException) {
+                // jatuh ke alarm inexact di bawah
+            }
+        }
+        setInexact()
+        return AlarmMode.INEXACT
     }
 
     fun scheduleNextUpdate(context: Context) {
@@ -196,18 +366,22 @@ object ClockUpdateScheduler {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val triggerAt = SystemClock.elapsedRealtime() + millisToNextMinute()
-        val exactAllowed = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || am.canScheduleExactAlarms()
-        if (exactAllowed) {
-            try {
-                am.setExactAndAllowWhileIdle(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi)
-                return
-            } catch (_: SecurityException) {
-                // jatuh ke alarm inexact di bawah
-            }
-        }
+        val canScheduleExact =
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && am.canScheduleExactAlarms()
         // Izin exact alarm dicabut (Android 12+): jangan berhenti menjadwalkan —
-        // alarm inexact tetap menjaga jam berganti menit, hanya bisa meleset beberapa detik.
-        am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi)
+        // alarm inexact tetap menjaga jam berganti menit, hanya bisa meleset
+        // beberapa detik. Keterlambatan itulah yang ditandai UI (UX-1).
+        schedule(
+            mode = alarmMode(Build.VERSION.SDK_INT, canScheduleExact),
+            setExact = {
+                am.setExactAndAllowWhileIdle(
+                    AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi
+                )
+            },
+            setInexact = {
+                am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAt, pi)
+            },
+        )
     }
 
     fun cancel(context: Context) {

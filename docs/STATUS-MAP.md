@@ -83,14 +83,15 @@ Kriteria selesai: keenam plasmoid tercatat dengan tiga kolom di atas terisi. Has
 
 ## 4. Risiko terbuka
 
-### a) Exact alarm — fallback inexact tanpa kriteria UX dan tanpa test
+### a) Exact alarm — fallback inexact + penanda "pembaruan tertunda" (tertutup 22 Oktober 2026)
 
 | | |
 |---|---|
-| **Risiko** | Di Android 12+, izin exact alarm bisa dicabut. Widget tetap menjadwalkan alarm inexact, tetapi tidak ada definisi kapan pembaruan dianggap "terlambat" dan tidak ada test untuk cabang penolakan izin. |
-| **Bukti di repo** | [`widget/ClockWidget.kt:199–211`](../android/app/src/main/java/io/github/areifzyp/dot/widget/ClockWidget.kt) — `canScheduleExactAlarms()` di baris 199, lalu `am.set(...)` sebagai fallback di baris 210. Test [`ClockUpdateSchedulerTest.kt`](../android/app/src/test/java/io/github/areifzyp/dot/widget/ClockUpdateSchedulerTest.kt) hanya menguji `millisToNextMinute` (2 test), tidak menyentuh cabang izin. |
+| **Risiko** | Di Android 12+, izin exact alarm bisa dicabut. Widget tetap menjadwalkan alarm inexact, tetapi tidak ada definisi kapan pembaruan dianggap "terlambat" dan tidak ada test untuk cabang penolakan izin. _(Kondisi sebelum 22 Oktober 2026 — sudah ditutup, lihat baris Status dan §4a-i.)_ |
+| **Bukti di repo** | Fallback: [`widget/ClockWidget.kt`](../android/app/src/main/java/io/github/areifzyp/dot/widget/ClockWidget.kt) — `canScheduleExactAlarms()`, lalu `am.set(...)` sebagai fallback, plus `try/catch SecurityException` untuk izin yang dicabut di tengah jalan. State kesegaran: [`widget/ClockFreshness.kt`](../android/app/src/main/java/io/github/areifzyp/dot/widget/ClockFreshness.kt) (`OnTime`/`Delayed`, ambang di `ClockFreshnessPolicy`). Geometri: [`widget/ClockLayout.kt`](../android/app/src/main/java/io/github/areifzyp/dot/widget/ClockLayout.kt). Test: `ClockUpdateSchedulerTest` (8), `ClockExactAlarmPermissionTest` (2), `ClockFreshnessTest` (8), `ClockFreshnessStoreTest` (3), `ClockLayoutTest` (6). |
 | **Pemilik** | Kriteria UX: **PM (Sekar)** — ditulis di §4a ini, bukan di PRD (PRD dibekukan). Test cabang izin: **frontend/dev Android**. |
 | **Kriteria penerimaan** | (1) Kriteria UX "tidak pernah tampak diam" — dirinci UX-1..6 di bawah. (2) Ada unit test yang mencakup cabang izin ditolak. |
+| **Status** | **AC-1 & AC-2 terpenuhi** (frontend, 22 Oktober 2026) — rincian bukti di §4a-i. Suite `:app:testDebugUnitTest`: 61 test / 0 gagal / 0 error. |
 
 #### Kriteria UX "tidak pernah tampak diam" (ditetapkan PM, 22 Oktober 2026)
 
@@ -106,6 +107,41 @@ Kegagalan yang dicegah bukan "widget berhenti" — melainkan **widget menampilka
 | **UX-6** | **Terbaca tanpa interaksi.** Penanda tampil tanpa pengguna harus membuka aplikasi atau menekan widget. | Tinjauan manual. |
 
 **Konsekuensi & wewenang pembalik:** ambang 2 menit dan bentuk penanda adalah keputusan produk yang bisa dibalik tanpa menyentuh PRD — cukup ubah tabel ini. Yang **tidak** boleh dibalik oleh implementasi: UX-1 (ambang didefinisikan, bukan diserahkan ke perilaku AlarmManager) dan UX-5 (status tidak boleh hanya warna). Keduanya yang membuat AC ini bisa diuji.
+
+#### a-i) Status implementasi (frontend, 22 Oktober 2026)
+
+**AC-1 — penanda "pembaruan tertunda".**
+
+- **UX-1 (ambang di kode).** [`ClockFreshnessPolicy.DELAY_THRESHOLD_MINUTES`](../android/app/src/main/java/io/github/areifzyp/dot/widget/ClockFreshness.kt) = 2. `evaluate()` membandingkan stempel pembaruan sebelumnya dengan jam berjalan **saat render**; selisih ≥ 2 menit → `Delayed`, di bawahnya → `OnTime`. Perilaku `AlarmManager` tidak pernah menjadi sumber keputusan.
+- **UX-2/UX-6 (penanda terlihat tanpa interaksi).** `ClockWidgetContent` menggambar baris tetap berisi indikator `TERTUNDA` (warna aksen) + label `HH:MM` (gaya sekunder). Keduanya digambar pada render yang sama, tanpa aksi pengguna.
+- **UX-3 (digit tidak bergeser).** Slot penanda dipesan **selalu**, termasuk saat `OnTime`: `ClockLayout.reservedMarkerHeightDp` = `MARKER_GAP_DP` + `MARKER_SP × 1.8` = 22 dp, dan `ClockLayout` sengaja **tidak menerima** parameter status. Jadi tidak ada cabang yang bisa membuat kotak digit mengecil tepat ketika penanda muncul. Dikunci `ClockLayoutTest` (`markerSlotIsReservedEvenWhenOnTime`, `digitBoxIsIdenticalForOnTimeAndDelayed`, `rowsAndDigitsNeverOverflowAvailableHeight`).
+- **UX-4 (pulih).** `provideGlance` mengevaluasi status dari stempel **sebelumnya**, lalu langsung menimpanya dengan stempel render ini (`ClockFreshnessStore.save`). Render berikutnya selalu membandingkan dengan stempel baru, sehingga tidak ada state "macet tertunda". Diuji `ClockFreshnessTest` (transisi `Delayed` → `OnTime`).
+- **UX-5 (bukan warna saja).** `ClockFreshnessPolicy.markerContentDescription()` menghasilkan `"Pembaruan tertunda, terakhir HH:MM"`; kalimat lengkap dibawa satu `Image`, gambar label waktu memakai `contentDescription = null` supaya pembaca layar tidak mengumumkan dua kali.
+
+**AC-2 — unit test cabang izin exact alarm ditolak.** 10 test, semuanya menyuntik `sdkInt` dan status izin sehingga tidak butuh perangkat Android 12+:
+
+| Test | Cabang yang dijaga |
+|---|---|
+| `ClockUpdateSchedulerTest.beforeAndroid12ExactAlarmIsAlwaysAllowed` | pra-Android 12 → `EXACT` tanpa izin |
+| `android12AndAboveWithPermissionUsesExactAlarm` | izin ada → `setExactAndAllowWhileIdle` |
+| `android12AndAboveWithoutPermissionFallsBackToInexact` | izin tidak ada → `set` inexact |
+| `deniedPermissionNeverCallsExactAlarm` | izin ditolak → exact tidak pernah dipanggil |
+| `allowedPermissionCallsExactAlarmOnly` | izin ada → tidak ada fallback inexact |
+| `securityExceptionFromRevokedPermissionFallsBackToInexact` | izin dicabut di tengah jalan → `SecurityException` ditangkap, jatuh ke inexact |
+| `ClockExactAlarmPermissionTest.permissionDeniedStillSchedulesAnAlarm` | end-to-end: izin ditolak tetap menghasilkan alarm terjadwal |
+| `permissionGrantedSchedulesExactAlarm` | end-to-end: izin ada → alarm exact |
+| `exactlyOnMinuteBoundarySchedulesFullMinute`, `midMinuteSchedulesRemainder` | aritmetika `millisToNextMinute` (test lama, tetap hijau) |
+
+Test-test ini dibuktikan **menggigit** lewat mutation testing, bukan sekadar hijau:
+
+- `alarmMode()` dipaksa selalu `EXACT` → `permissionDeniedStillSchedulesAnAlarm` + `android12AndAboveWithoutPermissionFallsBackToInexact` gagal.
+- `try/catch SecurityException` dihapus dari `schedule()` → `securityExceptionFromRevokedPermissionFallsBackToInexact` gagal.
+- `- reservedMarkerHeightDp` dihapus dari `ClockLayout.matrixHeightDp()` → `ClockLayoutTest` gagal 2 test.
+
+**Yang belum tertutup dan sengaja ditinggalkan terbuka:**
+
+- UX-2/UX-3 tetap meminta **snapshot** `OnTime` vs `Delayed`; itu milik gate §4b, dan alat snapshot belum ada di repo. Yang dikunci di sini adalah aritmetika geometrinya, bukan pikselnya.
+- **Keputusan desain untuk PM:** memesan slot penanda secara permanen membuat kotak digit menyusut 22 dp dibanding sebelum perubahan ini (pada widget bawaan 110 dp: 33,6 dp, sebelumnya 55,6 dp). Itu harga dari UX-3 — satu-satunya alternatif adalah membiarkan digit bergeser saat penanda muncul. Kalau PM lebih memilih digit besar dengan penanda yang mengambil ruang hanya saat `Delayed`, UX-3 harus dilonggarkan lebih dulu. Angka `MARKER_SP`, `MARKER_SLOT_FACTOR`, dan ambang 2 menit bisa diubah di `ClockLayout`/`ClockFreshnessPolicy` tanpa menyentuh PRD.
 
 ### b) Snapshot test — tidak ada gate visual untuk hybrid 6 Glance + 1 RemoteViews
 
