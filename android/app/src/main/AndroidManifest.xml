@@ -5,6 +5,12 @@
          aplikasi jam/alarm di API 33+; diabaikan pada versi Android lebih lama). -->
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
 
+    <!-- Widget Cuaca: fetch Open-Meteo (PRD §6.3) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Widget Kalender mode agenda (PRD §6.4 KAL-2); diminta hanya saat dipilih -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -41,6 +47,69 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/clock_widget_info" />
+        </receiver>
+
+        <!-- Konfigurasi Widget Teks (PRD §6.11 TXT-1) -->
+        <activity
+            android:name=".widget.TextWidgetConfigActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- Text Widget (PRD §6.11) -->
+        <receiver
+            android:name=".widget.TextWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/text_widget_info" />
+        </receiver>
+
+        <!-- Konfigurasi Widget Kalender (PRD §6.4 KAL-3) -->
+        <activity
+            android:name=".widget.CalendarWidgetConfigActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- Calendar Widget (PRD §6.4) -->
+        <receiver
+            android:name=".widget.CalendarWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/calendar_widget_info" />
+        </receiver>
+
+        <!-- Konfigurasi Widget Cuaca (PRD §6.3 CUA-1) -->
+        <activity
+            android:name=".weather.WeatherConfigActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <!-- Weather Widget (PRD §6.3) -->
+        <receiver
+            android:name=".weather.WeatherWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/weather_widget_info" />
         </receiver>
     </application>
 

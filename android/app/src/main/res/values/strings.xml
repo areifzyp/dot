@@ -30,4 +30,35 @@
     <string name="catalog_device_desc">Baterai, memori, dan suhu perangkat</string>
     <string name="catalog_music_name">Widget Musik</string>
     <string name="catalog_music_desc">Kontrol pemutaran musik</string>
+
+    <!-- Widget Teks (PRD §6.11) -->
+    <string name="widget_text_description">Dot. Text — teks buatan pengguna dengan font Doto</string>
+    <string name="catalog_text_name">Widget Teks</string>
+    <string name="catalog_text_desc">Tulis teks sendiri, tampil dengan font dot-matrix</string>
+    <string name="text_config_title">Widget Teks</string>
+    <string name="text_config_hint">Tulis teks di sini (maks 100 karakter)</string>
+    <string name="text_config_align">Perataan</string>
+    <string name="text_config_size">Ukuran huruf</string>
+    <string name="text_align_left">Kiri</string>
+    <string name="text_align_center">Tengah</string>
+    <string name="text_align_right">Kanan</string>
+
+    <!-- Widget Kalender (PRD §6.4) -->
+    <string name="widget_calendar_description">Dot. Calendar — tanggal dan agenda terdekat</string>
+    <string name="calendar_config_title">Widget Kalender — Mode Tampilan</string>
+    <string name="calendar_mode_date">Tanggal saja (tanpa izin)</string>
+    <string name="calendar_mode_agenda">Tanggal + agenda (butuh izin kalender)</string>
+    <string name="calendar_no_permission">Izin kalender belum diberikan</string>
+    <string name="calendar_empty">Tidak ada acara 24 jam ke depan</string>
+
+    <!-- Widget Cuaca (PRD §6.3) -->
+    <string name="widget_weather_description">Dot. Weather — suhu dan kondisi kota pilihan</string>
+    <string name="weather_config_title">Widget Cuaca — Pilih Kota</string>
+    <string name="weather_city_label">Nama kota</string>
+    <string name="weather_search">Cari</string>
+    <string name="weather_city_empty">Kota tidak ditemukan. Coba kata kunci lain.</string>
+    <string name="weather_unit_label">Satuan suhu</string>
+    <string name="weather_no_city">Ketuk untuk memilih kota</string>
+    <string name="weather_no_data">Menunggu data cuaca…</string>
+    <string name="weather_updated_at">Diperbarui %1$s</string>
 </resources>

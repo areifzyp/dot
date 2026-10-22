@@ -186,7 +186,7 @@ private fun WidgetDetail(entry: WidgetEntry, onBack: () -> Unit) {
             // GAL-3: tambah ke homescreen; fallback panduan manual
             Button(
                 onClick = {
-                    if (!WidgetPinRequest.request(context)) showManualGuide = true
+                    if (!WidgetPinRequest.request(context, entry.kind)) showManualGuide = true
                 },
                 enabled = entry.available,
                 modifier = Modifier.fillMaxWidth(),
