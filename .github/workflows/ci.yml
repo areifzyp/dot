@@ -43,6 +43,24 @@ jobs:
       - name: Run tests
         run: ./gradlew :app:testDebugUnitTest --stacktrace
 
+      # Gate visual (STATUS-MAP §4b). Bukan best-effort: tanpa
+      # `continue-on-error`, langkah ini menggagalkan job `test`, dan job itu
+      # wajib jadi required status check di branch protection `main` —
+      # kegagalan gate memblokir merge.
+      # Golden direkam manual (`./gradlew recordRoborazziDebug`), tidak di CI.
+      - name: Verify widget snapshots (blocking gate)
+        run: ./gradlew :app:verifyRoborazziDebug --stacktrace
+
+      - name: Upload snapshot diffs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-diff
+          path: |
+            android/app/build/outputs/roborazzi
+            android/app/src/test/snapshots
+          if-no-files-found: ignore
+
       - name: Assemble debug APK
         run: ./gradlew :app:assembleDebug --stacktrace
 

@@ -76,9 +76,9 @@ class ClockWidget : GlanceAppWidget() {
         // Satu instan waktu per render: digit jam, label tanggal, dan stempel
         // memakai nilai yang sama supaya "menit yang ditampilkan" bisa
         // dibandingkan dengan menit berjalan (UX-1).
-        val nowMillis = System.currentTimeMillis()
+        val nowMillis = WidgetClock.millis()
         val now = Instant.ofEpochMilli(nowMillis)
-            .atZone(ZoneId.systemDefault())
+            .atZone(WidgetClock.zone())
             .toLocalTime()
         val minuteOfDay = ClockFreshnessPolicy.minuteOfDay(now)
 
@@ -186,7 +186,7 @@ private fun ClockWidgetContent(
         )
     }
 
-    val dateText = LocalDate.now().format(DateTimeFormatter.ofPattern("EEE, d MMM"))
+    val dateText = WidgetClock.today().format(DateTimeFormatter.ofPattern("EEE, d MMM"))
     val dateLabel = if (amPm != null) "${dateText.uppercase()} · $amPm" else dateText.uppercase()
     val label = remember(dateLabel, labelPx, labelColor) {
         DotRender.text(

@@ -2,6 +2,12 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
+    id("io.github.takahirom.roborazzi")
+}
+
+// Snapshot gate (STATUS-MAP §4b). Goldens live in the repo so CI can verify them.
+roborazzi {
+    outputDir.set(file("src/test/snapshots"))
 }
 
 android {
@@ -83,6 +89,11 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.robolectric:robolectric:4.13")
     testImplementation("androidx.test:core-ktx:1.6.1")
+
+    // Snapshot gate (STATUS-MAP §4b) — alat disetujui arsitek 2026-10-22.
+    // Golden diverifikasi `verifyRoborazziDebug`; rekam hanya manual.
+    testImplementation("io.github.takahirom.roborazzi:roborazzi:1.60.0")
+
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")

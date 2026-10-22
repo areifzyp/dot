@@ -143,14 +143,52 @@ Test-test ini dibuktikan **menggigit** lewat mutation testing, bukan sekadar hij
 - UX-2/UX-3 tetap meminta **snapshot** `OnTime` vs `Delayed`; itu milik gate §4b, dan alat snapshot belum ada di repo. Yang dikunci di sini adalah aritmetika geometrinya, bukan pikselnya.
 - **Keputusan desain untuk PM:** memesan slot penanda secara permanen membuat kotak digit menyusut 22 dp dibanding sebelum perubahan ini (pada widget bawaan 110 dp: 33,6 dp, sebelumnya 55,6 dp). Itu harga dari UX-3 — satu-satunya alternatif adalah membiarkan digit bergeser saat penanda muncul. Kalau PM lebih memilih digit besar dengan penanda yang mengambil ruang hanya saat `Delayed`, UX-3 harus dilonggarkan lebih dulu. Angka `MARKER_SP`, `MARKER_SLOT_FACTOR`, dan ambang 2 menit bisa diubah di `ClockLayout`/`ClockFreshnessPolicy` tanpa menyentuh PRD.
 
-### b) Snapshot test — tidak ada gate visual untuk hybrid 6 Glance + 1 RemoteViews
+### b) Snapshot test — tidak ada gate visual untuk hybrid 6 Glance + 1 RemoteViews (tertutup 22 Oktober 2026)
 
 | | |
 |---|---|
-| **Risiko** | Tidak ada yang mencegah regresi tampilan. Enam widget Glance dan satu widget RemoteViews punya jalur render berbeda, jadi regresi bisa lolos tanpa terdeteksi oleh unit test biasa. |
-| **Bukti di repo** | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) hanya menjalankan `:app:testDebugUnitTest` dan `:app:assembleDebug`. Tidak ada dependensi snapshot di `android/app/build.gradle.kts` (tidak ada Paparazzi/Roborazzi). |
+| **Risiko** | Tidak ada yang mencegah regresi tampilan. Enam widget Glance dan satu widget RemoteViews punya jalur render berbeda, jadi regresi bisa lolos tanpa terdeteksi oleh unit test biasa. _(Kondisi sebelum 22 Oktober 2026 — sudah ditutup, lihat baris Status dan §4b-i.)_ |
+| **Bukti di repo** | Test: [`snapshot/WidgetSnapshotTest.kt`](../android/app/src/test/java/io/github/areifzyp/dot/snapshot/WidgetSnapshotTest.kt) + [`snapshot/WidgetSnapshotHarness.kt`](../android/app/src/test/java/io/github/areifzyp/dot/snapshot/WidgetSnapshotHarness.kt). Golden: `android/app/src/test/snapshots/` (16 PNG). Seam waktu: [`widget/WidgetClock.kt`](../android/app/src/main/java/io/github/areifzyp/dot/widget/WidgetClock.kt). Gate CI: [`ci.yml`](../.github/workflows/ci.yml) langkah `Verify widget snapshots (blocking gate)`. Konfigurasi: `android/build.gradle.kts` + `android/app/build.gradle.kts` (plugin & `testImplementation` Roborazzi 1.60.0). |
 | **Pemilik** | **frontend/dev Android** (gate CI), ditinjau arsitek untuk pemilihan alat snapshot. |
 | **Kriteria penerimaan** | Gate snapshot per widget × tema (terang/gelap), dijalankan di CI, dan kegagalan gate memblokir merge. **Wajib mencakup state `Delayed` widget Jam** (UX-2/UX-3 §4a) — kalau tidak, satu-satunya state baru yang ditambahkan untuk risiko §4a lolos tanpa gate visual. |
+| **Status** | **AC-1 & AC-2 terpenuhi** (frontend, 22 Oktober 2026) — rincian bukti di §4b-i. |
+
+#### b-i) Status implementasi (frontend, 22 Oktober 2026)
+
+**Alat: Roborazzi 1.60.0**, disetujui arsitek 22 Oktober 2026 dengan tiga syarat yang ketiganya terpenuhi: golden di-commit ke repo, `verifyRoborazziDebug` menjadi gate yang memblokir merge, dan mode rekam hanya manual (`./gradlew recordRoborazziDebug`) — tidak pernah dijalankan CI.
+
+Kenapa bukan Paparazzi: Paparazzi berbasis layoutlib dan tidak mendukung `RemoteViews`, sedangkan proyek ini hybrid. Kenapa 1.60.0 dan bukan versi terbaru: artefak 1.61.0 ke atas dikompilasi dengan metadata Kotlin 2.3.0, sedangkan proyek ini Kotlin 2.0.20 — build gagal dengan *metadata version mismatch*. 1.60.0 adalah versi terakhir dengan metadata Kotlin 2.0.
+
+**Matriks gate — 16 snapshot** (`WidgetSnapshotTest.widgetThemeMatrix`):
+
+| Widget | Jalur render | Snapshot |
+|---|---|---|
+| Jam | Glance | `clock_{light,dark}_{ontime,delayed}` = 4 |
+| Kalender | Glance | `calendar_{light,dark}` = 2 |
+| Cuaca | Glance | `weather_{light,dark}` = 2 |
+| Status HP | Glance | `device_{light,dark}` = 2 |
+| Musik | Glance | `music_{light,dark}` = 2 |
+| Dekoratif | Glance | `decorative_{light,dark}` = 2 |
+| Teks | **RemoteViews** | `text_{light,dark}` = 2 |
+
+Jumlahnya 16, bukan 14 seperti pada catatan arsitek: hitungan "5 widget lain" hanya mencakup widget Glance. Widget Teks adalah **satu-satunya** yang memakai `RemoteViews` — jalur yang justru paling mudah diregresikan karena tidak melewati Glance sama sekali. Menjatuhkannya berarti jalur RemoteViews tidak punya gate visual, jadi ia dimasukkan.
+
+**Cara render.** Bukan layoutlib, dan bukan `provideComposable` dari `glance-appwidget-testing` (API itu hanya memberi pohon semantik, bukan piksel). Setiap widget dirender lewat `AppWidgetManager` sungguhan: Glance menjalankan sesi komposisi lewat `GlanceAppWidget.update()` (WorkManager diinisialisasi dengan eksekutor sinkron supaya sesi berjalan di dalam test), RemoteViews lewat `ShadowAppWidgetManager`. Hasilnya `RemoteViews` → `View` → bitmap → Roborazzi, sehingga yang dibandingkan memang piksel hasil render — termasuk bitmap `DotRender` di dalamnya.
+
+**Determinisme** — tanpa ini gate akan merah terus-menerus dan orang akan mematikannya:
+
+- Waktu dipakukan lewat seam [`WidgetClock`](../android/app/src/main/java/io/github/areifzyp/dot/widget/WidgetClock.kt) (`Clock.fixed(2026-10-22 09:41 Asia/Jakarta)`). `System.currentTimeMillis()` **tidak** di-shadow Robolectric, jadi sebelum seam ini golden jam berubah tiap menit dan golden kalender tiap hari. Seam ini juga yang dipakai label tanggal jam dan tanggal kalender; defaultnya tetap `Clock.systemDefaultZone()` sehingga perilaku di perangkat tidak berubah.
+- `StatFs` (widget Status HP) dipatok lewat `ShadowStatFs`; tanpa itu angka penyimpanan mengikuti disk mesin runner.
+- Ukuran widget tetap 250×120 dp, `@Config(sdk = [33], qualifiers = "w320dp-h320dp-xhdpi")`.
+- Seluruh matriks dijalankan dalam **satu metode test**. `SessionManager` Glance adalah singleton per proses dan sesi widget tidak pernah selesai selama widget ada; kalau tiap sel dijadikan metode test sendiri, sel kedua menunggu sesi sel pertama tanpa batas (timeout tanpa pesan error). Kegagalan tetap dikumpulkan per sel agar pesannya menyebut snapshot mana yang berubah.
+- Diverifikasi: dua kali rekam berturut-turut menghasilkan 16/16 PNG identik byte-per-byte.
+
+**UX-3 terbukti oleh gate, bukan komentar.** `clock_{light,dark}_ontime` vs `clock_{light,dark}_delayed` berbeda mulai baris 169 dari 240 (area slot penanda); seluruh piksel di atasnya identik. Artinya kotak digit jam tidak bergeser saat penanda muncul — persis yang diminta UX-3 §4a.
+
+**Gate benar-benar memblokir (diuji, bukan diasumsikan).** Menaikkan `ClockLayout.PAD_DP` 14 → 18 dp membuat `verifyRoborazziDebug` gagal tepat pada 4 sel Jam dengan pesan `… is changed` plus berkas `*_compare.png`; setelah nilai dikembalikan, gate hijau lagi.
+
+**Sisa pekerjaan (setelan repo, bukan kode):** job CI `test` harus dijadikan *required status check* di branch protection `main` supaya kegagalan gate benar-benar menahan tombol merge. Itu wewenang admin repo dan tidak bisa dijamin dari dalam berkas workflow.
+
 
 ### c) Token — `design/tokens.json` disebut SSOT tetapi nol konsumen mesin
 

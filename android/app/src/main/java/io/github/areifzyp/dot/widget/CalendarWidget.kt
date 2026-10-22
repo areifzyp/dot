@@ -61,7 +61,7 @@ class CalendarWidget : GlanceAppWidget() {
         ) == PackageManager.PERMISSION_GRANTED
         val events = if (mode == CalendarMode.DATE_AGENDA && hasPermission) {
             withContext(Dispatchers.IO) {
-                CalendarEvents.upcoming(context, System.currentTimeMillis())
+                CalendarEvents.upcoming(context, WidgetClock.millis())
             }
         } else {
             emptyList()
@@ -87,7 +87,7 @@ private fun CalendarWidgetContent(
     events: List<CalendarEvents.Event>,
     hasPermission: Boolean,
 ) {
-    val today = LocalDate.now()
+    val today = WidgetClock.today()
     val dayName = today.format(DateTimeFormatter.ofPattern("EEEE", idLocale)).uppercase()
     val dateText = today.format(DateTimeFormatter.ofPattern("d MMMM yyyy", idLocale))
 
