@@ -1,8 +1,16 @@
 # PRD — Dot. (Inspired by Nothing)
 
-Versi 1.0 · 18 Oktober 2026 · Status: Perencanaan
+Versi 1.0 · 18 Oktober 2026 · Status: HISTORIS (v1.0) — acuan keputusan
 
-> Dokumen ini disusun dari diagram fitur awal (nama kerja: Nothing Widget Kit; nama final: Dot. - Inspired by Nothing). Bagian yang tidak tertera di diagram ditandai **Asumsi** atau dimasukkan ke bagian Pertanyaan Terbuka, supaya mudah dikoreksi.
+> Dokumen ini dibekukan sebagai historis: produk telah melewati Fase 1–4 dan
+> mulai mengerjakan kegiatan Pasca-Fase 4 (KDE Plasma). PRD ini bukan peta
+> progres, melainkan **acuan keputusan** untuk sisa proyek; progres aktual ada
+> di [`docs/STATUS-MAP.md`](STATUS-MAP.md) dan catatan proyek
+> `Obsidian/Hermes/projects/dot/` (`status.md`, `roadmap.md`).
+>
+> Bagian yang masih relevan dipegang: design token (§8), spesifikasi per widget
+> (§6), izin (§7), gaya (§8.3), dan Plasma (§12). Bagian yang sudah dieksekusi
+> penuh (§11.1) ditandai HISTORIS.
 
 ## 1. Ringkasan
 
@@ -50,24 +58,27 @@ Produk dirilis bertahap dalam empat fase. Fase 1 sudah menghasilkan produk yang 
 | Kontributor open-source (bila proyek kelak dibuka) | Pengembang atau desainer yang ingin menyumbang kode, desain, atau terjemahan | Repo rapi, dokumentasi jelas, panduan kontribusi |
 | Pengguna desktop Linux KDE Plasma (pasca-Fase 4) | Ingin widget bergaya sama di PC | Versi Plasma dengan tampilan konsisten |
 
-## 5. Ruang Lingkup dan Fase Rilis
+## 5. Ruang Lingkup dan Hasil Rilis
 
-| Fase | Fitur | Sub-fitur | Tujuan fase |
-|---|---|---|---|
-| 1 | Galeri Widget | Jelajahi Katalog, Pratinjau Widget, Tambah ke Homescreen, Widget Terpasang (sub-fitur ke-4, usulan) | Pengguna dapat menemukan dan memasang widget |
-| 1 | Widget Jam *(dipindah dari Fase 2)* | Jam Digital, Format Waktu, Zona Waktu Tambahan | Widget pertama yang berfungsi tanpa internet atau izin khusus; acuan gaya Nothing |
-| 1 | Gaya dasar, konfigurasi, dan onboarding (lintas fitur) | Design token (varian terang dan gelap), pilihan tema, layar konfigurasi widget, panduan pemasangan | Fondasi yang dipakai semua widget berikutnya |
-| 2 | Widget Cuaca | Pilih Kota, Info Cuaca Ringkas, Atur Ukuran Widget | Widget informasi harian |
-| 2 | Widget Kalender | Tanggal Hari Ini, Agenda Mendatang, Pilih Tampilan | Widget informasi harian |
-| 2 | Widget Teks *(baru)* | Tulis Teks di Aplikasi, Perataan dan Ukuran, Banyak Widget Teks | Widget kosmetik berisi teks buatan pengguna |
-| 3 | Widget Status HP | Pantau CPU, Suhu Perangkat, Baterai dan Memori | Widget status perangkat |
-| 3 | Widget Musik | Kontrol Putar, Info Lagu, Pilih Pemutar Musik | Widget interaktif |
-| 3 | Widget Dekoratif *(baru)* | Pola Titik, Simbol Titik, Pembatas | Widget murni kosmetik tanpa fungsi |
-| 3 | Gaya Nothing | Tema Monokrom, Font Titik-Titik, Warna Aksen | Kontrol gaya lanjutan oleh pengguna (gaya dasar dan tema terang/gelap sudah ada sejak Fase 1) |
-| 4 | Pengaturan Aplikasi | Preferensi Widget, Tentang Aplikasi, Bantuan dan Masukan | Penyempurnaan dan dukungan |
-| Pasca-4 | Versi KDE Plasma | Remake sebagai widget Plasma | Lihat bagian 12 |
+> Dikelola sebagai **ringkasan hasil**, bukan daftar fase yang akan dikerjakan.
+> Fase 1–4 selesai; kegiatan yang masih terbuka ada di Bagian 12 (Plasma), yang
+> dianggap dalam pengerjaan. Progres detail per widget → Bagian 17.1 dan
+> [`docs/STATUS-MAP.md`](STATUS-MAP.md).
 
-**Keputusan urutan:** Widget Jam dipindah ke Fase 1 supaya rilis pertama sudah punya alur lengkap (menjelajah, pratinjau, pasang) dengan widget yang benar-benar berfungsi. Gaya dasar Nothing (monokrom, font titik-titik, satu aksen default) tertanam sebagai *design token* sejak Fase 1; Fase 3 hanya menambahkan kontrol bagi pengguna untuk mengubahnya, sehingga widget tidak perlu dirombak.
+| Fase | Status | Hasil |
+|---|---|---|
+| 1 | ✅ Selesai | Galeri, Widget Jam, design token, onboarding, konfigurasi dasar |
+| 2 | ✅ Selesai | Teks, Kalender, Cuaca |
+| 3 | ✅ Selesai | Status HP, Musik, Dekoratif, Gaya Nothing |
+| 4 | ✅ Selesai (rilis v0.5.0) | Pengaturan, Tentang, Bantuan, Salin log |
+| 12 | 🔄 Dalam pengerjaan | KDE Plasma (remake, pasca-Fase 4) — 6 widget dibuat, instal & uji belum |
+
+**Keputusan urutan (tetap berlaku):** Widget Jam dipindah ke Fase 1 supaya rilis
+pertama sudah punya alur lengkap (menjelajah, pratinjau, pasang) dengan widget
+yang benar-benar berfungsi. Gaya dasar Nothing (monokrom, font titik-titik, satu
+aksen default) tertanam sebagai *design token* sejak Fase 1; Fase 3 hanya
+menambahkan kontrol bagi pengguna untuk mengubahnya, sehingga widget tidak
+perlu dirombak.
 
 ## 6. Persyaratan Fungsional
 
