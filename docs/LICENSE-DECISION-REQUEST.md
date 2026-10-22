@@ -3,7 +3,8 @@
 **Status:** MENUNGGU KEPUTUSAN · **Memblokir rilis:** ya (lihat §4) ·
 **Terverifikasi pada commit:** `27d5917` · **Pemeriksaan ulang terakhir:** 22 Oktober 2026,
 22:41 WIB · **Riwayat pemeriksaan:** §11 ·
-**Penyusun:** doc-writer · **Pemberi keputusan:** tim hukum/kepatuhan + pemilik proyek
+**Penyusun:** doc-writer · **Pemberi keputusan:** tim hukum/kepatuhan + pemilik proyek ·
+**Catatan & formulir keputusan:** [`LICENSE-DECISION-RECORD.md`](LICENSE-DECISION-RECORD.md)
 
 Repo Dot. menyatakan lisensinya di tiga tempat, dan ketiganya tidak sama. Tidak ada
 berkas `LICENSE` di akar repo. Dokumen ini mengumpulkan bukti, inventaris lisensi
@@ -31,6 +32,11 @@ Bila satu pertanyaan memang belum bisa diputuskan, tulis **"belum diputuskan"** 
 tetap merupakan jawaban yang sah dan mencegah agen menebak. Pertanyaan pendukung
 (Q2–Q6, Q8) boleh menyusul; yang menahan rilis hanya D1–D3 (lihat §8).
 
+Jawaban dicatat di [`LICENSE-DECISION-RECORD.md` §3](LICENSE-DECISION-RECORD.md) —
+formulir yang sama, dalam bentuk tabel. Selama §3 di sana masih memuat penanda
+`_(belum diisi)_`, gerbang otomatis `bash scripts/license-status.sh` akan keluar dengan
+exit `1`.
+
 ---
 
 ## 1. Keputusan yang diminta
@@ -52,7 +58,7 @@ dokumentasi) **tidak** ditahan.
 |---|---|---|---|
 | 1 | PRD §10 | Lisensi proyek **GPL-2.0-or-later**, "diterapkan nanti saat repo dibuka atau APK dibagikan" | [`docs/PRD-Dot.md:451`](PRD-Dot.md) |
 | 2 | `NOTICE` | "Licensed under the **Apache License, Version 2.0**" | [`NOTICE:8-12`](../NOTICE) |
-| 3 | Tombol "Lisensi" di aplikasi | Membuka URL `github.com/areifzyp/dot/blob/main/NOTICE`, yaitu sumber #2 — jadi **pengguna melihat Apache-2.0**, bukan GPL | [`SettingsScreen.kt:140`](../android/app/src/main/java/io/github/areifzyp/dot/settings/SettingsScreen.kt), [`strings.xml:86`](../android/app/src/main/res/values/strings.xml) |
+| 3 | Tombol "Lisensi" di aplikasi | Membuka URL `github.com/areifzyp/dot/blob/main/NOTICE`, yaitu sumber #2 — jadi **pengguna melihat Apache-2.0**, bukan GPL | [`SettingsScreen.kt:137`](../android/app/src/main/java/io/github/areifzyp/dot/settings/SettingsScreen.kt), [`strings.xml:86`](../android/app/src/main/res/values/strings.xml) |
 | 4 | Berkas `LICENSE` | **Tidak ada di akar repo.** `git ls-tree --name-only HEAD` hanya memuat `NOTICE` (tanpa `LICENSE`/`COPYING`) | `git ls-tree --name-only HEAD \| grep -iE "licen\|copying"` → kosong |
 | 5 | Metadata plasmoid Plasma | `"License": "MIT"` pada keenam plasmoid | [`plasma/*/metadata.json:14`](../plasma) |
 | 6 | Font Doto | SIL Open Font License 1.1, teks lisensi ikut di repo | [`design/fonts/OFL.txt`](../design/fonts/OFL.txt), [`NOTICE:20-31`](../NOTICE) |
@@ -213,7 +219,7 @@ Checklist ini yang membuat keputusan benar-benar berlaku. Belum dikerjakan — m
 | [`docs/PRD-Dot.md:451`](PRD-Dot.md) | §10 butir lisensi: hapus "keputusan pemilik"/"diterapkan nanti" bila D2 = sekarang |
 | [`docs/PRD-Dot.md:568`](PRD-Dot.md) | §16.4: tutup pertanyaan terbuka |
 | [`docs/PRD-Dot.md:611`](PRD-Dot.md) | Kriteria selesai Fase 4: ganti "sudah dicek" dengan bukti |
-| [`SettingsScreen.kt:140`](../android/app/src/main/java/io/github/areifzyp/dot/settings/SettingsScreen.kt) | URL tombol Lisensi: arahkan ke `LICENSE` bila berkas itu ada |
+| [`SettingsScreen.kt:137`](../android/app/src/main/java/io/github/areifzyp/dot/settings/SettingsScreen.kt) | URL tombol Lisensi: arahkan ke `LICENSE` bila berkas itu ada |
 | [`strings.xml:86`](../android/app/src/main/res/values/strings.xml) | Label "Lisensi" — cek juga `values-in` bila ada terjemahan |
 | [`plasma/*/metadata.json:14`](../plasma) | Field `License` untuk 6 plasmoid, sesuai D3 |
 | [`AGENTS.md`](../AGENTS.md) §Conventions | Aturan: lisensi dependensi baru dicek sebelum digabung (PRD §11.7) |
@@ -229,11 +235,18 @@ Checklist ini yang membuat keputusan benar-benar berlaku. Belum dikerjakan — m
 
 Kartu "sampai ada keputusan lisensi dari tim hukum/kepatuhan" selesai bila:
 
-1. D1, D2, D3 terjawab tertulis oleh tim hukum/kepatuhan (§6, Q1–Q8).
+1. D1, D2, D3 terjawab tertulis oleh tim hukum/kepatuhan (§6, Q1–Q8), dan
+   [`LICENSE-DECISION-RECORD.md` §3](LICENSE-DECISION-RECORD.md) terisi.
 2. Satu sumber kebenaran lisensi ditunjuk (PRD, `LICENSE`, atau `NOTICE`).
 3. Checklist §7 punya pemilik dan kartu tindak lanjut.
 
-Sampai ketiganya ada, kartu tetap terbuka dan §4 tetap ditahan.
+Sampai ketiganya ada, kartu tetap terbuka dan §4 tetap ditahan. Status dapat diperiksa
+kapan saja tanpa jaringan:
+
+```bash
+bash scripts/license-status.sh          # exit 0 = selesai, exit 1 = masih menunggu
+bash scripts/license-status.sh --quiet  # ringkas, untuk cron
+```
 
 ---
 

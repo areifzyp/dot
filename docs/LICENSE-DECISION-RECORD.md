@@ -1,0 +1,231 @@
+# License Decision Record — Dot.
+
+**Status item:** **BLOCKED** · **Dicatat:** 22 Oktober 2026, 22:47 WIB ·
+**Pengusul:** doc-writer · **Pemberi keputusan:** tim hukum/kepatuhan + pemilik proyek ·
+**Terverifikasi pada commit:** `27d5917` (`main`, VERSION `0.5.0`; fakta lisensi tidak
+berubah sampai `HEAD` — `git diff 27d5917..HEAD` pada PRD, `NOTICE`, `plasma/*/metadata.json`,
+`SettingsScreen.kt`, `strings.xml`, dan berkas Gradle → kosong) ·
+**Kartu pelacak:** `t_6cc84cef` (doc-writer) · **Kartu kembar:** `t_2e27c818` (arsitek) ·
+**Paket permintaan (kanonik):** [`LICENSE-DECISION-REQUEST.md`](LICENSE-DECISION-REQUEST.md)
+
+Satu berkas, dua peran — catatan status yang hidup, dan formulir keputusan yang sengaja
+masih kosong:
+
+| Bagian | Isi | Status |
+|---|---|---|
+| §1 | Catatan status BLOCKED + bukti bahwa keputusan belum ada | terisi |
+| §2 | Syarat "keputusan dianggap diterima" (agar tidak ambigu) | terisi |
+| §3 | **License Decision Record** — formulir keputusan | **kosong, menunggu keputusan** |
+| §4 | Pertanyaan eksplisit untuk tim hukum/kepatuhan | terisi |
+| §5 | Mekanisme cek berkala + log follow-up | terisi (pemilik follow-up: belum ditunjuk) |
+| §6 | Langkah menutup item setelah keputusan keluar | terisi |
+| §7 | Pekerjaan yang diblokir + tautan | terisi |
+| §8 | Riwayat berkas ini | terisi |
+
+> **Aturan berkas ini:** §3 hanya diisi dari keputusan **tertulis** pihak yang berwenang.
+> Jangan isi dengan dugaan, kesimpulan agen, atau "sepertinya". Bila satu pertanyaan belum
+> bisa diputuskan, tulis **"belum diputuskan"** — itu jawaban sah dan mencegah agen menebak.
+
+---
+
+## 1. Catatan status
+
+| Field | Isi |
+|---|---|
+| Status | **BLOCKED** — menunggu keputusan lisensi dari tim hukum/kepatuhan |
+| Alasan | Repo menyatakan lisensi di tiga tempat yang saling bertentangan (PRD §10 `GPL-2.0-or-later`, `NOTICE` `Apache-2.0`, 6 × `metadata.json` `MIT`) dan tidak punya berkas `LICENSE`. Memilih salah satunya adalah keputusan pemilik atas saran hukum, bukan pekerjaan dokumentasi. |
+| Dicatat pertama | 22 Oktober 2026, 20:33 WIB (catatan status pertama di kartu `t_6cc84cef`) |
+| Dicatat ulang | 22 Oktober 2026, 22:47 WIB (berkas ini dibuat; keputusan tetap belum ada) |
+| Pengusul | doc-writer |
+| Penanggung jawab follow-up | `> TODO:` belum ada orang yang ditunjuk — lihat §5 |
+| Kanal komunikasi ke tim hukum | `> TODO:` belum ditentukan (email / Slack / tiket) — lihat §5 |
+| Kadens cek | mingguan, Senin 09:00 WIB — job cron `3d4aef87edac` (§5) |
+| Kartu pelacak | `t_6cc84cef` (doc-writer) — kartu ini |
+| Kartu kembar | `t_2e27c818` (arsitek), judul sama, isi kosong — salah satu harus ditutup agar tidak dua kartu menunggu hal yang sama |
+
+### 1.1 Bukti bahwa keputusan belum ada
+
+Diperiksa 22 Oktober 2026, 22:44 WIB, pada commit `e16eaea`:
+
+| # | Yang diperiksa | Perintah | Hasil |
+|---|---|---|---|
+| 1 | Berkas `LICENSE`/`COPYING` di akar repo | `git ls-tree --name-only HEAD \| grep -iE "licen\|copying"` | **kosong** — tidak ada |
+| 2 | Teks yang dilihat pengguna di aplikasi | `grep -n "Apache License" NOTICE` | `NOTICE:8` → Apache-2.0 (tombol "Lisensi" di aplikasi membuka berkas ini) |
+| 3 | Klaim lisensi di PRD | `grep -n "GPL-2.0-or-later" docs/PRD-Dot.md` | `:451` (§10, "diterapkan nanti"), `:568` (§16.4) |
+| 4 | Metadata plasmoid | `grep -n '"License"' plasma/*/metadata.json` | 6 berkas, semuanya `MIT` di baris 14 |
+| 5 | Komentar keputusan di kartu `t_6cc84cef` | — | tidak ada; thread hanya berisi catatan doc-writer dan `auto-decomposer` |
+| 6 | Formulir §3 berkas ini | `grep -c '_(belum diisi)_' docs/LICENSE-DECISION-RECORD.md` | > 0 → masih kosong |
+
+Ringkas: tidak ada keputusan tertulis di repo, di kartu, maupun di berkas mana pun.
+Dua kali kartu di-*unblock* (22 Okt 20:36 dan 22:36 WIB) tanpa jawaban tertulis — unblock
+tanpa teks **bukan** keputusan (lihat §2).
+
+### 1.2 Apa yang ditahan, apa yang berjalan
+
+| Ditahan sampai keputusan keluar | Tetap berjalan |
+|---|---|
+| Membuat `LICENSE`; menyamakan `NOTICE`; membuka repo; membagikan APK; pengajuan F-Droid/Play; publikasi plasmoid ke KDE Store; teks lisensi di Tentang Aplikasi | Pengembangan kode, tes, CI, dokumentasi |
+
+Rincian alasan per aktivitas: [`LICENSE-DECISION-REQUEST.md` §4](LICENSE-DECISION-REQUEST.md).
+
+---
+
+## 2. Kapan keputusan dianggap diterima
+
+Agar tidak ada perdebatan saat jawaban datang, keputusan dianggap **diterima** hanya bila
+memenuhi kelima syarat berikut:
+
+1. **Tertulis** — komentar di kartu `t_6cc84cef`, berkas, atau salinan pesan (email/chat)
+   yang ditempel ke kartu. Bukan lisan, bukan "sudah di-unblock".
+2. **Berwenang** — datang dari orang bernama di tim hukum/kepatuhan, atau dari pemilik
+   proyek yang menyatakan bertindak atas nama mereka. Nama + jabatan dicatat di §3.
+3. **Menjawab D1, D2, D3** — boleh "belum diputuskan" untuk salah satunya; itu tetap
+   jawaban sah. Yang tidak boleh: tidak disebut sama sekali.
+4. **Menyebut cakupan** — kode Android, kode Plasma, dan 6 plasmoid (apakah ikut atau
+   terpisah).
+5. **Bertanggal** — tanggal keputusan dan (bila ada) tanggal berlaku.
+
+**Bukan keputusan:** unblock kartu tanpa teks; perubahan berkas tanpa catatan alasan;
+kesimpulan agen dari isi repo; "ikut saja yang sudah ada di NOTICE" tanpa pernyataan
+eksplisit bahwa itu keputusan final.
+
+---
+
+## 3. License Decision Record (formulir)
+
+Isi sel kanan. Jangan hapus baris. Ganti setiap `_(belum diisi)_` dengan isi sebenarnya;
+selama penanda itu masih ada, `scripts/license-status.sh` menganggap keputusan belum
+tercatat.
+
+| # | Field | Isi |
+|---|---|---|
+| 1 | **Jenis lisensi / komponen yang ditinjau** | _(belum diisi)_ — mis. "kode aplikasi Android (`android/`) + 6 plasmoid Plasma (`plasma/`) + font Doto" |
+| 2 | **Pertanyaan hukum yang diajukan** | D1–D3 + Q2–Q8, lihat §4 berkas ini dan §6 [`LICENSE-DECISION-REQUEST.md`](LICENSE-DECISION-REQUEST.md) |
+| 3 | **Tanggal pengajuan ke tim hukum/kepatuhan** | _(belum diisi)_ — paket bukti tersedia sejak 22 Okt 2026 (commit `6ef95cc`, diperbarui `e16eaea`) |
+| 4 | **Nama/narahubung penanggung jawab di tim tersebut** | _(belum diisi)_ — nama + jabatan + kanal. Bila proyek tidak punya tim hukum formal, tulis "pemilik proyek (nama)" dan jangan mengarang pihak lain |
+| 5 | **Keputusan akhir** | _(belum diisi)_ — `disetujui` / `ditolak` / `bersyarat` |
+| 6 | **Syarat & batasan** | _(belum diisi)_ — mis. kewajiban atribusi, larangan redistribusi bentuk tertentu, berkas yang wajib diubah, tenggat |
+| 7 | **Tanggal berlaku** | _(belum diisi)_ — sekarang / saat repo dibuka / saat APK pertama dibagikan (D2) |
+| 8 | **Lampiran/referensi** | _(belum diisi)_ — tautan komentar kartu, email, commit yang menerapkan keputusan |
+
+Field pendukung (wajib untuk kelengkapan, bukan untuk membuka blokir):
+
+| # | Field | Isi |
+|---|---|---|
+| 9 | Keputusan per ID | D1 = _(belum diisi)_ · D2 = _(belum diisi)_ · D3 = _(belum diisi)_ |
+| 10 | Tindak lanjut wajib | checklist 10 berkas di [`LICENSE-DECISION-REQUEST.md` §7](LICENSE-DECISION-REQUEST.md) — pemilik & kartu: _(belum diisi)_ |
+
+Format jawaban terpendek yang tetap sah (boleh ditempel sebagai komentar kartu):
+
+```text
+D1 = ......   (GPL-2.0-or-later | Apache-2.0 | MIT | lain: ......)
+D2 = ......   (sekarang | saat repo dibuka | saat APK pertama dibagikan)
+D3 = ......   (plasmoid tetap MIT | disamakan dengan D1)
+Keputusan akhir : disetujui | ditolak | bersyarat
+Diputuskan oleh : ...... (nama, jabatan/tim)
+Tanggal         : ......
+```
+
+---
+
+## 4. Pertanyaan yang harus dijawab (eksplisit)
+
+Daftar kanonik ada di [`LICENSE-DECISION-REQUEST.md` §6](LICENSE-DECISION-REQUEST.md)
+(lengkap dengan bukti dan alasan). Tabel di bawah adalah versi ringkas + kolom jawaban;
+**bila §6 berubah, ubah tabel ini juga** agar kedua dokumen tidak berbeda.
+
+| ID | Pertanyaan | Kalau tidak dijawab, yang jadi ambigu | Jawaban |
+|---|---|---|---|
+| **D1** | Lisensi apa yang berlaku untuk kode Dot. sendiri (Android + Plasma)? | Tidak ada isi sah untuk `LICENSE`; `NOTICE`/PRD/plasmoid tetap bertentangan | _(menunggu jawaban)_ |
+| **D2** | Ditetapkan sekarang, atau ditunda sampai repo dibuka / APK pertama dibagikan? | Tidak jelas kapan kewajiban lisensi mulai berlaku; PRD §10 saat ini menjanjikan "nanti" | _(menunggu jawaban)_ |
+| **D3** | Enam plasmoid Plasma tetap `MIT`, atau disamakan dengan D1? | Satu repo dua lisensi tanpa berkas yang menjelaskan pembagiannya | _(menunggu jawaban)_ |
+| **Q2** | Bila `GPL-2.0-or-later`: apakah "or later" harus eksplisit di `LICENSE` dan/atau header berkas sumber? Cukup satu `LICENSE` di akar? | Bentuk penerapan bisa salah meski pilihan lisensinya benar | _(menunggu jawaban)_ |
+| **Q3** | Apakah 101 dependensi Apache-2.0 di APK menimbulkan kewajiban tambahan (mis. teks lisensi pihak ketiga di dalam aplikasi)? Apakah `NOTICE` sekarang sudah memenuhi itu? | Kewajiban atribusi/redistribusi bisa terlewat saat APK dibagikan | _(menunggu jawaban)_ |
+| **Q4** | `glance-appwidget-external-protobuf:1.1.0` (BSD-3-Clause) dan `com.google.guava:listenablefuture:1.0` (POM tanpa lisensi) perlu tindakan khusus? | Dua artefak di APK tanpa jawaban tertulis soal kewajibannya | _(menunggu jawaban)_ |
+| **Q5** | Bolehkah 6 plasmoid tetap `MIT` di dalam repo yang lisensi utamanya GPL/Apache? Di berkas mana pembagian itu dinyatakan? | `metadata.json` dan `LICENSE` bisa saling bertentangan | _(menunggu jawaban)_ |
+| **Q6** | Font Doto (SIL OFL 1.1): apakah ketentuan *Reserved Font Name* terpicu bila kelak dibuat instance statis dari font variabel? | Risiko saat font di-instance ulang (skenario tercatat di PRD `:354`) | _(menunggu jawaban)_ |
+| **Q7** | Sama dengan D2, dari sisi hukum: boleh ditunda atau harus sekarang? | Jawaban D2 bisa datang tanpa dasar; ini yang menutup celahnya | _(menunggu jawaban)_ |
+| **Q8** | Pemakaian nama "Nothing" dan tagline "Inspired by Nothing" di judul/README/`NOTICE` perlu ditinjau terpisah sebelum publikasi? | Jalur merek bisa tertinggal saat publikasi | _(menunggu jawaban)_ |
+
+### 4.1 Uji ambiguitas sebelum menerima jawaban
+
+Jawaban hanya dipakai bila keempat hal ini bisa dijawab "ya" dari teksnya:
+
+- [ ] Menyebut **ID lisensi yang tepat** (mis. `GPL-2.0-or-later`, bukan "GPL" atau "open source").
+- [ ] Menyebut **cakupan**: `android/`, `plasma/`, font, dan berkas tes — mana yang ikut.
+- [ ] Menyebut **waktu berlaku**: sekarang / saat repo dibuka / saat APK dibagikan.
+- [ ] Menyebut **nasib tiga sumber yang sekarang bertentangan**: `NOTICE`, PRD §10, 6 × `metadata.json`.
+
+Bila ada yang tidak terjawab, jangan isi §3 — tanyakan ulang butir itu saja.
+
+---
+
+## 5. Mekanisme cek berkala
+
+| Aspek | Isi |
+|---|---|
+| Kadens | mingguan — **Senin 09:00 WIB** (UTC+7) |
+| Pelaksana cek | job cron `3d4aef87edac` ("Dot. — cek mingguan keputusan lisensi", `every monday 9am`, `deliver: local`). Setiap Senin ia menjalankan skrip cek lalu **memposting hasilnya sebagai komentar di kartu `t_6cc84cef`** |
+| Penanggung jawab follow-up | `> TODO:` **belum ada orang yang ditunjuk.** Pengusul (doc-writer) hanya mencatat status dan menjalankan cek otomatis; doc-writer tidak bisa menjadi pihak yang menghubungi tim hukum. Pemilik proyek perlu menunjuk satu orang + kanal |
+| Kanal komunikasi ke tim hukum | `> TODO:` email / Slack / tiket — belum ditentukan. Repo tidak mencatat kontak tim hukum/kepatuhan: `git ls-tree -r --name-only HEAD \| grep -iE 'CODEOWNERS\|CONTRIBUTING\|GOVERNANCE\|SECURITY\|MAINTAINERS'` → kosong (diperiksa 22 Okt 2026 22:46 WIB). Bila memang tidak ada tim hukum formal, **calon default** adalah pemilik repo `@areifzyp` yang menyatakan bertindak atas nama mereka — usulan, bukan keputusan; pemilik yang menetapkan. Catatan teknis: profil `doc-writer` tidak punya kanal Telegram aktif, jadi keluaran job masuk ke kartu (bukan chat) |
+| Cek otomatis (tanpa menghubungi siapa pun) | `bash scripts/license-status.sh` — mencetak status LICENSE/NOTICE/PRD/plasmoid + apakah §3 sudah terisi; exit `0` hanya bila LICENSE ada, NOTICE & PRD sejalan, dan §3 terisi |
+| Pemicu berhenti | skrip menjadi senyap (exit `0`, tanpa keluaran) saat `LICENSE` ada, `NOTICE` dan PRD §10 sejalan dengan `LICENSE`, dan §3 terisi. Metadata plasmoid hanya dicatat sebagai catatan, tidak menahan — karena D3 boleh memutuskan plasmoid tetap `MIT` di repo yang lisensi utamanya lain |
+| Mematikan pengingat | `hermes cron remove 3d4aef87edac` (setelah keputusan diterapkan, atau bila pengingat tidak diperlukan) |
+
+### 5.1 Log follow-up
+
+Satu baris per pemeriksaan. Jangan hapus baris lama.
+
+| Tanggal (WIB) | Oleh | Kanal | Hasil | Status item |
+|---|---|---|---|---|
+| 22 Okt 2026 20:33 | doc-writer | kartu `t_6cc84cef` | Paket keputusan disusun (commit `6ef95cc`); D1–D3 diajukan | BLOCKED |
+| 22 Okt 2026 22:36 | doc-writer | kartu `t_6cc84cef` | Pemeriksaan ulang #2: tidak ada `LICENSE`, tidak ada jawaban tertulis; formulir jawaban 3 baris ditambahkan (commit `e16eaea`) | BLOCKED |
+| 22 Okt 2026 22:47 | doc-writer | kartu `t_6cc84cef` | Pemeriksaan ulang #3: tetap belum ada keputusan; berkas ini dibuat + skrip cek status | BLOCKED |
+| 22 Okt 2026 22:57 | job cron `3d4aef87edac` | kartu `t_6cc84cef` | Uji job pertama: komentar mingguan terpasang di kartu (terverifikasi di thread) — mekanisme pengingat aktif, jadwal berikutnya Senin 26 Okt 2026 09:00 WIB | BLOCKED |
+
+---
+
+## 6. Setelah keputusan diterima — langkah menutup
+
+1. Isi **§3** (10 field) dan kolom jawaban di **§4** dari teks keputusan, bukan dari tafsiran.
+2. Jalankan `bash scripts/license-status.sh` → harus exit `0` dan senyap.
+3. Perbarui header + §11 [`LICENSE-DECISION-REQUEST.md`](LICENSE-DECISION-REQUEST.md)
+   (status `MENUNGGU KEPUTUSAN` → `DIPUTUSKAN`, tanggal, tautan ke §3 berkas ini) — dua
+   dokumen tidak boleh berbeda status.
+4. Tandai kartu `t_6cc84cef` **selesai/RESOLVED** dengan ringkasan berisi ID lisensi yang
+   diputuskan + commit yang menerapkan.
+5. Buat kartu tindak lanjut untuk checklist 10 berkas ([`§7`](LICENSE-DECISION-REQUEST.md))
+   — assignee doc-writer, tautkan ke berkas ini. Ini yang benar-benar menerapkan keputusan.
+6. Tutup kartu kembar `t_2e27c818` (arsitek) atau arahkan komentarnya ke berkas ini, supaya
+   tidak ada dua kartu menunggu hal yang sama.
+7. Bila D2 = "ditunda": status item menjadi **DEFERRED**, bukan RESOLVED — catat tanggal
+   tinjau ulang di §1 dan jangan hapus pengingat mingguan.
+
+---
+
+## 7. Pekerjaan yang diblokir (tautan)
+
+| Pekerjaan | Berkas / bukti | Ditahan oleh |
+|---|---|---|
+| Berkas `LICENSE` di akar repo | belum ada ([`§1.1`](#11-bukti-bahwa-keputusan-belum-ada) butir 1) | D1 |
+| Teks lisensi yang dilihat pengguna | [`NOTICE:8-12`](../NOTICE), [`SettingsScreen.kt:137`](../android/app/src/main/java/io/github/areifzyp/dot/settings/SettingsScreen.kt), [`strings.xml:86`](../android/app/src/main/res/values/strings.xml) | D1 |
+| Klaim lisensi di PRD | [`PRD-Dot.md:451`](PRD-Dot.md) §10, [`:568`](PRD-Dot.md) §16.4, [`:611`](PRD-Dot.md) kriteria Fase 4 | D1, D2 |
+| Metadata 6 plasmoid | [`plasma/*/metadata.json:14`](../plasma) | D3 |
+| Pembukaan repo · distribusi APK · F-Droid/Play · KDE Store | [`LICENSE-DECISION-REQUEST.md` §4](LICENSE-DECISION-REQUEST.md) | D1, D2 |
+| Aturan lisensi untuk dependensi baru + indeks dokumentasi | [`AGENTS.md`](../AGENTS.md) §Conventions, [`docs/README.md`](README.md) | D1 |
+| Kartu pelacak | `t_6cc84cef` (doc-writer) | — |
+| Kartu kembar | `t_2e27c818` (arsitek) | — |
+
+---
+
+## 8. Riwayat berkas ini
+
+| Waktu (WIB) | Commit | Perubahan |
+|---|---|---|
+| 22 Okt 2026 22:47 | commit yang menambahkan berkas ini — lihat `git log --follow -- docs/LICENSE-DECISION-RECORD.md` | Berkas dibuat: catatan status BLOCKED, formulir §3 (kosong), daftar pertanyaan §4, mekanisme cek §5, langkah penutupan §6, tautan pekerjaan diblokir §7. Disertai `scripts/license-status.sh` |
+
+---
+
+*Berkas ini mencatat, bukan memutuskan. Bila ada baris yang tidak cocok lagi dengan repo,
+perbaiki baris itu beserta buktinya — jangan menambah klaim baru tanpa perintah verifikasi
+di §1.1 atau `scripts/license-status.sh`.*
