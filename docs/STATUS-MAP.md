@@ -127,6 +127,20 @@ Kegagalan yang dicegah bukan "widget berhenti" — melainkan **widget menampilka
 | **Pemilik** | Arsip increment: **arsitek**. Sisa kontrak QML: **frontend** (kartu lane terpisah). |
 | **Kriteria penerimaan** | (1) Satu generator kanonik `tokens.json` → `Color.kt` — terpenuhi. (2) Generator dijalankan di CI sehingga drift gagal build — terpenuhi (step *Token drift gate*, pull_request trigger, merge-blocking). (3) Readme menyebut generator — terpenuhi di `design/README.md` (baris di `docs/README.md` yang masih menulis "generator belum ada" menunggu commit WIP pm yang sedang jalan; saat itu mendarat, baris itu wajib diperbarui). Rujukan mati `design/tokens.md` sudah dihapus di commit pembekuan — tidak ditagih ulang. |
 
+### d) Lisensi — tiga klaim bertentangan di satu repo, menunggu keputusan hukum/kepatuhan
+
+| | |
+|---|---|
+| **Status** | **waiting legal review** (terdaftar di sini 22 Oktober 2026 oleh arsitek; pelacak kanonik: kartu `t_6cc84cef` + cron mingguan Senin 09:00 WIB, lihat [`LICENSE-DECISION-RECORD.md`](LICENSE-DECISION-RECORD.md) §5). |
+| **Risiko** | Repo menyatakan tiga lisensi berbeda untuk kode yang sama: PRD §10 `GPL-2.0-or-later`, `NOTICE` `Apache-2.0` (inilah yang dilihat pengguna lewat tombol "Lisensi"), dan `metadata.json` keenam plasmoid Plasma `MIT`. Tidak ada berkas `LICENSE` di akar repo. Memilih salah satunya adalah keputusan pemilik proyek atas saran hukum — bukan pekerjaan dev, oleh karena itu terdaftar sebagai risiko dengan status `waiting legal review`. |
+| **Bukti di repo** | Paket permintaan keputusan: [`LICENSE-DECISION-REQUEST.md`](LICENSE-DECISION-REQUEST.md) (fakta terverifikasi §2, inventaris dependensi §3, opsi + konsekuensi teknis §5, pertanyaan Q1–Q11 §6, formulir jawaban §0). Catatan status hidup: [`LICENSE-DECISION-RECORD.md`](LICENSE-DECISION-RECORD.md) (BLOCKED; formulir keputusan §3 sengaja kosong sampai ada keputusan tertulis; cek konsistensi [`scripts/license-status.sh`](../scripts/license-status.sh)). Inventaris mentah: [`license-inventory/`](license-inventory/README.md) — 103 artefak runtime (101 Apache-2.0, 1 BSD-3-Clause, 1 tanpa pernyataan di POM), 141 artefak tes. |
+| **Pemilik** | **Keputusan D1–D3: pemilik proyek + tim hukum/kepatuhan.** Pelaksanaan checklist §7 `LICENSE-DECISION-REQUEST.md` setelah keputusan: arsitek + doc-writer. |
+| **Kriteria penerimaan** | (1) Formulir jawaban (REQUEST §0 / RECORD §3) terisi tertulis — D1–D3 minimal; "belum diputuskan" adalah jawaban sah. (2) Satu sumber kebenaran lisensi ditunjuk dan `LICENSE`/`NOTICE`/PRD §10/`plasma/*/metadata.json` diselaraskan. (3) `scripts/license-status.sh` keluar senyap (exit 0). |
+
+> **Yang ditahan sampai keputusan** (REQUEST §4): pembuatan `LICENSE`, pembukaan repo, pembagian APK, pengajuan F-Droid/Play Store, publikasi plasmoid ke KDE Store, penulisan ulang teks lisensi di Tentang Aplikasi (SET-2). Pengembangan kode, tes, CI, dan dokumentasi **tidak** ditahan.
+>
+> **Catatan untuk PM (rapat 22 Oktober 2026, tindak lanjut #4):** rapat memutuskan "tidak merge/main CI sampai ada keputusan lisensi" (pengusul: doc-writer). Dokumen permintaan §4 mempersempit penahanan ke aktivitas rilis/distribusi dengan alasan kode, tes, dan CI tidak bergantung pada lisensi. Kedua ruang lingkup ini belum diselaraskan — butuh konfirmasi PM mana yang berlaku: blokir semua merge ke `main`, atau hanya tahan daftar di atas. Patut diperhatikan: branch `feat/snapshot-gate` dan `fix/gradle-version-ssot` sedang berjalan dengan asumsi lingkup §4.
+
 ---
 
 ## 5. Konvensi

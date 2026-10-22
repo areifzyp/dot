@@ -14,6 +14,11 @@ index into those rules; individual rules live in their own files under
    the Compose theme imports a file generated from it, never hand-written magic
    numbers. Generator kanonik belum ada — lihat risiko terbuka di
    `STATUS-MAP.md` §4c.
+5. **License decision pending** → repo states three conflicting licenses
+   (PRD §10 `GPL-2.0-or-later`, `NOTICE` Apache-2.0, plasmoid
+   `metadata.json` MIT) and has no `LICENSE` file. Status: `waiting legal
+   review` — see `STATUS-MAP.md` §4d and `LICENSE-DECISION-REQUEST.md`.
+   Rilis dan distribusi tertahan sampai keputusan; kode, tes, dan CI jalan.
 
 ## Folders
 
