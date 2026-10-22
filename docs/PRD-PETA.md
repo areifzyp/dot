@@ -75,9 +75,12 @@ kecuali sub-bagian).
 
 **Catatan kasus khusus.**
 
-- **§3 dan §11 tidak punya sub-bagian bernomor.** `PRD 3.3` / `PRD 9.2` tidak
-  ada. Butir daftar di dalam §3 (Tujuan) dan §11 dirujuk sebagai
-  `§3 butir N` / `§11 butir N`.
+- **§3, §11, dan §16 tidak punya sub-bagian bernomor.** `PRD 3.3`,
+  `PRD 16.2`, dan `PRD 16.4` tidak ada. Butir daftar di dalam §3 (Tujuan),
+  §11 (Pengembangan dengan AI), dan §16 (Pertanyaan Terbuka) dirujuk sebagai
+  `§3 butir N` / `§11 butir N` / `§16 butir N`.
+- **§9 hanya punya satu sub-bagian bernomor (§9.1).** `PRD 9.2` tidak ada;
+  Application ID dibahas di paragraf utama §9.
 - **§7.1** adalah satu-satunya sub-bagian bernomor di §7.
 - **§8.5** membahas palet warna, bukan rahasia penandatanganan. Keamanan repo
   dan keystore ada di **§10**.
@@ -115,7 +118,9 @@ bertentangan:
 ## 4. Audit & perbaikan cross-reference
 
 Setiap rujukan `PRD x.y` di dokumen non-PRD diperiksa terhadap peta paragraf
-§2, lalu diperbaiki. Hasil audit:
+§2, lalu diperbaiki. Hasil audit — disisir ulang 23 Oktober 2026 pada basis
+`1f06890` (branch `docs/prd-peta-crossref`); dua baris ditambahkan/dikoreksi
+dari putusan awal yang salah:
 
 | Dokumen | Baris | Tertulis | Konteks klaim | Judul PRD sebenarnya | Hasil |
 |---|---|---|---|---|---|
@@ -130,14 +135,26 @@ Setiap rujukan `PRD x.y` di dokumen non-PRD diperiksa terhadap peta paragraf
 | `docs/REVIEW-PRD-FASE-STATE.md` | 100 | "baris 311" (§7.1, alarm tidak tepat waktu) | kutipan tabel izin | kalimat itu di baris **322** | ✅ diperbaiki → 322 |
 | `docs/REVIEW-PRD-FASE-STATE.md` | 131 | "PRD §9 baris 420" (design token JSON) | kutipan butir §9 | kalimat itu di baris **431** | ✅ diperbaiki → 431 |
 | `docs/REVIEW-PRD-FASE-STATE.md` | 8 | "PRD-Dot.md (613 baris)" | penyebutan total baris | total sebenarnya **624** baris | ✅ diperbaiki → 624 |
-| `docs/LICENSE-DECISION-REQUEST.md` | 187 dst | §10, §16.4, §11.7 | lisensi | cocok semua | ✅ BENAR |
-| `docs/STATUS-MAP.md` | §12, §6.1, §6.8, dll. | rujukan `§x.y` untuk status widget | cocok semua (kecuali baris 59, lihat atas) | — | ✅ BENAR |
+| `docs/REVIEW-PRD-FASE-STATE.md` | 162 | PRD §16.2 | nilai aksen `#D71921` masih perkiraan | **§16.2 tidak ada** (§16 hanya 5 butir daftar) → yang dimaksud **§16 "Pertanyaan Terbuka" butir 2** (baris 566) | ⛔ **tidak cocok** (luput dari audit awal) → diperbaiki di PR #6 |
+| `docs/LICENSE-DECISION-REQUEST.md` | 136, 137, 182, 187 | §10, §16.4, §11.7 | lisensi | §10 cocok. **§16.4 dan §11.7 tidak ada** (§16 hanya butir daftar, §11 dirujuk per butir — lihat §2); maksudnya **§16 "Pertanyaan Terbuka" butir 4** (baris 568) dan **§11 "Pengembangan dengan AI" butir 7** (baris 469) | ⛔ **tidak cocok** — putusan awal "cocok semua ✅ BENAR" **salah**; diperbaiki di PR #6, branch `docs/review-license-prd-refs` |
+| `docs/STATUS-MAP.md` | 54, 60, 61, 102 | §12, §9.1, §6.12, §8.3 | status widget & Plasma | §12 "Rencana Versi KDE Plasma", §9.1 "Ukuran dan Pembaruan Widget", §6.12 "Widget Dekoratif", §8.3 "Tema Terang dan Gelap" — keempatnya ada di §2 | ✅ BENAR (diverifikasi per baris; `§6.1`/`§6.8` yang disebut versi awal tabel ini tidak pernah muncul di berkasnya) |
 
-**Pola kegagalan.** Tiga dari tujuh rujukan salah mengacu ke **§8.5** dan
-**§9.x** — pola yang sama di dua pasang dokumen (AGENTS.md ↔ .cursor/rules.md).
-Ini menunjukkan rujukan ditulis ulang dari ingatan, bukan dicek terhadap PRD.
-Bagian §2 dokumen ini ada untuk menghentikan pola itu: **rujuk ke peta, bukan
-ke ingatan.**
+**Pola kegagalan 1 — topik salah.** Enam rujukan salah di pasangan
+`AGENTS.md` ↔ `.cursor/rules.md` (4 di `AGENTS.md`, 2 di `.cursor/rules.md`);
+lima di antaranya menunjuk **§8.5** atau **§9.x** yang topiknya berbeda dari
+klaimnya. Rujukan ditulis ulang dari ingatan, bukan dicek terhadap PRD.
+
+**Pola kegagalan 2 — sub-bagian yang tidak pernah ada.** Tiga token
+(`§16.2`, `§16.4`, `§11.7`), lima penyebutan di dua dokumen, menganggap setiap
+paragraf punya sub-bagian desimal. Padahal §16 dan §11 hanya berisi butir
+daftar; bentuk sahnya `§16 butir 2`, `§16 butir 4`, `§11 butir 7`. Ironisnya
+§6 dokumen ini sudah memakai bentuk butir yang benar untuk rujukan yang sama —
+jadi kesalahannya ada di baris audit, bukan di peta. Semua sudah diperbaiki di
+PR #6 (`docs/review-license-prd-refs`).
+
+Bagian §2 dokumen ini ada untuk menghentikan kedua pola itu: **rujuk ke peta,
+bukan ke ingatan** — dan **keberadaan `§x.y` wajib dicek di §2 sebelum
+dipakai**.
 
 **Catatan positif.** `docs/README.md` aturan 4 sudah merujuk
 `../design/tokens.json` dengan benar (berkasnya ada); klaim STATUS-MAP bahwa
