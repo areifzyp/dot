@@ -1,0 +1,17 @@
+{
+  "KPlugin": {
+    "Id": "org.dot.clock",
+    "Name": "Dot Clock",
+    "Description": "Nothing-style dot-matrix clock widget for KDE Plasma",
+    "Authors": [
+      {
+        "Name": "Arif",
+        "Email": ""
+      }
+    ],
+    "Icon": "clock",
+    "Category": "Time and Date",
+    "License": "MIT"
+  },
+  "X-KDE-PluginInfo-Name": "org.dot.clock"
+}
