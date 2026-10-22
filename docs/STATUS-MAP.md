@@ -140,10 +140,10 @@ Test-test ini dibuktikan **menggigit** lewat mutation testing, bukan sekadar hij
 
 **Yang belum tertutup dan sengaja ditinggalkan terbuka:**
 
-- UX-2/UX-3 tetap meminta **snapshot** `OnTime` vs `Delayed`; itu milik gate §4b, dan alat snapshot belum ada di repo. Yang dikunci di sini adalah aritmetika geometrinya, bukan pikselnya.
+- UX-2/UX-3 tetap meminta **snapshot** `OnTime` vs `Delayed`; itu milik gate §4b. Alat snapshotnya sudah ada sejak 22 Oktober 2026 (Roborazzi, 16 golden — lihat §4b-i); yang dikunci di sini adalah aritmetika geometrinya, bukan pikselnya.
 - **Keputusan desain untuk PM:** memesan slot penanda secara permanen membuat kotak digit menyusut 22 dp dibanding sebelum perubahan ini (pada widget bawaan 110 dp: 33,6 dp, sebelumnya 55,6 dp). Itu harga dari UX-3 — satu-satunya alternatif adalah membiarkan digit bergeser saat penanda muncul. Kalau PM lebih memilih digit besar dengan penanda yang mengambil ruang hanya saat `Delayed`, UX-3 harus dilonggarkan lebih dulu. Angka `MARKER_SP`, `MARKER_SLOT_FACTOR`, dan ambang 2 menit bisa diubah di `ClockLayout`/`ClockFreshnessPolicy` tanpa menyentuh PRD.
 
-### b) Snapshot test — tidak ada gate visual untuk hybrid 6 Glance + 1 RemoteViews (tertutup 22 Oktober 2026)
+### b) Snapshot test — tidak ada gate visual untuk hybrid 6 Glance + 1 RemoteViews (gate CI terpasang 22 Oktober 2026; AC-2b branch protection masih terbuka)
 
 | | |
 |---|---|
@@ -151,7 +151,7 @@ Test-test ini dibuktikan **menggigit** lewat mutation testing, bukan sekadar hij
 | **Bukti di repo** | Test: [`snapshot/WidgetSnapshotTest.kt`](../android/app/src/test/java/io/github/areifzyp/dot/snapshot/WidgetSnapshotTest.kt) + [`snapshot/WidgetSnapshotHarness.kt`](../android/app/src/test/java/io/github/areifzyp/dot/snapshot/WidgetSnapshotHarness.kt). Golden: `android/app/src/test/snapshots/` (16 PNG). Seam waktu: [`widget/WidgetClock.kt`](../android/app/src/main/java/io/github/areifzyp/dot/widget/WidgetClock.kt). Gate CI: [`ci.yml`](../.github/workflows/ci.yml) langkah `Verify widget snapshots (blocking gate)`. Konfigurasi: `android/build.gradle.kts` + `android/app/build.gradle.kts` (plugin & `testImplementation` Roborazzi 1.60.0). |
 | **Pemilik** | **frontend/dev Android** (gate CI), ditinjau arsitek untuk pemilihan alat snapshot. |
 | **Kriteria penerimaan** | Gate snapshot per widget × tema (terang/gelap), dijalankan di CI, dan kegagalan gate memblokir merge. **Wajib mencakup state `Delayed` widget Jam** (UX-2/UX-3 §4a) — kalau tidak, satu-satunya state baru yang ditambahkan untuk risiko §4a lolos tanpa gate visual. |
-| **Status** | **AC-1 & AC-2 terpenuhi** (frontend, 22 Oktober 2026) — rincian bukti di §4b-i. |
+| **Status** | **AC-1 terpenuhi. AC-2 dipecah: (a) terpenuhi, (b) TERBUKA.** (frontend, 22 Oktober 2026; baris ini dipecah 23 Oktober 2026 setelah tinjauan.) — **(a)** langkah gate menggagalkan job `test`: terpenuhi & terverifikasi. **(b)** job itu menjadi *required status check* di branch protection `main` sehingga kegagalan gate menahan tombol merge: **belum terpasang** — `main` tidak terlindungi (bukti `404 "Branch not protected"` di §4b-i). Karena (b) belum beres, **AC-2 belum boleh disebut terpenuhi**; AC-1 dan AC-2a yang tertutup. Rincian bukti di §4b-i. |
 
 #### b-i) Status implementasi (frontend, 22 Oktober 2026)
 
@@ -185,9 +185,33 @@ Jumlahnya 16, bukan 14 seperti pada catatan arsitek: hitungan "5 widget lain" ha
 
 **UX-3 terbukti oleh gate, bukan komentar.** `clock_{light,dark}_ontime` vs `clock_{light,dark}_delayed` berbeda mulai baris 169 dari 240 (area slot penanda); seluruh piksel di atasnya identik. Artinya kotak digit jam tidak bergeser saat penanda muncul — persis yang diminta UX-3 §4a.
 
-**Gate benar-benar memblokir (diuji, bukan diasumsikan).** Menaikkan `ClockLayout.PAD_DP` 14 → 18 dp membuat `verifyRoborazziDebug` gagal tepat pada 4 sel Jam dengan pesan `… is changed` plus berkas `*_compare.png`; setelah nilai dikembalikan, gate hijau lagi.
+**Gate benar-benar memblokir job CI (diuji, bukan diasumsikan).** Menaikkan `ClockLayout.PAD_DP` 14 → 18 dp membuat `verifyRoborazziDebug` gagal tepat pada 4 sel Jam dengan pesan `… is changed` plus berkas `*_compare.png`; setelah nilai dikembalikan, gate hijau lagi. Tinjauan independen mengulanginya dengan merusak piksel `clock_light_ontime.png`: `62 tests completed, 1 failed`, `GRADLE_EXIT=1`.
 
-**Sisa pekerjaan (setelan repo, bukan kode):** job CI `test` harus dijadikan *required status check* di branch protection `main` supaya kegagalan gate benar-benar menahan tombol merge. Itu wewenang admin repo dan tidak bisa dijamin dari dalam berkas workflow.
+#### b-ii) AC-2 dipecah: langkah CI (tertutup) vs. branch protection (terbuka)
+
+AC-2 berbunyi "dijalankan di CI **dan** kegagalan gate memblokir merge". Dua bagian itu punya pemilik berbeda dan tidak boleh ditulis sebagai satu status, karena bagian pertama bisa dibuktikan dari repo sementara bagian kedua tidak.
+
+**(a) Langkah gate menggagalkan job `test` — TERPENUHI, terverifikasi.** `ci.yml` menjalankan `:app:verifyRoborazziDebug` **tanpa** `continue-on-error`, sehingga snapshot yang berubah menggagalkan job `test`. Dibuktikan dua kali dengan mutasi (mutasi layout dan golden rusak, keduanya menghasilkan `GRADLE_EXIT=1`).
+
+**(b) Required status check di `main` — TERBUKA.** Tanpa required check, GitHub tetap menampilkan tombol merge saat check merah, jadi gate hanya *best-effort*. Bukti lapangan, 23 Oktober 2026 (token dengan `permissions.admin=true`):
+
+```
+GET /repos/areifzyp/dot/branches/main/protection
+→ HTTP 404  {"message": "Branch not protected", "status": "404"}
+
+GET /repos/areifzyp/dot/rulesets
+→ HTTP 200  []        # tidak ada ruleset yang menggantikan branch protection
+```
+
+`main` **tidak terlindungi oleh jalur mana pun** — baik *classic branch protection* maupun *repository ruleset*. Karena itu, per 23 Oktober 2026, **kegagalan gate belum memblokir merge**, dan AC-2 belum terpenuhi; yang tertutup adalah AC-1 dan AC-2a.
+
+**Nama check yang harus dipilih: `Build & unit test`.** Itu `jobs.test.name` di `ci.yml` — bukan id job `test`, bukan nama berkas workflow. Salah pilih nama berarti tidak ada check dengan nama itu yang pernah melaporkan status, sehingga gate tetap tidak menahan merge.
+
+**Urutan pemasangan penting.** Required check dipasang **setelah** `ci.yml` yang memuat job itu ada di `main`. Kalau dipasang lebih dulu, PR dari cabang tanpa workflow tersebut tidak akan pernah memunculkan check `Build & unit test`, PR menggantung, dan proteksinya akan dimatikan orang. Selain itu, mengaktifkan proteksi `main` mengubah alur merge **semua** kontributor (push langsung ke `main` menjadi lewat PR) — itu keputusan pemilik repo, bukan keputusan worker.
+
+**Tindak lanjut:** kartu `t_4c253582` (pemilik: pm, eksekusi setelan oleh admin repo/operator). AC-2b baru boleh ditandai terpenuhi setelah kartu itu selesai dan respons `200` berisi `required_status_checks.contexts` memuat `Build & unit test` ditempelkan sebagai bukti.
+
+**Risiko yang tercatat, bukan alasan menahan:** gate belum pernah berjalan di runner GitHub sungguhan (`feat/snapshot-gate` masih lokal; kontrak kartu `t_d1afc45d` = local-only). Determinisme baru terbukti di mesin pengembang. Kalau run pertama di `ubuntu-latest` merah karena rendering Robolectric/Skia/font berbeda, rekam ulang golden di container CI — jangan menambah `continue-on-error` atau mematikan gate.
 
 
 ### c) Token — `design/tokens.json` disebut SSOT tetapi nol konsumen mesin
