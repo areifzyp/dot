@@ -1,0 +1,17 @@
+{
+  "KPlugin": {
+    "Id": "org.dot.music",
+    "Name": "Dot Music",
+    "Description": "Nothing-style media player widget for KDE Plasma",
+    "Authors": [
+      {
+        "Name": "Arif",
+        "Email": ""
+      }
+    ],
+    "Icon": "multimedia-player",
+    "Category": "Multimedia",
+    "License": "MIT"
+  },
+  "X-KDE-PluginInfo-Name": "org.dot.music"
+}
