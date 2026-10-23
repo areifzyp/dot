@@ -30,7 +30,7 @@ Unit test yang ada (`android/app/src/test/java/io/github/areifzyp/dot/`): `Smoke
 
 ---
 
-## 2. Plasma (pasca-Fase 4) — terpasang di Plasma 6 hidup; 6/6 muat, 1 kotak kosong
+## 2. Plasma (pasca-Fase 4) — terpasang di Plasma 6 hidup; 6/6 muat, **0/6 lolos P0** (semua menyimpang dari PRD, §3)
 
 `plasma/` berisi 6 plasmoid dan satu skrip pemasangan. Setiap plasmoid punya `metadata.json` dengan `KPlugin.Id` yang sesuai nama foldernya.
 
@@ -63,7 +63,7 @@ Tidak ada `plasma/org.dot.decorative`. §12 PRD (dibekukan) menyebut urutan Plas
 
 1. Mengikuti §12 yang sudah dibekukan. Memasukkan Dekoratif berarti memperluas PRD historis secara eksplisit, bukan menyelesaikan pekerjaan yang tertinggal.
 2. Dekoratif di Android bersifat statis tanpa sumber data (PRD §6.12: "statis, tanpa pembaruan berkala"). Di Plasma nilai tambahnya paling kecil dibanding enam widget lain yang punya data hidup — dan Plasma sudah punya kebebasan menempatkan gambar statis.
-3. v1.0 tinggal satu item (§3, uji instal). Menambah plasmoid ketujuh menambah satu siklus desain + uji pasang sebelum rilis, tanpa mengubah nilai rilis.
+3. v1.0 **tidak lolos gerbang** (23 Oktober 2026): uji instal selesai, tetapi keenam plasmoid gagal P0 tampilan dan satu hazard skrip pemasangan masih terbuka (§3, §4b). Menambah plasmoid ketujuh berarti menambah satu siklus desain + uji pasang di atas tumpukan itu, tanpa mengubah nilai rilis.
 
 **Konsekuensi:** Dekoratif Plasma dicatat sebagai **kandidat pasca-v1.0**. Memasukkannya butuh keputusan operator (Arif) untuk memperluas §12; sampai itu ada, jangan dihitung sebagai pekerjaan yang tertinggal.
 
