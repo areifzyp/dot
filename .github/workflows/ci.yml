@@ -15,6 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Token drift gate (design/tokens.json → Color.kt)
+        working-directory: ${{ github.workspace }}
+        run: |
+          python3 design/generate_color_kt.py
+          git diff --exit-code -- android/app/src/main/java/io/github/areifzyp/dot/ui/theme/Color.kt
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:

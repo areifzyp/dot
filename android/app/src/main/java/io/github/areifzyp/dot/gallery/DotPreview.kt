@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -120,6 +121,118 @@ private fun GlyphGrid(
     }
 }
 
+@Composable
+fun KindPreview(
+    kind: WidgetKind,
+    size: SizeVariant,
+    palette: DotPalette,
+    modifier: Modifier = Modifier,
+) {
+    when (kind) {
+        WidgetKind.CLOCK -> DotMatrixTimePreview(size = size, palette = palette, modifier = modifier)
+        WidgetKind.TEXT -> TextPreview(size = size, palette = palette, modifier = modifier)
+        WidgetKind.WEATHER -> WeatherPreview(size = size, palette = palette, modifier = modifier)
+        WidgetKind.CALENDAR -> CalendarPreview(size = size, palette = palette, modifier = modifier)
+        WidgetKind.DEVICE -> DevicePreview(size = size, palette = palette, modifier = modifier)
+        WidgetKind.MUSIC -> MusicPreview(size = size, palette = palette, modifier = modifier)
+        WidgetKind.DECORATIVE -> DecorativePreview(size = size, palette = palette, modifier = modifier)
+    }
+}
+
+@Composable
+fun TextPreview(size: SizeVariant, palette: DotPalette, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(palette.background)
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text("Dot.", color = palette.foreground, fontSize = 18.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+        Text("Catatan Harian", color = palette.secondary, fontSize = 11.sp)
+    }
+}
+
+@Composable
+fun WeatherPreview(size: SizeVariant, palette: DotPalette, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(palette.background)
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text("Jakarta", color = palette.secondary, fontSize = 10.sp)
+        Text("28°C", color = palette.foreground, fontSize = 22.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        Text("Cerah Berawan", color = palette.secondary, fontSize = 10.sp)
+    }
+}
+
+@Composable
+fun CalendarPreview(size: SizeVariant, palette: DotPalette, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(palette.background)
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text("SABTU", color = palette.foreground, fontSize = 14.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        Text("24 OKTOBER", color = palette.secondary, fontSize = 11.sp)
+    }
+}
+
+@Composable
+fun DevicePreview(size: SizeVariant, palette: DotPalette, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(palette.background)
+            .padding(12.dp),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text("Baterai 85% ⚡", color = palette.foreground, fontSize = 11.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+        Text("RAM 4.2 / 8 GB", color = palette.secondary, fontSize = 10.sp)
+    }
+}
+
+@Composable
+fun MusicPreview(size: SizeVariant, palette: DotPalette, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(palette.background)
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text("Now Playing", color = palette.secondary, fontSize = 10.sp)
+        Text("Nothing Track", color = palette.foreground, fontSize = 12.sp, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+        Spacer(Modifier.height(4.dp))
+        Text("⏮  ▶  ⏭", color = palette.foreground, fontSize = 12.sp)
+    }
+}
+
+@Composable
+fun DecorativePreview(size: SizeVariant, palette: DotPalette, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(palette.background)
+            .padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text("• • • • •", color = palette.foreground, fontSize = 16.sp)
+        Text("• • • • •", color = palette.secondary, fontSize = 16.sp)
+    }
+}
+
 /**
  * Kartu pratinjau terang + gelap berdampingan (GAL-2: kedua tema, per ukuran).
  */
@@ -137,8 +250,8 @@ fun PreviewCard(entry: WidgetEntry, size: SizeVariant, modifier: Modifier = Modi
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier,
         ) {
-            DotMatrixTimePreview(size = size, palette = PreviewPalettes.light, modifier = Modifier.weight(1f))
-            DotMatrixTimePreview(size = size, palette = PreviewPalettes.dark, modifier = Modifier.weight(1f))
+            KindPreview(kind = entry.kind, size = size, palette = PreviewPalettes.light, modifier = Modifier.weight(1f))
+            KindPreview(kind = entry.kind, size = size, palette = PreviewPalettes.dark, modifier = Modifier.weight(1f))
         }
         Text(
             text = entry.displayName(),

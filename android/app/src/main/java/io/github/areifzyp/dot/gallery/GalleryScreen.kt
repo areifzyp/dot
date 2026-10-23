@@ -43,7 +43,11 @@ import io.github.areifzyp.dot.R
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GalleryScreen(onBack: (() -> Unit)? = null) {
+fun GalleryScreen(
+    onBack: (() -> Unit)? = null,
+    onStyleClick: (() -> Unit)? = null,
+    onSettingsClick: (() -> Unit)? = null,
+) {
     var selected by remember { mutableStateOf<WidgetEntry?>(null) }
     val detail = selected
     if (detail == null) {
@@ -54,8 +58,18 @@ fun GalleryScreen(onBack: (() -> Unit)? = null) {
                     navigationIcon = {
                         if (onBack != null) {
                             IconButton(onClick = onBack) {
-                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.gallery_back))
                             }
+                        }
+                    },
+                    actions = {
+                        if (onSettingsClick != null) {
+                            TextButton(onClick = onSettingsClick) {
+                                Text(stringResource(R.string.settings_title))
+                            }
+                        }
+                        if (onStyleClick != null) {
+                            TextButton(onClick = onStyleClick) { Text(stringResource(R.string.gallery_style)) }
                         }
                     },
                 )
@@ -79,6 +93,7 @@ private fun CatalogList(
     contentPadding: PaddingValues,
     onSelect: (WidgetEntry) -> Unit,
 ) {
+    val installed = rememberInstalledWidgets(refreshKey = WidgetEntry.ALL.size)
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -86,6 +101,9 @@ private fun CatalogList(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
+        item(key = "installed") {
+            InstalledWidgetsCard(installed = installed)
+        }
         items(WidgetEntry.ALL, key = { it.kind.name }) { entry ->
             CatalogRow(entry = entry, onClick = { onSelect(entry) })
         }
@@ -109,12 +127,12 @@ private fun CatalogRow(entry: WidgetEntry, onClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            // Ikon = cuplikan dot-matrix mini (GAL-1: nama, ikon, ukuran)
-            DotMatrixTimePreview(
+            // Ikon = cuplikan dot-matrix mini spesifik per widget
+            KindPreview(
+                kind = entry.kind,
                 size = SizeVariant.SMALL,
                 palette = PreviewPalettes.dark,
                 modifier = Modifier.weight(0.35f),
-                showDate = false,
             )
             Column(modifier = Modifier.weight(0.65f)) {
                 Text(name, style = MaterialTheme.typography.titleMedium)
@@ -152,7 +170,7 @@ private fun WidgetDetail(entry: WidgetEntry, onBack: () -> Unit) {
                 title = { Text(name) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.gallery_back))
                     }
                 },
             )
