@@ -45,13 +45,19 @@ Unit test yang ada (`android/app/src/test/java/io/github/areifzyp/dot/`): `Smoke
 | `org.dot.music` | Dot Music | [`metadata.json`](../plasma/org.dot.music/metadata.json) | Terpasang · muat bersih · placeholder: tanpa MPRIS, glyph tidak bisa diklik (§3) |
 | `org.dot.text` | Dot Text Note | [`metadata.json`](../plasma/org.dot.text/metadata.json) | Terpasang · muat bersih · sebagian: Doto terpakai, isi & warna hardcode (§3) |
 
-Pemasangan: [`plasma/install-all.sh`](../plasma/install-all.sh) menyalin keenam folder ke `$HOME/.local/share/plasma/plasmoids`. **Terverifikasi 22 Okt 2026 (PM):** skrip berhenti pada galat (`set -e`), dan baris `echo "Refreshing KPackage index..."` **tidak diikuti perintah apa pun** — murni teks, index tidak di-refresh.
+Pemasangan: [`plasma/install-all.sh`](../plasma/install-all.sh) menyalin keenam folder ke `$HOME/.local/share/plasma/plasmoids`; `DOT_PLASMOID_DEST` mengalihkan tujuan itu untuk pengujian.
 
-**Terverifikasi 23 Okt 2026 (penguji): refresh manual tidak diperlukan.** `kpackagetool6 -t Plasma/Applet --list` mengenali keenam `org.dot.*` tanpa `kbuildsycoca6` maupun restart plasmashell. Baris itu tetap menyesatkan (menyatakan sesuatu yang tidak dikerjakan), tetapi ketiadaannya tidak menghalangi registrasi paket.
+**Jalur aman sejak `eb3cd00`** (branch `feat/snapshot-gate`; belum mendarat di `main` — kartu `t_05d56bad`). Bukti: `run3.log` kartu `t_a71f5814` — 33 asersi `PASS`, nol `FAIL` (mencakup AC-1/AC-2/AC-3, termasuk jalur sukses: 6/6 terpasang, `exit 0`, sukses tercetak sekali, re-run idempoten) — dan re-verifikasi independen kartu `t_4ee1c5c7` (36/36 asersi, status review). Tiap plasmoid:
 
-Dua hazard lain di skrip yang sama, terverifikasi: `rm -rf "$DEST_DIR/$widget"` dijalankan **sebelum** `cp` — bila `cp` gagal, plasmoid lama sudah terhapus dan tidak ada rollback. Dan `set -e` tidak menolong bila `cp` berhasil sebagian.
+1. **disalin ke staging** di dalam `DEST_DIR` — `mktemp -d "$DEST_DIR/.dot-install.XXXXXX"`, filesystem sama sehingga tukar akhirnya rename; `cp` yang gagal tidak menyentuh salinan lama;
+2. **divalidasi di staging** — `metadata.json`, `contents/ui/main.qml`, `contents/fonts/Doto.ttf`; satu berkas hilang → `exit 1`, pesan galat menyebut nama berkas, salinan lama utuh, staging dibersihkan;
+3. **baru ditukar** — salinan lama dihapus hanya setelah validasi lolos, lalu `mv` menempatkan yang baru.
 
-Status "belum diuji pasang" sudah **tidak berlaku** sejak 23 Oktober 2026; hasilnya ada di §3. Yang masih terbuka bukan lagi uji pasang, melainkan selisih antara tampilan dan PRD (enam butir P0 gagal) plus satu perbaikan yang belum masuk `main` (lihat §3).
+Dengan pola itu, keluaran skrip sesuai kenyataan: `installed successfully` hanya tercetak bila keenam plasmoid tervalidasi. Kegagalan pada widget ke-*n* menyisakan widget 1..*n*−1 berversi baru dan widget *n*..6 berversi lama: tidak ada plasmoid yang tersalin separuh, tetapi campuran versi antar-widget mungkin — jalankan ulang setelah sumbernya diperbaiki. Baris `echo "Refreshing KPackage index..."` **dihapus** karena refresh memang tidak diperlukan: `kpackagetool6 -t Plasma/Applet --list` mengenali keenam `org.dot.*` tanpa `kbuildsycoca6` maupun restart plasmashell (verifikasi penguji, 23 Oktober 2026).
+
+Tiga hazard yang berlaku sebelum `eb3cd00` — hapus salinan lama **sebelum** `cp`, tanpa validasi isi, dan `installed successfully` tanpa syarat — sudah tidak ada di skrip. Salinan yang terpasang di mesin operator berasal dari `53c449b`, jadi menjalankan ulang skrip versi `main` sekarang belum memakai jalur aman sampai `eb3cd00` mendarat.
+
+Status "belum diuji pasang" sudah **tidak berlaku** sejak 23 Oktober 2026; hasilnya ada di §3. Yang masih terbuka bukan lagi uji pasang, melainkan selisih antara tampilan dan PRD (0/6 lolos P0, §3) plus pendaratan `eb3cd00` ke `main` (kartu `t_05d56bad`).
 
 ### Dekoratif di Plasma — di luar cakupan v1.0 (keputusan PM, 22 Oktober 2026)
 
@@ -63,7 +69,7 @@ Tidak ada `plasma/org.dot.decorative`. §12 PRD (dibekukan) menyebut urutan Plas
 
 1. Mengikuti §12 yang sudah dibekukan. Memasukkan Dekoratif berarti memperluas PRD historis secara eksplisit, bukan menyelesaikan pekerjaan yang tertinggal.
 2. Dekoratif di Android bersifat statis tanpa sumber data (PRD §9.1 "Ukuran dan Pembaruan Widget", baris Dekoratif: *"statis, tanpa pembaruan berkala"*; §6.12: *"tidak memicu pembaruan latar belakang"*). Di Plasma nilai tambahnya paling kecil dibanding enam widget lain yang punya data hidup — dan Plasma sudah punya kebebasan menempatkan gambar statis.
-3. v1.0 **tidak lolos gerbang** (23 Oktober 2026): uji instal selesai, tetapi keenam plasmoid gagal P0 tampilan dan satu hazard skrip pemasangan masih terbuka (§3, §4b). Menambah plasmoid ketujuh berarti menambah satu siklus desain + uji pasang di atas tumpukan itu, tanpa mengubah nilai rilis.
+3. v1.0 **tidak lolos gerbang** (23 Oktober 2026): uji instal selesai, tetapi keenam plasmoid gagal P0 tampilan dan perbaikan skrip pemasangan (`eb3cd00`) belum masuk `main` (kartu `t_05d56bad`). Menambah plasmoid ketujuh berarti menambah satu siklus desain + uji pasang di atas tumpukan itu, tanpa mengubah nilai rilis.
 
 **Konsekuensi:** Dekoratif Plasma dicatat sebagai **kandidat pasca-v1.0**. Memasukkannya butuh keputusan operator (Arif) untuk memperluas §12; sampai itu ada, jangan dihitung sebagai pekerjaan yang tertinggal.
 
